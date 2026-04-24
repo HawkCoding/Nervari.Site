@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Solutions — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}::selection{background:rgba(91,93,225,0.4)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(91,93,225,0.65)!important;transform:translateY(-1px)}
+.btn-ghost:hover{background:rgba(255,255,255,0.08)!important}
+.step-card{transition:transform 0.22s,box-shadow 0.22s}
+.step-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(91,93,225,0.18)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes drawLine{from{stroke-dashoffset:400}to{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+const STEPS = [
+  { n:1, icon:'📞', title:'Book a Call', desc:'A short discovery call to understand your business, the friction points, and whether we\'re the right fit.' },
+  { n:2, icon:'🎯', title:'Define the Problem', desc:'We work with you to clearly name the bottleneck — what it\'s costing you and what the right outcome looks like.' },
+  { n:3, icon:'🔍', title:'Audit the Current Workflow', desc:'We map how the work is actually happening today — tools, handoffs, data sources, and where things break down.' },
+  { n:4, icon:'🗺️', title:'Map the Best-Fit Solution', desc:'We design the right automation or workflow structure, presented clearly before a single line is built.' },
+  { n:5, icon:'⚙️', title:'Build and Preview', desc:'We build the solution and walk you through it before go-live. You see it working before you sign off.' },
+  { n:6, icon:'🚀', title:'Launch and Train', desc:'We go live together. Your team gets trained so they know how to use it, check it, and get the most from it.' },
+  { n:7, icon:'🛡️', title:'Support and Improve', desc:'We stay available after launch. As your business changes, the system can be updated to match.' },
+];
+
+const CustomPage = () => {
+  const [activeStep, setActiveStep] = React.useState(null);
+  return (
+    <div>
+      <SiteNav active="Custom"/>
+
+      {/* HERO */}
+      <section style={{ position:'relative', background:'#0C0821', padding:'140px 32px 90px', overflow:'hidden' }}>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 60% 40%, rgba(84,31,164,0.2), transparent 60%)', pointerEvents:'none' }}/>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 30% 60%, rgba(91,93,225,0.12), transparent 55%)', pointerEvents:'none' }}/>
+        <div style={{ maxWidth:840, margin:'0 auto', position:'relative' }}>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.1s both' }}><SLabel color="#9D5FE0">Bespoke Automation</SLabel></div>
+          <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+            <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(38px,5vw,64px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24, textWrap:'balance' }}>
+              Custom Solutions<br/><span style={{ background:'linear-gradient(90deg,#9D5FE0,#5B5DE1)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Built for Your Business</span>
+            </h1>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.4s both', maxWidth:600 }}>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.55)', lineHeight:1.75, marginBottom:36 }}>Not every problem fits inside a pre-built package. When your bottleneck is unique, we map the process, build the right automation or workflow, and hand over a solution designed for the way your business actually works.</p>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.55s both', display:'flex', gap:16, flexWrap:'wrap' }}>
+            <SBtn href="contact.html" variant="primary" style={{ fontSize:19, padding:'14px 32px' }}>Solve My Bottleneck</SBtn>
+            <SBtn href="pre-built.html" variant="ghost" style={{ fontSize:19 }}>Explore Pre-Built Options →</SBtn>
+          </div>
+        </div>
+      </section>
+
+      {/* OBJECTION HANDLING */}
+      <section style={{ background:'#0d0c20', padding:'80px 32px' }}>
+        <div style={{ maxWidth:900, margin:'0 auto' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:48, alignItems:'center' }}>
+            {/* LEFT — cost headline */}
+            <div>
+              <SLabel color="#9D5FE0">Common Concern</SLabel>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(28px,3.5vw,46px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.15, marginBottom:20 }}>
+                Not automating is already<br/>
+                <span style={{ background:'linear-gradient(90deg,#9D5FE0,#5B5DE1)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>costing you.</span>
+              </h2>
+              <p style={{ fontSize:19, color:'rgba(255,255,255,0.5)', lineHeight:1.75, marginBottom:28 }}>Custom automation typically costs less than the manual drag it replaces — often paid back within the first month.</p>
+              <div style={{ display:'flex', gap:12, alignItems:'center', padding:'16px 20px', background:'rgba(157,95,224,0.1)', border:'1px solid rgba(157,95,224,0.25)', borderRadius:12 }}>
+                <div style={{ fontSize:28, flexShrink:0 }}>💡</div>
+                <div style={{ fontSize:17, color:'rgba(255,255,255,0.65)', lineHeight:1.5 }}>Every week you wait, the cost compounds. The right system pays for itself.</div>
+              </div>
+            </div>
+            {/* RIGHT — cost card */}
+            <div style={{ background:'#0a0818', border:'1px solid rgba(157,95,224,0.3)', borderRadius:20, padding:'36px 32px', boxShadow:'0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(157,95,224,0.15)' }}>
+              <div style={{ fontSize:13, letterSpacing:3, textTransform:'uppercase', color:'rgba(157,95,224,0.7)', fontFamily:'Space Grotesk,sans-serif', fontWeight:600, marginBottom:24 }}>What inaction costs you</div>
+              {[
+                { icon:'⏱', cost:'4–6 hrs', label:'lost every week to manual admin' },
+                { icon:'📉', cost:'20–40%', label:'of leads lost to slow follow-up' },
+                { icon:'🔄', cost:'Daily', label:'owner dependency blocking growth' },
+              ].map(item => (
+                <div key={item.label} style={{ display:'flex', gap:16, alignItems:'center', padding:'18px 0', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ fontSize:26, flexShrink:0 }}>{item.icon}</div>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:28, color:'#fff', lineHeight:1 }}>{item.cost}</div>
+                    <div style={{ fontSize:15, color:'rgba(255,255,255,0.42)', marginTop:4 }}>{item.label}</div>
+                  </div>
+                </div>
+              ))}
+              <div style={{ marginTop:24, fontSize:15, color:'rgba(255,255,255,0.5)', fontStyle:'italic', lineHeight:1.6 }}>Directional estimates based on common client patterns.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7-STEP PROCESS */}
+      <section style={{ background:'#0C0821', padding:'96px 32px' }}>
+        <div style={{ maxWidth:840, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:56 }}>
+            <SLabel>How It Works</SLabel>
+            <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,50px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>A Clear Process. No Surprises.</h2>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.4)', marginTop:12, maxWidth:480, margin:'12px auto 0' }}>Seven structured steps from first call to live system — you know exactly where you are at every stage.</p>
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+            {STEPS.map((step, i) => (
+              <div key={step.n} className="step-card" onClick={() => setActiveStep(activeStep===step.n ? null : step.n)}
+                style={{ display:'flex', gap:0, cursor:'pointer', position:'relative' }}>
+                {/* connector line */}
+                {i < STEPS.length - 1 && (
+                  <div style={{ position:'absolute', left:27, top:56, width:2, height:'calc(100% - 20px)', background:'linear-gradient(to bottom, rgba(91,93,225,0.4), rgba(91,93,225,0.05))', zIndex:0 }}/>
+                )}
+                <div style={{ flexShrink:0, zIndex:1, marginRight:24, paddingTop:20 }}>
+                  <div style={{ width:56, height:56, borderRadius:'50%', background: activeStep===step.n ? '#5B5DE1' : 'rgba(91,93,225,0.15)', border:`2px solid ${activeStep===step.n ? '#5B5DE1' : 'rgba(91,93,225,0.35)'}`, display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:22, color: activeStep===step.n ? '#fff' : '#5B5DE1', transition:'all 0.25s', boxShadow: activeStep===step.n ? '0 0 24px rgba(91,93,225,0.5)' : 'none' }}>{step.n}</div>
+                </div>
+                <div style={{ flex:1, padding:'20px 0 28px', borderBottom: i < STEPS.length-1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  <div style={{ display:'flex', gap:12, alignItems:'center', marginBottom: activeStep===step.n ? 12 : 0 }}>
+                    <span style={{ fontSize:22 }}>{step.icon}</span>
+                    <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22, color:'#fff' }}>{step.title}</div>
+                    <div style={{ marginLeft:'auto', color:'#5B5DE1', fontSize:22, transition:'transform 0.2s', transform: activeStep===step.n ? 'rotate(180deg)' : 'rotate(0)' }}>↓</div>
+                  </div>
+                  {activeStep === step.n && (
+                    <div style={{ fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, animation:'fadeIn 0.2s ease' }}>{step.desc}</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROOF PILLARS */}
+      <section style={{ background:'linear-gradient(180deg,#0C0821 0%,#131458 50%,#0C0821 100%)', padding:'96px 32px' }}>
+        <div style={{ maxWidth:960, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:28 }}>
+          {[
+            { icon:'🎯', title:'Built for You', desc:'No templates. Built for how your business actually runs.' },
+            { icon:'📋', title:'Fully Delivered', desc:'We build, test, train, and hand over. No loose ends.' },
+            { icon:'🛡️', title:'Here After Launch', desc:'We stay available as your business grows and changes.' },
+          ].map(p => (
+            <div key={p.title} style={{ textAlign:'center', padding:'52px 32px', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, position:'relative', overflow:'hidden' }}>
+              <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:120, height:3, background:'linear-gradient(90deg,transparent,#5B5DE1,transparent)', borderRadius:2 }}/>
+              <div style={{ fontSize:44, marginBottom:24 }}>{p.icon}</div>
+              <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:26, color:'#fff', marginBottom:14, lineHeight:1.2 }}>{p.title}</div>
+              <div style={{ fontSize:19, color:'rgba(255,255,255,0.52)', lineHeight:1.65 }}>{p.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section style={{ background:'linear-gradient(135deg,#0d0c20,#131458)', padding:'96px 32px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%, rgba(84,31,164,0.3), transparent 60%)', pointerEvents:'none' }}/>
+        <div style={{ maxWidth:620, margin:'0 auto', position:'relative' }}>
+          <SLabel color="#9D5FE0">Ready to Start</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(28px,4vw,48px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>Tell Us About Your Bottleneck.</h2>
+          <p style={{ fontSize:19, color:'rgba(255,255,255,0.48)', lineHeight:1.75, marginBottom:36 }}>Book a free discovery call. We'll listen, map the problem, and tell you honestly whether a pre-built or custom solution is the better fit.</p>
+          <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap' }}>
+            <SBtn href="contact.html" variant="primary" style={{ fontSize:19, padding:'14px 36px' }}>Solve My Bottleneck</SBtn>
+            <SBtn href="pre-built.html" variant="ghost" style={{ fontSize:19 }}>Explore Pre-Built Options →</SBtn>
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter/>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<CustomPage/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

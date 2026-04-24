@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Built Solutions — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}::selection{background:rgba(91,93,225,0.4)}
+.pkg-card{transition:transform 0.22s,box-shadow 0.22s,border-color 0.22s;cursor:pointer}
+.pkg-card:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(91,93,225,0.22)!important;border-color:rgba(91,93,225,0.4)!important}
+.jump-pill{transition:all 0.2s;cursor:pointer}
+.jump-pill:hover{background:rgba(91,93,225,0.12)!important;color:#fff!important}
+.btn-primary:hover{box-shadow:0 0 40px rgba(91,93,225,0.65)!important;transform:translateY(-1px)}
+.btn-ghost:hover{background:rgba(255,255,255,0.08)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ringPulse{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.7}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+@keyframes ringPulse2{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.5}100%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}
+@keyframes breathGlow{0%,100%{box-shadow:0 0 30px rgba(91,93,225,0.3),inset 0 0 30px rgba(91,93,225,0.05)}50%{box-shadow:0 0 80px rgba(91,93,225,0.7),0 0 140px rgba(157,95,224,0.3),inset 0 0 60px rgba(91,93,225,0.12)}}
+@keyframes orbitDot{0%{transform:rotate(0deg) translateX(180px) rotate(0deg)}100%{transform:rotate(360deg) translateX(180px) rotate(-360deg)}}
+@keyframes orbitDot2{0%{transform:rotate(120deg) translateX(200px) rotate(-120deg)}100%{transform:rotate(480deg) translateX(200px) rotate(-480deg)}}
+@keyframes orbitDot3{0%{transform:rotate(240deg) translateX(160px) rotate(-240deg)}100%{transform:rotate(600deg) translateX(160px) rotate(-600deg)}}
+@keyframes shimmerBtn{0%,100%{background-position:200% center}50%{background-position:-200% center}}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+const CATS = ['Sales','Marketing','Admin','Operations','Outside the Box'];
+
+const PACKAGES = {
+  Sales: [
+    { title:'Lead Capture to CRM Sync', desc:'Captures leads from forms and channels, enriches records, and sends them into your CRM with task creation.', time:'4–6 hrs/week', value:'R6k–R15k/month', price:'R4,890' },
+    { title:'AI Lead Qualification', desc:'Scores inbound leads, tags urgency, and routes hot leads to your sales team instantly.', time:'5–8 hrs/week', value:'R8k–R20k/month', price:'R6,240' },
+    { title:'Missed Call Recovery', desc:'Automatically messages missed callers and books follow-up actions so no lead goes cold.', time:'3–5 hrs/week', value:'R5k–R12k/month', price:'R5,310' },
+    { title:'Quote Follow-Up Sequence', desc:'Sends timed reminders after a quote is issued and alerts the owner on high-value inactivity.', time:'4–7 hrs/week', value:'R7k–R18k/month', price:'R6,980' },
+    { title:'Sales Pipeline Alert System', desc:'Flags stalled deals and sends role-based reminders to keep deals moving through the pipeline.', time:'3–6 hrs/week', value:'R6k–R14k/month', price:'R5,760' },
+    { title:'Lead Source Performance Tracker', desc:'Tracks which channels bring the best leads and pushes daily summary reports to your team.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R6,430' },
+  ],
+  Marketing: [
+    { title:'Review Request Engine', desc:'Triggers review requests after service completion and routes positive responses first.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R4,560' },
+    { title:'Content Repurposing Workflow', desc:'Turns one content input into multiple post drafts, captions, and publishing tasks automatically.', time:'5–8 hrs/week', value:'R7k–R18k/month', price:'R7,130' },
+    { title:'Campaign Lead Nurture Flow', desc:'Moves new leads into timed email or WhatsApp nurture journeys without manual intervention.', time:'4–7 hrs/week', value:'R6k–R16k/month', price:'R6,740' },
+    { title:'Ad Lead Response Router', desc:'Pushes paid-ad leads to the right channel, owner, or CRM stage instantly on capture.', time:'3–5 hrs/week', value:'R5k–R13k/month', price:'R5,980' },
+    { title:'Referral Tracking Workflow', desc:'Tracks referrals, source performance, and sends thank-you follow-ups automatically.', time:'2–4 hrs/week', value:'R4k–R11k/month', price:'R5,420' },
+    { title:'Marketing KPI Digest', desc:'Builds a simple recurring summary of traffic, leads, and campaign performance for your team.', time:'3–5 hrs/week', value:'R5k–R12k/month', price:'R6,210' },
+  ],
+  Admin: [
+    { title:'Invoice Reminder Automation', desc:'Sends payment reminders and internal alerts on overdue invoices without manual tracking.', time:'3–6 hrs/week', value:'R5k–R14k/month', price:'R4,980' },
+    { title:'New Client Onboarding Pack', desc:'Sends forms, welcome documents, internal tasks, and kickoff reminders automatically on signup.', time:'4–7 hrs/week', value:'R6k–R16k/month', price:'R6,590' },
+    { title:'Document Request Tracker', desc:'Automates chasing missing documents and logs outstanding items so nothing falls through.', time:'3–5 hrs/week', value:'R4k–R11k/month', price:'R5,740' },
+    { title:'Internal Approval Flow', desc:'Moves requests through approval steps with status updates and escalation notices automatically.', time:'4–6 hrs/week', value:'R6k–R15k/month', price:'R6,860' },
+    { title:'Meeting Summary Dispatcher', desc:'Sends structured AI-generated summaries and action items to all attendees after every meeting.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R5,630' },
+    { title:'Staff Task Reminder System', desc:'Sends recurring reminders for deadline-driven admin work to keep the team on track.', time:'2–3 hrs/week', value:'R3k–R8k/month', price:'R4,790' },
+  ],
+  Operations: [
+    { title:'Job Status Update Workflow', desc:'Updates internal teams and clients automatically as jobs move through each stage.', time:'4–7 hrs/week', value:'R7k–R18k/month', price:'R6,920' },
+    { title:'Order Handoff Automation', desc:'Moves order information from sales to ops without manual re-entry or copy-paste errors.', time:'5–8 hrs/week', value:'R8k–R20k/month', price:'R7,480' },
+    { title:'Stock Alert and Reorder Notice', desc:'Triggers alerts when stock or consumables fall below thresholds so you never run short.', time:'3–5 hrs/week', value:'R5k–R12k/month', price:'R5,890' },
+    { title:'Daily Ops Summary Dashboard Push', desc:'Compiles operational KPIs and delivers them on a schedule to your team or inbox.', time:'3–5 hrs/week', value:'R5k–R13k/month', price:'R6,350' },
+    { title:'Service Ticket Routing', desc:'Routes service issues to the right team and logs priority automatically on submission.', time:'4–6 hrs/week', value:'R6k–R15k/month', price:'R6,770' },
+    { title:'Workflow Escalation Engine', desc:'Escalates delayed tasks, blocked jobs, or missed SLAs with automatic notifications.', time:'4–7 hrs/week', value:'R6k–R17k/month', price:'R7,040' },
+  ],
+  'Outside the Box': [
+    { title:'WhatsApp Concierge Assistant', desc:'Handles simple inbound questions and escalates real sales or support needs to your team.', time:'5–8 hrs/week', value:'R7k–R18k/month', price:'R7,260' },
+    { title:'Voice Note to Task Workflow', desc:'Turns voice notes into structured tasks, summaries, and reminders automatically.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R5,540' },
+    { title:'AI Proposal Builder', desc:'Builds first-draft proposals from intake answers and internal templates in minutes.', time:'4–7 hrs/week', value:'R7k–R18k/month', price:'R7,390' },
+    { title:'Webform to Instant Estimate', desc:'Creates rough estimates or next-step recommendations from website submissions immediately.', time:'3–6 hrs/week', value:'R5k–R14k/month', price:'R6,680' },
+    { title:'Knowledge Base Answer Assistant', desc:'Pulls answers from internal docs and prepares draft replies for your team to send.', time:'4–6 hrs/week', value:'R6k–R16k/month', price:'R7,110' },
+    { title:'Executive Daily Brief', desc:'Builds a daily digest of leads, jobs, cash flow prompts, and issues for the owner.', time:'3–5 hrs/week', value:'R5k–R13k/month', price:'R6,460' },
+  ],
+};
+
+const INCLUDED = ['Workflow file','Installation guide','Setup documents','2-hour setup call','Launch support','Handover notes'];
+
+// ── PACKAGE CARD ─────────────────────────────────────────────
+const PkgCard = ({ pkg, onOpen }) => (
+  <div className="pkg-card" onClick={() => onOpen(pkg)} style={{
+    borderRadius:14, border:'1px solid rgba(255,255,255,0.09)',
+    background:'rgba(255,255,255,0.03)', padding:'24px 22px',
+    display:'flex', flexDirection:'column', gap:14,
+    boxShadow:'0 4px 20px rgba(0,0,0,0.3)',
+  }}>
+    <div style={{ width:40, height:40, borderRadius:10, background:'rgba(91,93,225,0.15)', border:'1px solid rgba(91,93,225,0.25)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>⚡</div>
+    <div>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22, color:'#fff', marginBottom:6, lineHeight:1.3 }}>{pkg.title}</div>
+      <div style={{ fontSize:13.5, color:'rgba(255,255,255,0.48)', lineHeight:1.6 }}>{pkg.desc}</div>
+    </div>
+    <div style={{ marginTop:'auto', display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:14, borderTop:'1px solid rgba(255,255,255,0.07)' }}>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22, color:'#5B5DE1' }}>{pkg.price}</div>
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:2 }}>
+        <div style={{ fontSize:13, color:'rgba(255,255,255,0.55)', fontWeight:600 }}>💰 {pkg.value}/mo</div>
+        <div style={{ fontSize:12, color:'rgba(255,255,255,0.45)' }}>⏱ saves {pkg.time}</div>
+      </div>
+    </div>
+  </div>
+);
+
+// ── MODAL ────────────────────────────────────────────────────
+const Modal = ({ pkg, onClose }) => {
+  React.useEffect(() => { document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = ''; }; }, []);
+  if (!pkg) return null;
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(12,8,33,0.88)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:24, backdropFilter:'blur(8px)', animation:'fadeIn 0.18s ease' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background:'#13102a', border:'1px solid rgba(91,93,225,0.3)', borderRadius:20, maxWidth:620, width:'100%', padding:'40px', boxShadow:'0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(91,93,225,0.12)', animation:'slideUp 0.22s ease', maxHeight:'90vh', overflowY:'auto' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
+          <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color:'#fff', lineHeight:1.2, flex:1, paddingRight:16 }}>{pkg.title}</div>
+          <button onClick={onClose} style={{ background:'rgba(255,255,255,0.08)', border:'none', color:'rgba(255,255,255,0.5)', cursor:'pointer', width:32, height:32, borderRadius:8, fontSize:22, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>×</button>
+        </div>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.58)', lineHeight:1.75, marginBottom:28 }}>{pkg.desc}</p>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:28 }}>
+          <div style={{ background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.2)', borderRadius:10, padding:'14px 16px' }}>
+            <div style={{ fontSize:19, letterSpacing:2, color:'#5B5DE1', textTransform:'uppercase', marginBottom:6 }}>Time Saved</div>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22, color:'#A8D8F4' }}>{pkg.time}</div>
+          </div>
+          <div style={{ background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.2)', borderRadius:10, padding:'14px 16px' }}>
+            <div style={{ fontSize:19, letterSpacing:2, color:'#5B5DE1', textTransform:'uppercase', marginBottom:6 }}>Est. Value</div>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22, color:'#A8D8F4' }}>{pkg.value}</div>
+          </div>
+        </div>
+        <div style={{ marginBottom:28 }}>
+          <div style={{ fontSize:22, letterSpacing:2, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', marginBottom:14 }}>What's Included</div>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+            {INCLUDED.map(item => (
+              <div key={item} style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:6, padding:'6px 12px', fontSize:19, color:'rgba(255,255,255,0.6)', display:'flex', gap:6, alignItems:'center' }}>
+                <span style={{ color:'#5B5DE1' }}>✓</span>{item}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ borderTop:'1px solid rgba(255,255,255,0.08)', paddingTop:24, display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, flexWrap:'wrap' }}>
+          <div>
+            <div style={{ fontSize:22, color:'rgba(255,255,255,0.5)', marginBottom:4 }}>Fixed Price</div>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:32, color:'#5B5DE1' }}>{pkg.price}</div>
+          </div>
+          <a href={`contact.html?pkg=${encodeURIComponent(pkg.title)}`} className="btn-primary" onClick={e => { e.preventDefault(); setActiveModal(null); setShowPopup(true); }} style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#5B5DE1', color:'#fff', padding:'14px 30px', borderRadius:10, fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:22, boxShadow:'0 0 28px rgba(91,93,225,0.4)', textDecoration:'none' }}>Book a Call →</a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── SECTION DIVIDER ──────────────────────────────────────────
+const SectionDivider = ({ cat }) => (
+  <div style={{ position:'relative', height:48, display:'flex', alignItems:'center', justifyContent:'center', overflow:'visible' }}>
+    <div style={{ position:'absolute', left:0, right:0, height:1, background:'linear-gradient(90deg, transparent 0%, rgba(91,93,225,0.35) 30%, rgba(157,95,224,0.35) 70%, transparent 100%)' }}/>
+    <div style={{ position:'relative', background:'#0C0821', padding:'0 20px', display:'flex', alignItems:'center', gap:10 }}>
+      <div style={{ width:6, height:6, borderRadius:'50%', background:'#5B5DE1', boxShadow:'0 0 10px 3px rgba(91,93,225,0.6)' }}/>
+      <span style={{ fontSize:10, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.5)', fontFamily:'Space Grotesk,sans-serif', fontWeight:600 }}>{cat}</span>
+      <div style={{ width:6, height:6, borderRadius:'50%', background:'#9D5FE0', boxShadow:'0 0 10px 3px rgba(157,95,224,0.6)' }}/>
+    </div>
+  </div>
+);
+
+// ── SCROLL PROGRESS ──────────────────────────────────────────
+const ScrollProgress = () => {
+  const [pct, setPct] = React.useState(0);
+  React.useEffect(() => {
+    const fn = () => { const el = document.documentElement; setPct(el.scrollTop / (el.scrollHeight - el.clientHeight) * 100); };
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+
+  const size = 72;
+  const stroke = 5;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const dash = circ * pct / 100;
+  const gap  = circ - dash;
+
+  return (
+    <div style={{ position:'fixed', right:20, top:'50%', transform:'translateY(-50%)', zIndex:50, display:'flex', flexDirection:'column', alignItems:'center', gap:0 }}>
+      <svg width={size} height={size} style={{ transform:'rotate(-90deg)', filter:`drop-shadow(0 0 ${6 + pct * 0.12}px rgba(91,93,225,${0.4 + pct * 0.005}))`, transition:'filter 0.3s' }}>
+        {/* track */}
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={stroke}/>
+        {/* fill */}
+        <circle cx={size/2} cy={size/2} r={r} fill="none"
+          stroke="url(#pg)" strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${gap}`}
+          style={{ transition:'stroke-dasharray 0.15s linear' }}/>
+        <defs>
+          <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#5B5DE1"/>
+            <stop offset="100%" stopColor="#9D5FE0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      {/* number overlaid on the ring */}
+      <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', textAlign:'center', pointerEvents:'none' }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:22, color:'#fff', lineHeight:1 }}>{Math.round(pct)}</div>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:9, color:'rgba(255,255,255,0.4)', letterSpacing:1 }}>%</div>
+      </div>
+    </div>
+  );
+};
+
+// ── MAIN PAGE ────────────────────────────────────────────────
+const PreBuiltPage = () => {
+  const [activeModal, setActiveModal] = React.useState(null);
+  const [activeCat, setActiveCat] = React.useState('Sales');
+  const [showPopup, setShowPopup] = React.useState(false);
+
+  const scrollTo = (cat) => {
+    setActiveCat(cat);
+    const el = document.getElementById(`cat-${cat.replace(/\s+/g,'-')}`);
+    if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+  };
+
+  React.useEffect(() => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) setActiveCat(e.target.dataset.cat); });
+    }, { threshold: 0.3 });
+    CATS.forEach(cat => { const el = document.getElementById(`cat-${cat.replace(/\s+/g,'-')}`); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div>
+      <SiteNav active="Pre-Built"/>
+      <ScrollProgress/>
+
+      {/* HERO */}
+      <section style={{ background:'linear-gradient(180deg,#0C0821 0%,#0d0c20 100%)', padding:'140px 32px 80px', textAlign:'center' }}>
+        <div style={{ maxWidth:680, margin:'0 auto' }}>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.1s both' }}><SLabel>Done-For-You Automation</SLabel></div>
+          <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+            <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(42px,5vw,68px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>Pre-Built AI Automations</h1>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.4s both' }}>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.52)', lineHeight:1.75, marginBottom:36 }}>Proven packages designed for common business bottlenecks. Faster to launch than fully custom work. Everything included to get you running.</p>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.55s both', display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
+            {CATS.map(c => (
+              <button key={c} onClick={() => scrollTo(c)} style={{ fontFamily:'Inter,sans-serif', fontWeight:500, fontSize:22, padding:'8px 18px', borderRadius:20, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.6)', cursor:'pointer', transition:'all 0.2s' }}>{c}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STICKY JUMP NAV */}
+      <div style={{ position:'sticky', top:70, zIndex:40, background:'rgba(12,8,33,0.95)', backdropFilter:'blur(12px)', borderBottom:'1px solid rgba(255,255,255,0.07)', padding:'12px 32px' }}>
+        <div style={{ maxWidth:900, margin:'0 auto', display:'flex', gap:8, flexWrap:'wrap' }}>
+          {CATS.map(c => (
+            <button key={c} onClick={() => scrollTo(c)} className="jump-pill" style={{
+              fontFamily:'Inter,sans-serif', fontWeight:500, fontSize:22,
+              padding:'7px 18px', borderRadius:20, border:'none', cursor:'pointer',
+              background: activeCat === c ? 'rgba(91,93,225,0.2)' : 'transparent',
+              color: activeCat === c ? '#fff' : 'rgba(255,255,255,0.45)',
+              borderBottom: activeCat === c ? '2px solid #5B5DE1' : '2px solid transparent',
+              transition:'all 0.2s',
+            }}>{c}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* CATEGORIES */}
+      {CATS.map((cat, ci) => (
+        <React.Fragment key={cat}>
+        <section id={`cat-${cat.replace(/\s+/g,'-')}`} data-cat={cat}
+          style={{ background: ci % 2 === 0 ? '#0C0821' : '#0d0c20', padding:'80px 32px' }}>
+          <div style={{ maxWidth:900, margin:'0 auto' }}>
+            <div style={{ marginBottom:40 }}>
+              <SLabel>{cat.toUpperCase()}</SLabel>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(30px,3.5vw,42px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', marginBottom:10 }}>{cat} Automations</h2>
+              <p style={{ fontSize:19, color:'rgba(255,255,255,0.4)', maxWidth:520 }}>
+                {cat==='Sales' && 'Capture more leads, follow up faster, and keep your pipeline moving without the manual work.'}
+                {cat==='Marketing' && 'Run smarter campaigns, request reviews, and track performance without the daily admin.'}
+                {cat==='Admin' && 'Automate the paperwork, approvals, and reminders that quietly eat your day.'}
+                {cat==='Operations' && 'Keep jobs moving, teams informed, and operations running without the owner in the middle.'}
+                {cat==='Outside the Box' && 'Creative AI-powered automations that go beyond the standard categories.'}
+              </p>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
+              {PACKAGES[cat].map((pkg, i) => <PkgCard key={i} pkg={pkg} onOpen={setActiveModal}/>)}
+            </div>
+          </div>
+        </section>
+        {ci < CATS.length - 1 && (
+          <div style={{ background: ci % 2 === 0 ? '#0d0c20' : '#0C0821', paddingBottom:0 }}>
+            <SectionDivider cat={CATS[ci + 1]}/>
+          </div>
+        )}
+        </React.Fragment>
+      ))}
+
+      {/* HOW IT WORKS LINK */}
+      <section style={{ background:'#0C0821', padding:'40px 32px', borderTop:'1px solid rgba(255,255,255,0.06)', textAlign:'center' }}>
+        <div style={{ maxWidth:600, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'center', gap:20, flexWrap:'wrap' }}>
+          <span style={{ fontSize:17, color:'rgba(255,255,255,0.4)' }}>Want to understand our delivery process?</span>
+          <SBtn href="how-it-works.html" variant="ghost" style={{ fontSize:16, padding:'10px 24px' }}>See How It Works →</SBtn>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section style={{ background:'linear-gradient(135deg,#0a0818,#0e0d30)', padding:'100px 32px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+        {/* background radial */}
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 50%, rgba(91,93,225,0.18), transparent 65%)', pointerEvents:'none' }}/>
+        {/* orbiting dots */}
+        <div style={{ position:'absolute', left:'50%', top:'50%', width:0, height:0, pointerEvents:'none' }}>
+          <div style={{ position:'absolute', width:8, height:8, borderRadius:'50%', background:'#5B5DE1', boxShadow:'0 0 12px 4px rgba(91,93,225,0.8)', animation:'orbitDot 6s linear infinite' }}/>
+          <div style={{ position:'absolute', width:6, height:6, borderRadius:'50%', background:'#9D5FE0', boxShadow:'0 0 10px 3px rgba(157,95,224,0.7)', animation:'orbitDot2 9s linear infinite' }}/>
+          <div style={{ position:'absolute', width:5, height:5, borderRadius:'50%', background:'#A8D8F4', boxShadow:'0 0 8px 3px rgba(168,216,244,0.6)', animation:'orbitDot3 7s linear infinite' }}/>
+        </div>
+        {/* expanding rings */}
+        <div style={{ position:'absolute', left:'50%', top:'50%', width:300, height:300, borderRadius:'50%', border:'1px solid rgba(91,93,225,0.4)', animation:'ringPulse 3.5s ease-out infinite', pointerEvents:'none' }}/>
+        <div style={{ position:'absolute', left:'50%', top:'50%', width:300, height:300, borderRadius:'50%', border:'1px solid rgba(157,95,224,0.3)', animation:'ringPulse2 3.5s ease-out 1.75s infinite', pointerEvents:'none' }}/>
+        {/* card */}
+        <div style={{ maxWidth:600, margin:'0 auto', position:'relative', background:'rgba(13,12,32,0.85)', border:'1px solid rgba(91,93,225,0.35)', borderRadius:24, padding:'56px 48px', backdropFilter:'blur(12px)', animation:'breathGlow 4s ease-in-out infinite' }}>
+          <SLabel color="#A8D8F4">Not Sure Which Package?</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(30px,3.5vw,46px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', marginBottom:16 }}>Book a Call and We'll Point You in the Right Direction</h2>
+          <p style={{ fontSize:22, color:'rgba(255,255,255,0.52)', marginBottom:36, lineHeight:1.75 }}>Tell us where your biggest bottleneck is. We'll match you to the right package — or tell you if a custom solution makes more sense.</p>
+          <a onClick={e => { e.preventDefault(); setShowPopup(true); }} href="#" style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'16px 42px', borderRadius:12, fontSize:19, fontWeight:700, fontFamily:'Space Grotesk,sans-serif', color:'#fff', textDecoration:'none', background:'linear-gradient(90deg,#5B5DE1,#9D5FE0,#5B5DE1)', backgroundSize:'300% auto', animation:'shimmerBtn 3s linear infinite', boxShadow:'0 0 40px rgba(91,93,225,0.5)', border:'none', cursor:'pointer' }}>Book a Call →</a>
+        </div>
+      </section>
+
+      <SiteFooter/>
+      {activeModal && <Modal pkg={activeModal} onClose={() => setActiveModal(null)}/>}
+      {showPopup && <BookingPopup onClose={() => setShowPopup(false)}/>}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<PreBuiltPage/>);
+</script>
+<div id="root"></div>
+</body>
+</html>
