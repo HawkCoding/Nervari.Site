@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who We Are — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}::selection{background:rgba(91,93,225,0.4)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(91,93,225,0.65)!important;transform:translateY(-1px)}
+.val-card{transition:transform 0.22s,border-color 0.22s}
+.val-card:hover{transform:translateY(-4px);border-color:rgba(91,93,225,0.35)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+const WhoPage = () => (
+  <div>
+    <SiteNav active="Who We Are"/>
+
+    {/* HERO / INTRO */}
+    <section style={{ background:'#0C0821', padding:'140px 32px 96px', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 70% 30%, rgba(91,93,225,0.14), transparent 55%)', pointerEvents:'none' }}/>
+      <div style={{ maxWidth:840, margin:'0 auto', position:'relative' }}>
+        <div style={{ animation:'fadeInUp 0.6s ease 0.1s both' }}><SLabel>Our Story</SLabel></div>
+        <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+          <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(42px,5.5vw,70px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:28, textWrap:'balance' }}>
+            We saw the problem.<br/>
+            <span style={{ background:'linear-gradient(90deg,#5B5DE1,#9D5FE0)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>So we built the fix.</span>
+          </h1>
+        </div>
+        <div style={{ animation:'fadeInUp 0.6s ease 0.4s both', maxWidth:620 }}>
+          <p style={{ fontSize:22, color:'rgba(255,255,255,0.55)', lineHeight:1.8 }}>Too many businesses are slowed down by systems built for someone else. We built Nervari to change that.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* EMPATHY BLOCK */}
+    <section style={{ background:'#0d0c20', padding:'96px 32px' }}>
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:56, alignItems:'center' }}>
+          <div>
+            <SLabel color="#f87171">The Reality</SLabel>
+            <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(24px,3vw,36px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', lineHeight:1.2, marginBottom:20 }}>Running a Business Shouldn't Mean Drowning in Admin</h2>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.5)', lineHeight:1.8, marginBottom:20 }}>Most small business owners aren't short on ideas or effort. They're short on time — because too much of it goes toward tasks that should be handled automatically.</p>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.5)', lineHeight:1.8 }}>Chasing invoices. Following up on quotes. Re-entering data. Coordinating handoffs. These aren't growth activities — they're operational drag. And most businesses are carrying far more of it than they realise.</p>
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+            {[
+              { label:'Admin overload', stat:'6 hrs', desc:'per day lost to tasks that could be automated' },
+              { label:'Revenue leakage', stat:'R10k+', desc:'per month from slow follow-ups and missed leads' },
+              { label:'Owner dependency', stat:'High', desc:'business stalls the moment the owner steps back' },
+              { label:'Team frustration', stat:'Common', desc:'good people doing repetitive manual work' },
+            ].map(item => (
+              <div key={item.label} style={{ display:'flex', gap:16, padding:'16px 18px', background:'rgba(220,38,38,0.05)', border:'1px solid rgba(220,38,38,0.14)', borderRadius:12, alignItems:'center' }}>
+                <div style={{ flexShrink:0, textAlign:'center', minWidth:56 }}>
+                  <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:22, color:'#fca5a5' }}>{item.stat}</div>
+                </div>
+                <div>
+                  <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:600, fontSize:19, color:'#f87171', marginBottom:2 }}>{item.label}</div>
+                  <div style={{ fontSize:19, color:'rgba(255,255,255,0.42)', lineHeight:1.5 }}>{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* HOW WE WORK */}
+    <section style={{ background:'#0C0821', padding:'96px 32px' }}>
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:52 }}>
+          <SLabel>Our Approach</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,3.5vw,40px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>Practical. Not Overly Technical.</h2>
+          <p style={{ fontSize:22, color:'rgba(255,255,255,0.4)', marginTop:12, maxWidth:480, margin:'12px auto 0' }}>We don't lead with technology. We lead with your problem — and then find the right tool to solve it.</p>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:20 }}>
+          {[
+            { icon:'👂', title:'We Listen First', desc:'Before we recommend anything, we understand how your business works — the good parts and the friction points.' },
+            { icon:'🗺️', title:'We Map Before We Build', desc:'We document the current workflow, find where it breaks, and design the right fix before any building starts.' },
+            { icon:'🎓', title:'We Train and Hand Over', desc:'Every delivery includes training. Your team knows how to use it, check it, and get the most out of it.' },
+            { icon:'📞', title:'We Stay Available', desc:'After launch, we don\'t disappear. We\'re available when you have questions or need to adjust something.' },
+          ].map(v => (
+            <div key={v.title} className="val-card" style={{ padding:'28px', background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:16 }}>
+              <div style={{ fontSize:28, marginBottom:14 }}>{v.icon}</div>
+              <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22, color:'#fff', marginBottom:10 }}>{v.title}</div>
+              <div style={{ fontSize:19, color:'rgba(255,255,255,0.48)', lineHeight:1.7 }}>{v.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* TECH WITHOUT OVERWHELM */}
+    <section style={{ background:'linear-gradient(135deg,#0f0d22,#131458)', padding:'96px 32px' }}>
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:56, alignItems:'center' }}>
+          {/* visual placeholder */}
+          <div style={{ borderRadius:20, background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.18)', height:280, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:12 }}>
+            <div style={{ fontSize:48 }}>🤝</div>
+            <div style={{ fontFamily:'Inter,sans-serif', fontSize:19, color:'rgba(255,255,255,0.45)', letterSpacing:1 }}>[ team / process imagery ]</div>
+          </div>
+          <div>
+            <SLabel>Our Promise</SLabel>
+            <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(24px,3vw,36px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', lineHeight:1.2, marginBottom:16 }}>Technology Shouldn't Feel Intimidating</h2>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.52)', lineHeight:1.8, marginBottom:16 }}>A lot of people running small businesses didn't grow up inside digital systems. Modern tools can feel overwhelming — and the last thing you need is more complexity on your plate.</p>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.52)', lineHeight:1.8 }}>We are the translator. We take the technical side off your desk, and hand you back something that just works — clearly, reliably, and without requiring you to understand what's happening behind the scenes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* TRUST / TOOLS */}
+    <section style={{ background:'#0C0821', padding:'80px 32px' }}>
+      <div style={{ maxWidth:840, margin:'0 auto', textAlign:'center' }}>
+        <SLabel>How We Deliver</SLabel>
+        <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(24px,3vw,36px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', marginBottom:12 }}>Tools and Standards We Work To</h2>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.35)', marginBottom:44 }}>[ Tool logos — placeholder for layout. Replace with real assets before launch. ]</p>
+        <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap' }}>
+          {['Workflow Automation','AI Integration','CRM Connection','WhatsApp API','Custom Build'].map(t => (
+            <div key={t} style={{ padding:'14px 24px', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.09)', borderRadius:10, fontFamily:'Inter,sans-serif', fontSize:22, fontWeight:500, color:'rgba(255,255,255,0.5)' }}>{t}</div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* CTA */}
+    <section style={{ background:'linear-gradient(135deg,#0d0c20,#131458)', padding:'96px 32px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%, rgba(91,93,225,0.22), transparent 65%)', pointerEvents:'none' }}/>
+      <div style={{ maxWidth:580, margin:'0 auto', position:'relative' }}>
+        <SLabel color="#A8D8F4">Work With Us</SLabel>
+        <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4.5vw,54px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:18, textWrap:'balance' }}>Ready to Remove the Drag from Your Business?</h2>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.46)', lineHeight:1.75, marginBottom:36 }}>Book a free call. We'll listen, understand what's slowing you down, and tell you honestly what we can do about it.</p>
+        <SBtn href="contact.html" variant="primary" style={{ fontSize:19, padding:'14px 38px' }}>Book a Call</SBtn>
+      </div>
+    </section>
+
+    <SiteFooter/>
+  </div>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<WhoPage/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

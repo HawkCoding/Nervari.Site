@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(91,93,225,0.4)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(91,93,225,0.65)!important;transform:translateY(-1px)}
+.btn-outline:hover{background:rgba(91,93,225,0.1)!important}
+.hov-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(91,93,225,0.2)!important}
+.hov-card{transition:transform 0.25s,box-shadow 0.25s}
+.faq-item:hover{border-color:rgba(91,93,225,0.3)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+// ── TWEAKS ────────────────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "manualTone": "muted",
+  "autoGlowLevel": "high"
+}/*EDITMODE-END*/;
+
+const MANUAL_PRESETS = {
+  muted:  { bg:'rgba(160,75,45,0.07)', border:'rgba(160,75,45,0.22)', label:'rgba(210,140,110,1)', value:'rgba(230,180,160,1)' },
+  amber:  { bg:'rgba(180,110,30,0.07)', border:'rgba(180,110,30,0.22)', label:'rgba(220,165,60,1)',  value:'rgba(240,200,110,1)' },
+  red:    { bg:'rgba(220,38,38,0.07)',  border:'rgba(220,38,38,0.22)',  label:'#f87171',             value:'#fca5a5' },
+};
+const AUTO_PRESETS = {
+  standard: { bg:'rgba(91,93,225,0.06)', border:'rgba(91,93,225,0.22)', shadow:'0 0 30px rgba(91,93,225,0.08)' },
+  high:     { bg:'rgba(91,93,225,0.12)', border:'rgba(91,93,225,0.38)', shadow:'0 0 56px rgba(91,93,225,0.22), inset 0 0 32px rgba(91,93,225,0.04)' },
+  vivid:    { bg:'linear-gradient(135deg,rgba(91,93,225,0.18),rgba(84,31,164,0.12))', border:'rgba(91,93,225,0.55)', shadow:'0 0 80px rgba(91,93,225,0.35), inset 0 0 40px rgba(91,93,225,0.06)' },
+};
+
+const TweaksPanel = ({ tweaks, setTweaks, visible }) => {
+  if (!visible) return null;
+  const update = (k, v) => { const next={...tweaks,[k]:v}; setTweaks(next); window.parent.postMessage({type:'__edit_mode_set_keys',edits:next},'*'); };
+  return (
+    <div style={{ position:'fixed', bottom:24, right:24, zIndex:9999, background:'#13102a', border:'1px solid rgba(91,93,225,0.4)', borderRadius:14, padding:22, width:280, boxShadow:'0 12px 40px rgba(0,0,0,0.5)', fontFamily:'Inter,sans-serif' }}>
+      <div style={{ fontSize:19, fontWeight:700, color:'#fff', marginBottom:18 }}>Tweaks</div>
+
+      <div style={{ marginBottom:18 }}>
+        <div style={{ fontSize:22, color:'rgba(255,255,255,0.4)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Manual Block Tone</div>
+        <div style={{ display:'flex', gap:8 }}>
+          {['muted','amber','red'].map(t => (
+            <button key={t} onClick={() => update('manualTone', t)} style={{ flex:1, padding:'7px 0', borderRadius:8, border:`1px solid ${tweaks.manualTone===t?'#5B5DE1':'rgba(255,255,255,0.12)'}`, background: tweaks.manualTone===t?'rgba(91,93,225,0.2)':'transparent', color: tweaks.manualTone===t?'#fff':'rgba(255,255,255,0.4)', fontSize:19, fontWeight:600, cursor:'pointer', textTransform:'capitalize' }}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div style={{ fontSize:22, color:'rgba(255,255,255,0.4)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Automated Block Glow</div>
+        <div style={{ display:'flex', gap:8 }}>
+          {['standard','high','vivid'].map(t => (
+            <button key={t} onClick={() => update('autoGlowLevel', t)} style={{ flex:1, padding:'7px 0', borderRadius:8, border:`1px solid ${tweaks.autoGlowLevel===t?'#5B5DE1':'rgba(255,255,255,0.12)'}`, background: tweaks.autoGlowLevel===t?'rgba(91,93,225,0.2)':'transparent', color: tweaks.autoGlowLevel===t?'#fff':'rgba(255,255,255,0.4)', fontSize:22, fontWeight:600, cursor:'pointer', textTransform:'capitalize' }}>{t}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── COMPARISON KPI CARD ───────────────────────────────────────
+const KpiCard = ({ label, value, sub, bad, mc }) => {
+  const m = mc || MANUAL_PRESETS.muted;
+  return (
+    <div style={{ padding:'18px 20px', borderRadius:12, background: bad ? m.bg : 'rgba(91,93,225,0.08)', border: `1px solid ${bad ? m.border : 'rgba(91,93,225,0.22)'}` }}>
+      <div style={{ fontSize:19, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color: bad ? m.label : '#5B5DE1', marginBottom:6 }}>{label}</div>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color: bad ? m.value : '#A8D8F4', marginBottom:4 }}>{value}</div>
+      {sub && <div style={{ fontSize:19, color:'rgba(255,255,255,0.4)', lineHeight:1.4 }}>{sub}</div>}
+    </div>
+  );
+};
+
+// ── STAT BLOCK ────────────────────────────────────────────────
+const StatBlock = ({ prefix='', suffix='%', target, label, note }) => {
+  const [val, ref] = useCounter(target);
+  return (
+    <div ref={ref} style={{ textAlign:'center', flex:1, padding:'20px 16px' }}>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:64, fontWeight:800, color:'#5B5DE1', lineHeight:1, letterSpacing:-2 }}>
+        {prefix}{val}{suffix}
+      </div>
+      <div style={{ fontFamily:'Inter,sans-serif', fontSize:22, color:'rgba(255,255,255,0.55)', marginTop:8, lineHeight:1.5 }}>{label}</div>
+      {note && <div style={{ fontFamily:'Inter,sans-serif', fontSize:19, color:'rgba(255,255,255,0.45)', marginTop:4, fontStyle:'italic' }}>{note}</div>}
+    </div>
+  );
+};
+
+// ── FAQ ITEM ──────────────────────────────────────────────────
+const FaqItem = ({ q, a }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="faq-item" onClick={() => setOpen(o => !o)} style={{
+      borderBottom:'1px solid rgba(255,255,255,0.08)', padding:'22px 0', cursor:'pointer',
+      transition:'border-color 0.2s',
+    }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:20 }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:19, fontWeight:600, color:'#fff' }}>{q}</div>
+        <div style={{ color:'#5B5DE1', fontSize:24, fontWeight:300, flexShrink:0, transition:'transform 0.2s', transform: open ? 'rotate(45deg)' : 'rotate(0)' }}>+</div>
+      </div>
+      {open && <div style={{ fontFamily:'Inter,sans-serif', fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginTop:14, animation:'fadeIn 0.2s ease' }}>{a}</div>}
+    </div>
+  );
+};
+
+// ── TYPE BUILDER ──────────────────────────────────────────────
+const TypeBuilder = ({ text, size = 14 }) => {
+  const [displayed, setDisplayed] = React.useState('');
+  const [done, setDone] = React.useState(false);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      let i = 0;
+      const tick = () => {
+        if (i > text.length) { setDone(true); return; }
+        setDisplayed(text.slice(0, i));
+        i++;
+        setTimeout(tick, 38);
+      };
+      setTimeout(tick, 300);
+    }, { threshold: 0.5 });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [text]);
+  return (
+    <div ref={ref} style={{ display:'inline-flex', alignItems:'center', gap:0, fontFamily:'Space Grotesk,sans-serif', fontSize:size, fontWeight:700, letterSpacing:3.5, textTransform:'uppercase', color:'#5B5DE1', marginBottom:18 }}>
+      <span>{displayed}</span>
+      {!done && <span style={{ display:'inline-block', width:2, height:'1.1em', background:'#5B5DE1', marginLeft:2, animation:'cursorBlink 0.7s step-end infinite', verticalAlign:'middle' }}/>}
+    </div>
+  );
+};
+
+// ── HOME PAGE ─────────────────────────────────────────────────
+const HomePage = ({ tweaks = TWEAK_DEFAULTS }) => {
+  const mc = MANUAL_PRESETS[tweaks.manualTone] || MANUAL_PRESETS.muted;
+  const ac = AUTO_PRESETS[tweaks.autoGlowLevel] || AUTO_PRESETS.high;
+  const [showPopup, setShowPopup] = React.useState(false);
+  return (
+  <div>
+    <SiteNav active="Home"/>
+
+    {/* ── HERO ────────────────────────────────────────────── */}
+    <section style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', background:'#0C0821' }}>
+      <NodeCanvas count={28}/>
+      {/* ambient glow */}
+      <div style={{ position:'absolute', top:'30%', left:'50%', transform:'translate(-50%,-50%)', width:700, height:500, background:'radial-gradient(ellipse, rgba(91,93,225,0.18) 0%, rgba(84,31,164,0.08) 50%, transparent 75%)', pointerEvents:'none' }}/>
+      <div style={{ position:'relative', zIndex:2, textAlign:'center', maxWidth:820, padding:'0 32px', paddingTop:70 }}>
+        <div>
+          <TypeBuilder text="AI Automation for Small Businesses" size={17}/>
+        </div>
+        <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+          <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(48px,6vw,80px)', fontWeight:800, lineHeight:1.1, letterSpacing:'-0.03em', color:'#fff', marginBottom:24, textWrap:'balance' }}>
+            Stop Leaving Money on the Table<br/>
+            <span style={{ background:'linear-gradient(90deg, #5B5DE1, #9D5FE0)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>with Manual Processes</span>
+          </h1>
+        </div>
+        <div style={{ animation:'fadeInUp 0.7s ease 0.4s both' }}>
+          <p style={{ fontSize:22, color:'rgba(255,255,255,0.58)', lineHeight:1.75, maxWidth:640, margin:'0 auto 36px', textWrap:'balance' }}>
+            Replace repetitive tasks, slow back-and-forths, and the daily admin pile-up with smart systems that save time, recover lost revenue, and let your business run smoother — without adding more to your plate.
+          </p>
+        </div>
+        <div style={{ animation:'fadeInUp 0.6s ease 0.55s both', display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap', alignItems:'center' }}>
+          <SBtn onClick={() => setShowPopup(true)} variant="primary" style={{ fontSize:19, padding:'15px 36px' }}>Book a Call</SBtn>
+          <SBtn href="pre-built.html" variant="ghost" style={{ fontSize:19 }}>See Solutions →</SBtn>
+        </div>
+        <div style={{ animation:'fadeInUp 0.6s ease 0.7s both', marginTop:20 }}>
+          <p style={{ fontSize:19, color:'rgba(255,255,255,0.45)', fontStyle:'italic' }}>Built for small businesses that need practical systems, not more software clutter.</p>
+        </div>
+        {/* trust strip */}
+        <div style={{ animation:'fadeInUp 0.6s ease 0.85s both', marginTop:56, paddingTop:32, borderTop:'1px solid rgba(255,255,255,0.07)' }}>
+          <p style={{ fontSize:14, letterSpacing:3, textTransform:'uppercase', color:'rgba(255,255,255,0.4)', marginBottom:20, fontWeight:600 }}>Trusted by businesses across</p>
+          <div style={{ display:'flex', justifyContent:'center', gap:12, flexWrap:'wrap' }}>
+            {['Retail','Professional Services','Trades','Healthcare','Hospitality'].map(l => (
+              <div key={l} style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:14, fontWeight:600, color:'rgba(255,255,255,0.65)', letterSpacing:0.5, padding:'7px 16px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:20 }}>{l}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* scroll nudge */}
+      <div style={{ position:'absolute', bottom:32, left:'50%', transform:'translateX(-50%)', display:'flex', flexDirection:'column', alignItems:'center', gap:6, animation:'pulse 2s infinite' }}>
+        <div style={{ width:1, height:40, background:'linear-gradient(to bottom, transparent, rgba(91,93,225,0.5))' }}/>
+        <div style={{ fontSize:19, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.2)' }}>Scroll</div>
+      </div>
+    </section>
+
+    {/* ── COMPARISON ─────────────────────────────────────── */}
+    <section style={{ background:'#0d0c20', padding:'96px 32px' }}>
+      <div style={{ maxWidth:1000, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:56 }}>
+          <SLabel>The Real Cost</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:700, letterSpacing:'-0.02em', color:'#fff', textWrap:'balance' }}>Manual vs. Automated — Side by Side</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', gap:24, alignItems:'stretch' }}>
+          {/* Manual */}
+          <div className="hov-card" style={{ background: mc.bg, border:`1px solid ${mc.border}`, borderRadius:20, padding:32 }}>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:19, fontWeight:700, letterSpacing:2, textTransform:'uppercase', color: mc.label, marginBottom:24 }}>❌ Manual Business</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              <KpiCard bad mc={mc} label="Daily Time Lost" value="4–6 hrs" sub="≈ R2,000–R3,000/day in owner time spent on tasks a system should handle"/>
+              <KpiCard bad mc={mc} label="Leads Falling Through" value="~23%" sub="of inbound enquiries never get followed up"/>
+              <KpiCard bad mc={mc} label="Revenue at Risk" value="R12k+" sub="per month from slow quotes and missed callbacks"/>
+              <KpiCard bad mc={mc} label="Owner Dependency" value="High" sub="business stops when the owner steps away"/>
+            </div>
+          </div>
+          {/* VS */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', padding:'0 12px' }}>
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
+              <div style={{ width:1, flex:1, minHeight:60, background:'linear-gradient(to bottom, transparent, rgba(91,93,225,0.4))' }}/>
+              <div style={{ width:52, height:52, borderRadius:'50%', background:'linear-gradient(135deg,#5B5DE1,#9D5FE0)', boxShadow:'0 0 28px rgba(91,93,225,0.7), 0 0 60px rgba(157,95,224,0.3)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:17, color:'#fff', letterSpacing:1, flexShrink:0 }}>VS</div>
+              <div style={{ width:1, flex:1, minHeight:60, background:'linear-gradient(to top, transparent, rgba(91,93,225,0.4))' }}/>
+            </div>
+          </div>
+          {/* Automated */}
+          <div className="hov-card" style={{ background: ac.bg, border:`1px solid ${ac.border}`, borderRadius:20, padding:32, boxShadow: ac.shadow }}>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:19, fontWeight:700, letterSpacing:2, textTransform:'uppercase', color:'#5B5DE1', marginBottom:24 }}>✓ Automated Business</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              <KpiCard label="Time Reclaimed" value="4–6 hrs" sub="back every day — enough to close 2–3 more deals or exit the daily admin loop"/>
+              <KpiCard label="Lead Follow-Up" value="100%" sub="every enquiry captured and actioned instantly"/>
+              <KpiCard label="Revenue Protected" value="R12k+" sub="per month from faster quotes and smart callbacks"/>
+              <KpiCard label="Owner Freed Up" value="Yes" sub="systems run whether you're in the office or not"/>
+            </div>
+          </div>
+        </div>
+        <p style={{ textAlign:'center', fontSize:22, color:'rgba(255,255,255,0.2)', marginTop:28, fontStyle:'italic' }}>Figures are illustrative directional estimates based on common client scenarios, not guaranteed outcomes.</p>
+      </div>
+    </section>
+
+    {/* ── WHAT WE OFFER ───────────────────────────────────── */}
+    <section style={{ background:'#0C0821', padding:'96px 32px' }}>
+      <div style={{ maxWidth:1000, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:56 }}>
+          <SLabel>How We Help</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:700, letterSpacing:'-0.02em', color:'#fff' }}>Two Ways to Remove the Drag</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:28 }}>
+          {/* Pre-Built */}
+          <div className="hov-card" style={{ borderRadius:20, border:'1px solid rgba(91,93,225,0.3)', background:'linear-gradient(135deg,rgba(91,93,225,0.12),rgba(84,31,164,0.06))', padding:'40px 36px', boxShadow:'0 0 40px rgba(91,93,225,0.1)' }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'rgba(91,93,225,0.2)', border:'1px solid rgba(91,93,225,0.4)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24, marginBottom:24 }}>⚡</div>
+            <h3 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color:'#fff', marginBottom:14 }}>Pre-Built Solutions</h3>
+            <p style={{ fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:28 }}>Done-for-you automation packages for the most common business bottlenecks. Fixed price, fast to launch, and everything you need to get running is included.</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:32 }}>
+              {['Fixed price — no surprises','Ready in days, not months','Includes setup call and support','Sales, Marketing, Admin, Ops'].map(f => (
+                <div key={f} style={{ display:'flex', gap:10, alignItems:'center' }}>
+                  <div style={{ width:18, height:18, borderRadius:'50%', background:'rgba(91,93,225,0.25)', border:'1px solid #5B5DE1', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, color:'#5B5DE1', flexShrink:0 }}>✓</div>
+                  <span style={{ fontSize:22, color:'rgba(255,255,255,0.6)' }}>{f}</span>
+                </div>
+              ))}
+            </div>
+            <SBtn href="pre-built.html" variant="primary">Browse Packages →</SBtn>
+          </div>
+          {/* Custom */}
+          <div className="hov-card" style={{ borderRadius:20, border:'1px solid rgba(255,255,255,0.09)', background:'rgba(255,255,255,0.03)', padding:'40px 36px' }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'rgba(157,95,224,0.15)', border:'1px solid rgba(157,95,224,0.3)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24, marginBottom:24 }}>🔧</div>
+            <h3 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color:'#fff', marginBottom:14 }}>Custom Solutions</h3>
+            <p style={{ fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:28 }}>When your problem doesn't fit a package, we map your workflow, build the right solution, and hand over something designed for the way your business actually works.</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:32 }}>
+              {['Built around your exact process','7-step structured build process','Train your team on handover','Ongoing support available'].map(f => (
+                <div key={f} style={{ display:'flex', gap:10, alignItems:'center' }}>
+                  <div style={{ width:18, height:18, borderRadius:'50%', background:'rgba(157,95,224,0.15)', border:'1px solid #9D5FE0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, color:'#9D5FE0', flexShrink:0 }}>✓</div>
+                  <span style={{ fontSize:22, color:'rgba(255,255,255,0.6)' }}>{f}</span>
+                </div>
+              ))}
+            </div>
+            <SBtn href="custom.html" variant="ghost">Solve My Bottleneck →</SBtn>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── STATS ───────────────────────────────────────────── */}
+    <section style={{ background:'linear-gradient(180deg,#0C0821 0%,#131458 50%,#0C0821 100%)', padding:'80px 32px', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 50%, rgba(91,93,225,0.12), transparent 70%)', pointerEvents:'none' }}/>
+      <div style={{ maxWidth:1000, margin:'0 auto', position:'relative' }}>
+        <div style={{ textAlign:'center', marginBottom:48 }}>
+          <SLabel color="rgba(168,216,244,0.6)">Market Evidence</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(24px,3vw,38px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>The Shift Is Already Happening</h2>
+        </div>
+        <div style={{ display:'flex', gap:0, flexWrap:'wrap', borderTop:'1px solid rgba(255,255,255,0.07)', borderBottom:'1px solid rgba(255,255,255,0.07)' }}>
+          <StatBlock target={78} label="of organisations report using AI in at least one business function" note="McKinsey, State of AI 2025"/>
+          <div style={{ width:1, background:'rgba(255,255,255,0.07)', alignSelf:'stretch' }}/>
+          <StatBlock target={66} label="of AI adopters reported increased productivity" note="PwC AI Agent Survey 2025"/>
+          <div style={{ width:1, background:'rgba(255,255,255,0.07)', alignSelf:'stretch' }}/>
+          <StatBlock target={57} label="of adopters reported measurable cost savings" note="PwC AI Agent Survey 2025"/>
+          <div style={{ width:1, background:'rgba(255,255,255,0.07)', alignSelf:'stretch' }}/>
+          <StatBlock prefix="+" target={25} label="revenue growth rate among top AI adopters" note="IBM AI in Action 2024"/>
+        </div>
+        <p style={{ textAlign:'center', fontSize:22, color:'rgba(255,255,255,0.2)', marginTop:20, fontStyle:'italic' }}>Directional market proof from published research — not guaranteed client results.</p>
+      </div>
+    </section>
+
+    {/* ── TESTIMONIALS ────────────────────────────────────── */}
+    <section style={{ background:'#0f0d22', padding:'96px 32px' }}>
+      <div style={{ maxWidth:1000, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:56 }}>
+          <SLabel>Client Results</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>What Businesses Are Saying</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:24 }}>
+          {[
+            { name:'Sarah K.', role:'Owner, Trades Business', quote:'We were losing jobs because follow-ups fell through the cracks. Now it all runs automatically and we\'ve reclaimed hours every week.' },
+            { name:'Marcus T.', role:'Operations Manager, Retail Group', quote:'The pre-built package was running in under a week. The setup call made it simple. I didn\'t need to understand the tech.' },
+            { name:'Lindi M.', role:'General Manager, Service Business', quote:'I was skeptical — but it just works. Quotes go out faster, reminders happen on time, and I\'m out of the admin loop.' },
+          ].map((t, i) => (
+            <div key={i} className="hov-card" style={{ borderRadius:16, border:'1px solid rgba(255,255,255,0.08)', background:'rgba(255,255,255,0.03)', padding:'32px 28px', position:'relative' }}>
+              <div style={{ position:'absolute', top:20, right:24, fontSize:19, fontFamily:'Inter,sans-serif', letterSpacing:1.5, color:'rgba(255,255,255,0.15)', textTransform:'uppercase', fontWeight:600 }}>Placeholder</div>
+              <div style={{ fontSize:28, color:'#5B5DE1', marginBottom:16, opacity:0.5 }}>"</div>
+              <p style={{ fontSize:19, color:'rgba(255,255,255,0.65)', lineHeight:1.75, marginBottom:24, fontStyle:'italic' }}>{t.quote}</p>
+              <div style={{ display:'flex', gap:12, alignItems:'center' }}>
+                <div style={{ width:36, height:36, borderRadius:'50%', background:'linear-gradient(135deg,#5B5DE1,#9D5FE0)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:22 }}>{t.name[0]}</div>
+                <div>
+                  <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:600, fontSize:22, color:'#fff' }}>{t.name}</div>
+                  <div style={{ fontSize:19, color:'rgba(255,255,255,0.35)' }}>{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ── FAQ TEASER ──────────────────────────────────────── */}
+    <section style={{ background:'#0C0821', padding:'96px 32px' }}>
+      <div style={{ maxWidth:720, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:48 }}>
+          <SLabel>Good Questions</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(28px,3.5vw,40px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>Honest Answers.</h2>
+        </div>
+        {[
+          { q:'How long does setup take?', a:'Pre-built solutions typically take less than a week from purchase to launch. Custom solutions vary by complexity but follow a clear 7-step process — you\'ll know the timeline before we start.' },
+          { q:'Do I need to be technical to use this?', a:'Not at all. We handle the build, run a setup call with you, and train your team on how to use the system. You don\'t need to understand what\'s happening behind the scenes.' },
+          { q:'What if I need something more than a pre-built package?', a:'That\'s what our Custom Solutions are for. You can start with a discovery call and we\'ll map out the right build for your specific workflow.' },
+        ].map((item, i) => <FaqItem key={i} {...item}/>)}
+        <div style={{ textAlign:'center', marginTop:40 }}>
+          <SBtn href="contact.html" variant="ghost">See all FAQs on the Contact page →</SBtn>
+        </div>
+      </div>
+    </section>
+
+    {/* ── FINAL CTA ───────────────────────────────────────── */}
+    <section style={{ background:'linear-gradient(135deg,#0d0c20,#131458)', padding:'96px 32px', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%, rgba(91,93,225,0.25), transparent 65%)', pointerEvents:'none' }}/>
+      <div style={{ position:'absolute', bottom:-60, left:'50%', transform:'translateX(-50%)', width:600, height:200, background:'radial-gradient(ellipse, rgba(84,31,164,0.2), transparent 70%)', pointerEvents:'none' }}/>
+      <div style={{ maxWidth:680, margin:'0 auto', textAlign:'center', position:'relative' }}>
+        <SLabel color="#A8D8F4">Ready to Start</SLabel>
+        <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>Stop Running the Business.<br/>Start Building It.</h2>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.5)', lineHeight:1.7, marginBottom:40 }}>Book a free call. We'll identify the biggest operational drag in your business and show you exactly what can be automated — and what it's worth.</p>
+        <SBtn onClick={() => setShowPopup(true)} variant="primary" style={{ fontSize:22, padding:'16px 42px' }}>Book a Call — It's Free</SBtn>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.45)', marginTop:16 }}>No pressure. No jargon. Just a straight conversation about your business.</p>
+      </div>
+    </section>
+
+    <SiteFooter/>
+    {showPopup && <BookingPopup onClose={() => setShowPopup(false)}/>}
+  </div>
+  );
+};
+
+const App = () => {
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+  const [tweaksVisible, setTweaksVisible] = React.useState(false);
+  React.useEffect(() => {
+    const fn = e => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksVisible(false);
+    };
+    window.addEventListener('message', fn);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', fn);
+  }, []);
+  return (
+    <>
+      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksVisible}/>
+      <HomePage tweaks={tweaks}/>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>
