@@ -1,25 +1,26 @@
-# CODING AGENTS: READ THIS FIRST
+# Nervari Website
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+Live website for [Nervari](https://nervari.co.za) — AI automation for South African small businesses.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+## Website
 
-## What you should do — IMPORTANT
+The production website files are in `docs/` and served via GitHub Pages.
 
-**Read the chat transcripts first.** There are 23 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+| Page | File |
+|---|---|
+| Home | `docs/index.html` |
+| Pre-Built Solutions | `docs/pre-built.html` |
+| Custom Solutions | `docs/custom.html` |
+| Who We Are | `docs/who-we-are.html` |
+| Contact | `docs/contact.html` |
+| Free Gift | `docs/free-gift.html` |
+| How It Works | `docs/how-it-works.html` |
+| Pre-Built Coming Soon | `docs/pre-built-coming-soon.html` |
 
-**Read `project/hifi/pre-built.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+## Stack
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+React 18 (CDN) + Babel standalone. No build step — static files only.
 
-## About the design files
+## Design Bundle
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
-
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
-
-## Bundle contents
-
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `N8N Workflow(Neura) (Remix)` project files (HTML prototypes, assets, components)
+The original design handoff files from Claude Design are in `project/hifi/` and `chats/`.
