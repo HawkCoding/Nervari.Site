@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Solutions — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0C0821;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+::selection{background:rgba(91,93,225,0.4)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.opt-btn{transition:all 0.18s;cursor:pointer;text-align:left}
+.opt-btn:hover{border-color:rgba(91,93,225,0.6)!important;background:rgba(91,93,225,0.1)!important}
+.opt-btn.selected{border-color:#5B5DE1!important;background:rgba(91,93,225,0.15)!important}
+input,textarea{outline:none;transition:border-color 0.2s}
+input:focus,textarea:focus{border-color:rgba(91,93,225,0.6)!important}
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+const TOTAL_STEPS = 5;
+
+const STEPS_META = [
+  { label: 'Your Business' },
+  { label: 'The Bottleneck' },
+  { label: 'Context' },
+  { label: 'Your Goals' },
+  { label: 'Contact' },
+];
+
+// ── Option Button ──────────────────────────────────────────
+const OptBtn = ({ label, sub, selected, onClick, icon }) => (
+  <button className={`opt-btn${selected ? ' selected' : ''}`} onClick={onClick} style={{
+    width:'100%', background: selected ? 'rgba(91,93,225,0.15)' : 'rgba(255,255,255,0.03)',
+    border: `1.5px solid ${selected ? '#5B5DE1' : 'rgba(255,255,255,0.1)'}`,
+    borderRadius:12, padding:'16px 20px', display:'flex', alignItems:'center', gap:14,
+  }}>
+    {icon && <span style={{ width:32, height:32, borderRadius:8, border:'1px solid rgba(255,255,255,0.18)', display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'rgba(255,255,255,0.6)' }}><LineIcon name={icon} size={16}/></span>}
+    <div style={{ flex:1 }}>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:600, fontSize:16, color:'#fff', marginBottom: sub ? 3 : 0 }}>{label}</div>
+      {sub && <div style={{ fontSize:13, color:'rgba(255,255,255,0.42)', lineHeight:1.4 }}>{sub}</div>}
+    </div>
+    <div style={{ width:20, height:20, borderRadius:'50%', border:`2px solid ${selected ? '#5B5DE1' : 'rgba(255,255,255,0.2)'}`, background: selected ? '#5B5DE1' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+      {selected && <div style={{ width:8, height:8, borderRadius:'50%', background:'#fff' }}/>}
+    </div>
+  </button>
+);
+
+// ── Progress Bar ───────────────────────────────────────────
+const ProgressBar = ({ step }) => (
+  <div style={{ width:'100%', height:3, background:'rgba(255,255,255,0.07)', borderRadius:99, overflow:'hidden' }}>
+    <div style={{ height:'100%', width:`${(step / TOTAL_STEPS) * 100}%`, background:'linear-gradient(90deg,#5B5DE1,#9D5FE0)', borderRadius:99, transition:'width 0.45s cubic-bezier(0.4,0,0.2,1)' }}/>
+  </div>
+);
+
+// ── Step Wrapper ──────────────────────────────────────────
+const StepWrap = ({ children }) => (
+  <div style={{ animation:'scaleIn 0.3s ease both' }}>{children}</div>
+);
+
+// ── Main App ───────────────────────────────────────────────
+const App = () => {
+  const [step, setStep] = React.useState(0); // 0 = hero
+  const [answers, setAnswers] = React.useState({
+    businessType: null,
+    bottleneck: null,
+    teamSize: null,
+    tried: [],
+    goal: null,
+    name: '', email: '', phone: '', detail: '',
+  });
+  const [submitted, setSubmitted] = React.useState(false);
+  const [dir, setDir] = React.useState(1);
+
+  const goTo = (n) => { setDir(n > step ? 1 : -1); setStep(n); };
+  const next = () => goTo(step + 1);
+  const back = () => goTo(step - 1);
+  const set = (k, v) => setAnswers(a => ({ ...a, [k]: v }));
+  const toggle = (k, v) => setAnswers(a => {
+    const arr = a[k]; return { ...a, [k]: arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v] };
+  });
+
+  const canContinue = () => {
+    if (step === 1) return !!answers.businessType;
+    if (step === 2) return !!answers.bottleneck;
+    if (step === 3) return !!answers.teamSize;
+    if (step === 4) return !!answers.goal;
+    if (step === 5) return answers.name && answers.email && answers.phone;
+    return true;
+  };
+
+  const submit = e => { e.preventDefault(); if (canContinue()) setSubmitted(true); };
+
+  const inputStyle = {
+    width:'100%', background:'rgba(255,255,255,0.05)',
+    border:'1.5px solid rgba(255,255,255,0.12)', borderRadius:10,
+    padding:'14px 16px', fontFamily:'Inter,sans-serif', fontSize:16, color:'#fff',
+  };
+
+  return (
+    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column' }}>
+
+      {/* ── Top Bar ── */}
+      <div style={{ padding:'20px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom: step > 0 ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent' }}>
+        <a href="index.html" style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:22, color:'#fff', textDecoration:'none', letterSpacing:-0.5 }}>Nervari</a>
+        {step > 0 && step <= TOTAL_STEPS && !submitted && (
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <div style={{ fontSize:13, color:'rgba(255,255,255,0.35)', fontWeight:500 }}>Step {step} of {TOTAL_STEPS}</div>
+            <div style={{ width:120 }}><ProgressBar step={step}/></div>
+          </div>
+        )}
+        <a href="custom.html" style={{ fontSize:14, color:'rgba(255,255,255,0.35)', textDecoration:'none' }}>Learn more →</a>
+      </div>
+
+      {/* ── Content ── */}
+      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px' }}>
+        <div style={{ width:'100%', maxWidth:580 }}>
+
+          {/* HERO / INTRO */}
+          {step === 0 && (
+            <div style={{ animation:'fadeUp 0.5s ease both', textAlign:'center' }}>
+              <div style={{ display:'inline-block', fontFamily:'Inter,sans-serif', fontSize:12, fontWeight:600, letterSpacing:3, textTransform:'uppercase', color:'#5B5DE1', marginBottom:20, padding:'6px 14px', border:'1px solid rgba(91,93,225,0.3)', borderRadius:20 }}>Custom Solutions</div>
+              <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(36px,5vw,56px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>
+                Tell us what's<br/>
+                <span style={{ background:'linear-gradient(90deg,#5B5DE1,#9D5FE0)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>slowing you down.</span>
+              </h1>
+              <p style={{ fontSize:18, color:'rgba(255,255,255,0.5)', lineHeight:1.75, marginBottom:40, maxWidth:420, margin:'0 auto 40px', textWrap:'balance' }}>5 quick questions. We'll map the right automation for your business — built around how you actually work.</p>
+              <button onClick={next} style={{ background:'#5B5DE1', color:'#fff', border:'none', borderRadius:12, padding:'16px 40px', fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:18, cursor:'pointer', boxShadow:'0 0 40px rgba(91,93,225,0.5)', transition:'all 0.2s' }}>Get Started →</button>
+              <div style={{ marginTop:16, fontSize:13, color:'rgba(255,255,255,0.25)' }}>Takes about 2 minutes. No commitment.</div>
+            </div>
+          )}
+
+          {/* STEP 1 — Business Type */}
+          {step === 1 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Question 1</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>What type of business do you run?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>Pick the one that fits best.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {[
+                  { v:'trades', label:'Trades / Contractors', sub:'Plumbing, electrical, construction, maintenance', icon:'wrench' },
+                  { v:'retail', label:'Retail / E-commerce', sub:'Physical store, online shop, or both', icon:'bag' },
+                  { v:'services', label:'Professional Services', sub:'Consultants, agencies, finance, legal, medical', icon:'briefcase' },
+                  { v:'hospitality', label:'Hospitality / Food', sub:'Restaurant, accommodation, events', icon:'utensils' },
+                  { v:'other', label:'Something Else', sub:'Tell us more at the end', icon:'asterisk' },
+                ].map(o => (
+                  <OptBtn key={o.v} label={o.label} sub={o.sub} icon={o.icon} selected={answers.businessType === o.v} onClick={() => { set('businessType', o.v); setTimeout(next, 200); }}/>
+                ))}
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 2 — Bottleneck */}
+          {step === 2 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Question 2</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>Where's the biggest drag right now?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>Pick the one that costs you the most.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {[
+                  { v:'leads', label:'Losing leads', sub:'Follow-ups falling through, slow responses, missed enquiries', icon:'trendDown' },
+                  { v:'admin', label:'Admin overload', sub:'Paperwork, invoices, reminders eating hours every day', icon:'clipboard' },
+                  { v:'ops', label:'Operations chaos', sub:'Jobs stalling, handoffs breaking, teams out of sync', icon:'gear' },
+                  { v:'reporting', label:'No visibility', sub:'I don\'t know what\'s happening until something breaks', icon:'search' },
+                  { v:'owner', label:'Everything runs through me', sub:'The business stops when I step away', icon:'link' },
+                ].map(o => (
+                  <OptBtn key={o.v} label={o.label} sub={o.sub} icon={o.icon} selected={answers.bottleneck === o.v} onClick={() => { set('bottleneck', o.v); setTimeout(next, 200); }}/>
+                ))}
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 3 — Team Size */}
+          {step === 3 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Question 3</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>How big is your team?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>Including yourself.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {[
+                  { v:'solo', label:'Just me', icon:'user' },
+                  { v:'small', label:'2–5 people', icon:'users' },
+                  { v:'medium', label:'6–20 people', icon:'building' },
+                  { v:'large', label:'20+ people', icon:'buildingTall' },
+                ].map(o => (
+                  <OptBtn key={o.v} label={o.label} icon={o.icon} selected={answers.teamSize === o.v} onClick={() => { set('teamSize', o.v); setTimeout(next, 200); }}/>
+                ))}
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 4 — Goal */}
+          {step === 4 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Question 4</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>What would feel like a win to you?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>What does success look like in 90 days?</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {[
+                  { v:'time', label:'Get my time back', sub:'Stop spending hours on tasks a system should handle', icon:'clock' },
+                  { v:'revenue', label:'Stop losing revenue', sub:'Capture more leads, quote faster, follow up reliably', icon:'dollar' },
+                  { v:'scale', label:'Be able to grow', sub:'Build something that works without me in every step', icon:'trendUp' },
+                  { v:'peace', label:'Less chaos', sub:'Clear visibility, fewer dropped balls, calmer operations', icon:'check' },
+                ].map(o => (
+                  <OptBtn key={o.v} label={o.label} sub={o.sub} icon={o.icon} selected={answers.goal === o.v} onClick={() => { set('goal', o.v); setTimeout(next, 200); }}/>
+                ))}
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 5 — Contact */}
+          {step === 5 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Last Step</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>Where should we reach you?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>We'll review your answers and come prepared.</p>
+              <form onSubmit={submit} style={{ display:'flex', flexDirection:'column', gap:14 }}>
+                <div>
+                  <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Your Name *</label>
+                  <input required value={answers.name} onChange={e => set('name', e.target.value)} placeholder="Full name" style={inputStyle}/>
+                </div>
+                <div>
+                  <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Email *</label>
+                  <input required type="email" value={answers.email} onChange={e => set('email', e.target.value)} placeholder="you@yourbusiness.com" style={inputStyle}/>
+                </div>
+                <div>
+                  <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Phone / WhatsApp *</label>
+                  <input required value={answers.phone} onChange={e => set('phone', e.target.value)} placeholder="+27 ..." style={inputStyle}/>
+                </div>
+                <div>
+                  <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Anything else? <span style={{ textTransform:'none', letterSpacing:0, fontWeight:400, opacity:0.55 }}>(optional)</span></label>
+                  <textarea value={answers.detail} onChange={e => set('detail', e.target.value)} rows={3} placeholder="More context about your situation..." style={{ ...inputStyle, resize:'vertical' }}/>
+                </div>
+                <button type="submit" style={{ background:'#5B5DE1', color:'#fff', border:'none', borderRadius:12, padding:'16px', fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:18, cursor:'pointer', boxShadow:'0 0 36px rgba(91,93,225,0.45)', marginTop:4, transition:'all 0.2s' }}>Book My Call →</button>
+                <div style={{ textAlign:'center', fontSize:13, color:'rgba(255,255,255,0.2)' }}>No commitment. We'll confirm within 1 business day.</div>
+              </form>
+            </StepWrap>
+          )}
+
+          {/* SUBMITTED */}
+          {submitted && (
+            <div style={{ textAlign:'center', animation:'fadeUp 0.5s ease both', padding:'40px 0' }}>
+              <div style={{ width:72, height:72, borderRadius:'50%', background:'rgba(91,93,225,0.15)', border:'2px solid #5B5DE1', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', margin:'0 auto 28px', boxShadow:'0 0 40px rgba(91,93,225,0.3)' }}><LineIcon name="check" size={32} stroke={2}/></div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:32, fontWeight:800, color:'#fff', marginBottom:12 }}>You're all set.</h2>
+              <p style={{ fontSize:17, color:'rgba(255,255,255,0.5)', lineHeight:1.75, maxWidth:360, margin:'0 auto 32px' }}>We've got your answers. We'll review them and reach out within one business day to confirm your call.</p>
+              <div style={{ padding:'20px 24px', background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.2)', borderRadius:14, maxWidth:380, margin:'0 auto 28px', textAlign:'left' }}>
+                <div style={{ fontSize:12, letterSpacing:2.5, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:14, fontWeight:600 }}>Your Summary</div>
+                {[
+                  ['Business', { trades:'Trades/Contractors', retail:'Retail/E-commerce', services:'Professional Services', hospitality:'Hospitality/Food', other:'Other' }[answers.businessType]],
+                  ['Bottleneck', { leads:'Losing leads', admin:'Admin overload', ops:'Operations chaos', reporting:'No visibility', owner:'Owner dependency' }[answers.bottleneck]],
+                  ['Team', { solo:'Just me', small:'2–5 people', medium:'6–20 people', large:'20+ people' }[answers.teamSize]],
+                  ['Goal', { time:'Get time back', revenue:'Stop losing revenue', scale:'Build to scale', peace:'Less chaos' }[answers.goal]],
+                ].map(([k, v]) => v && (
+                  <div key={k} style={{ display:'flex', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid rgba(255,255,255,0.05)', fontSize:14 }}>
+                    <span style={{ color:'rgba(255,255,255,0.35)' }}>{k}</span>
+                    <span style={{ color:'#fff', fontWeight:500 }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+              <a href="index.html" style={{ color:'rgba(255,255,255,0.35)', fontSize:14, textDecoration:'none' }}>← Back to Nervari</a>
+            </div>
+          )}
+
+          {/* Nav buttons (steps 2–5) */}
+          {step >= 2 && step <= TOTAL_STEPS && !submitted && (
+            <div style={{ marginTop:28, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <button onClick={back} style={{ background:'none', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.45)', borderRadius:8, padding:'10px 20px', fontFamily:'Inter,sans-serif', fontSize:14, cursor:'pointer', transition:'all 0.2s' }}>← Back</button>
+              {step < TOTAL_STEPS && (
+                <button onClick={next} disabled={!canContinue()} style={{ background: canContinue() ? '#5B5DE1' : 'rgba(255,255,255,0.07)', color: canContinue() ? '#fff' : 'rgba(255,255,255,0.2)', border:'none', borderRadius:8, padding:'10px 24px', fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:14, cursor: canContinue() ? 'pointer' : 'not-allowed', transition:'all 0.2s' }}>Continue →</button>
+              )}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* ── Footer strip ── */}
+      {!submitted && (
+        <div style={{ padding:'16px 32px', borderTop:'1px solid rgba(255,255,255,0.05)', display:'flex', justifyContent:'center', gap:32 }}>
+          {['No commitment', 'Reviewed within 1 business day', 'Custom-built for your workflow'].map(t => (
+            <div key={t} style={{ fontSize:12, color:'rgba(255,255,255,0.22)', display:'flex', alignItems:'center', gap:6 }}>
+              <span style={{ color:'rgba(91,93,225,0.7)', display:'inline-flex' }}><LineIcon name="check" size={12} stroke={1.8}/></span>{t}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

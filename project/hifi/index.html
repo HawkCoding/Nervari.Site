@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(91,93,225,0.4)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(91,93,225,0.65)!important;transform:translateY(-1px)}
+.btn-outline:hover{background:rgba(91,93,225,0.1)!important}
+.hov-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(91,93,225,0.2)!important}
+.hov-card{transition:transform 0.25s,box-shadow 0.25s}
+.faq-item:hover{border-color:rgba(91,93,225,0.3)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes heroRingGlow{0%,100%{opacity:0.82}50%{opacity:1}}
+/* ── Money-on-the-table cinematic scene ──────────────────── */
+@keyframes mtSceneIntro{ 0%{opacity:0; transform:translate(-50%,-44%) scale(1.04)} 100%{opacity:1; transform:translate(-50%,-46%) scale(1)} }
+@keyframes mtHaloPulse{
+  0%,100% { opacity: .55; transform: scale(1); }
+  50%     { opacity: .9;  transform: scale(1.04); }
+}
+@keyframes mtPileBreathe{
+  0%,100% { filter: drop-shadow(0 0 28px rgba(91,93,225,0.32)) drop-shadow(0 0 70px rgba(157,95,224,0.18)); }
+  50%     { filter: drop-shadow(0 0 44px rgba(91,93,225,0.55)) drop-shadow(0 0 110px rgba(157,95,224,0.32)); }
+}
+@keyframes mtBillRise{
+  0%   { transform: translate(0,0) rotate(var(--r0)) scale(var(--s,1)); opacity: 0; }
+  8%   { opacity: var(--peak, .9); }
+  62%  { opacity: var(--peak, .9); }
+  100% { transform: translate(var(--dx,0), var(--dy,-540px)) rotate(var(--r1)) scale(calc(var(--s,1) * 0.55)); opacity: 0; }
+}
+@keyframes mtDustRise{
+  0%   { transform: translate(0,0); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(var(--dx,0), var(--dy,-380px)); opacity: 0; }
+}
+@keyframes mtTickerFloat{
+  0%   { transform: translate(0,0); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translate(8px, -78px); opacity: 0; }
+}
+@keyframes mtFloorPulse{
+  0%,100% { opacity: .35; transform: translateX(-50%) scaleX(1); }
+  50%     { opacity: .55; transform: translateX(-50%) scaleX(1.06); }
+}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+// ── TWEAKS ────────────────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "manualTone": "muted",
+  "autoGlowLevel": "high"
+}/*EDITMODE-END*/;
+
+const MANUAL_PRESETS = {
+  muted:  { bg:'rgba(160,75,45,0.07)', border:'rgba(160,75,45,0.22)', label:'rgba(210,140,110,1)', value:'rgba(230,180,160,1)' },
+  amber:  { bg:'rgba(180,110,30,0.07)', border:'rgba(180,110,30,0.22)', label:'rgba(220,165,60,1)',  value:'rgba(240,200,110,1)' },
+  red:    { bg:'rgba(220,38,38,0.07)',  border:'rgba(220,38,38,0.22)',  label:'#f87171',             value:'#fca5a5' },
+};
+const AUTO_PRESETS = {
+  standard: { bg:'rgba(91,93,225,0.06)', border:'rgba(91,93,225,0.22)', shadow:'0 0 30px rgba(91,93,225,0.08)' },
+  high:     { bg:'rgba(91,93,225,0.12)', border:'rgba(91,93,225,0.38)', shadow:'0 0 56px rgba(91,93,225,0.22), inset 0 0 32px rgba(91,93,225,0.04)' },
+  vivid:    { bg:'linear-gradient(135deg,rgba(91,93,225,0.18),rgba(84,31,164,0.12))', border:'rgba(91,93,225,0.55)', shadow:'0 0 80px rgba(91,93,225,0.35), inset 0 0 40px rgba(91,93,225,0.06)' },
+};
+
+const TweaksPanel = ({ tweaks, setTweaks, visible }) => {
+  if (!visible) return null;
+  const update = (k, v) => { const next={...tweaks,[k]:v}; setTweaks(next); window.parent.postMessage({type:'__edit_mode_set_keys',edits:next},'*'); };
+  return (
+    <div style={{ position:'fixed', bottom:24, right:24, zIndex:9999, background:'#13102a', border:'1px solid rgba(91,93,225,0.4)', borderRadius:14, padding:22, width:280, boxShadow:'0 12px 40px rgba(0,0,0,0.5)', fontFamily:'Inter,sans-serif' }}>
+      <div style={{ fontSize:19, fontWeight:700, color:'#fff', marginBottom:18 }}>Tweaks</div>
+
+      <div style={{ marginBottom:18 }}>
+        <div style={{ fontSize:22, color:'rgba(255,255,255,0.4)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Manual Block Tone</div>
+        <div style={{ display:'flex', gap:8 }}>
+          {['muted','amber','red'].map(t => (
+            <button key={t} onClick={() => update('manualTone', t)} style={{ flex:1, padding:'7px 0', borderRadius:8, border:`1px solid ${tweaks.manualTone===t?'#5B5DE1':'rgba(255,255,255,0.12)'}`, background: tweaks.manualTone===t?'rgba(91,93,225,0.2)':'transparent', color: tweaks.manualTone===t?'#fff':'rgba(255,255,255,0.4)', fontSize:19, fontWeight:600, cursor:'pointer', textTransform:'capitalize' }}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div style={{ fontSize:22, color:'rgba(255,255,255,0.4)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Automated Block Glow</div>
+        <div style={{ display:'flex', gap:8 }}>
+          {['standard','high','vivid'].map(t => (
+            <button key={t} onClick={() => update('autoGlowLevel', t)} style={{ flex:1, padding:'7px 0', borderRadius:8, border:`1px solid ${tweaks.autoGlowLevel===t?'#5B5DE1':'rgba(255,255,255,0.12)'}`, background: tweaks.autoGlowLevel===t?'rgba(91,93,225,0.2)':'transparent', color: tweaks.autoGlowLevel===t?'#fff':'rgba(255,255,255,0.4)', fontSize:22, fontWeight:600, cursor:'pointer', textTransform:'capitalize' }}>{t}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── COMPARISON KPI CARD ───────────────────────────────────────
+const KpiCard = ({ label, value, sub, bad, mc }) => {
+  const m = mc || MANUAL_PRESETS.muted;
+  return (
+    <div style={{ padding:'18px 20px', borderRadius:12, background: bad ? m.bg : 'rgba(91,93,225,0.08)', border: `1px solid ${bad ? m.border : 'rgba(91,93,225,0.22)'}` }}>
+      <div style={{ fontSize:19, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color: bad ? m.label : '#5B5DE1', marginBottom:6 }}>{label}</div>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color: bad ? m.value : '#A8D8F4', marginBottom:4 }}>{value}</div>
+      {sub && <div style={{ fontSize:19, color:'rgba(255,255,255,0.4)', lineHeight:1.4 }}>{sub}</div>}
+    </div>
+  );
+};
+
+// ── STAT BLOCK ────────────────────────────────────────────────
+const StatBlock = ({ prefix='', suffix='%', target, label, note }) => {
+  const [val, ref] = useCounter(target);
+  return (
+    <div ref={ref} style={{ textAlign:'center', flex:1, padding:'20px 16px' }}>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:64, fontWeight:800, color:'#5B5DE1', lineHeight:1, letterSpacing:-2 }}>
+        {prefix}{val}{suffix}
+      </div>
+      <div style={{ fontFamily:'Inter,sans-serif', fontSize:22, color:'rgba(255,255,255,0.55)', marginTop:8, lineHeight:1.5 }}>{label}</div>
+      {note && <div style={{ fontFamily:'Inter,sans-serif', fontSize:19, color:'rgba(255,255,255,0.45)', marginTop:4, fontStyle:'italic' }}>{note}</div>}
+    </div>
+  );
+};
+
+// ── FAQ ITEM ──────────────────────────────────────────────────
+const FaqItem = ({ q, a }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="faq-item" onClick={() => setOpen(o => !o)} style={{
+      borderBottom:'1px solid rgba(255,255,255,0.08)', padding:'22px 0', cursor:'pointer',
+      transition:'border-color 0.2s',
+    }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:20 }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:19, fontWeight:600, color:'#fff' }}>{q}</div>
+        <div style={{ color:'#5B5DE1', fontSize:24, fontWeight:300, flexShrink:0, transition:'transform 0.2s', transform: open ? 'rotate(45deg)' : 'rotate(0)' }}>+</div>
+      </div>
+      {open && <div style={{ fontFamily:'Inter,sans-serif', fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginTop:14, animation:'fadeIn 0.2s ease' }}>{a}</div>}
+    </div>
+  );
+};
+
+// ── TYPE BUILDER ──────────────────────────────────────────────
+const TypeBuilder = ({ text, size = 14 }) => {
+  const [displayed, setDisplayed] = React.useState('');
+  const [done, setDone] = React.useState(false);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      let i = 0;
+      const tick = () => {
+        if (i > text.length) { setDone(true); return; }
+        setDisplayed(text.slice(0, i));
+        i++;
+        setTimeout(tick, 38);
+      };
+      setTimeout(tick, 300);
+    }, { threshold: 0.5 });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [text]);
+  return (
+    <div ref={ref} style={{ display:'inline-flex', alignItems:'center', gap:0, fontFamily:'Space Grotesk,sans-serif', fontSize:size, fontWeight:700, letterSpacing:3.5, textTransform:'uppercase', color:'#5B5DE1', marginBottom:18 }}>
+      <span>{displayed}</span>
+      {!done && <span style={{ display:'inline-block', width:2, height:'1.1em', background:'#5B5DE1', marginLeft:2, animation:'cursorBlink 0.7s step-end infinite', verticalAlign:'middle' }}/>}
+    </div>
+  );
+};
+
+// ── MONEY-ON-THE-TABLE — cinematic, premium ──────────────────
+// One beautiful, static composition: the full pile of money on the
+// table, lit with a warm spotlight. Bills slowly RISE off the pile
+// and drift away — money literally evaporating off the table.
+// A faint stream of small "$" tickers floats up beside it, like
+// dollars dissolving into the ether. Ambient breathing glow.
+const RisingBill = ({ b }) => (
+  <div
+    aria-hidden
+    style={{
+      position:'absolute',
+      left: `${b.x}%`,
+      bottom: `${b.y}%`,
+      width: 38,
+      height: 22,
+      pointerEvents:'none',
+      animation: `mtBillRise ${b.dur}s cubic-bezier(.36,.05,.42,1) ${b.delay}s infinite`,
+      '--dx': `${b.dx}px`,
+      '--dy': `${b.dy}px`,
+      '--r0': `${b.r0}deg`,
+      '--r1': `${b.r1}deg`,
+      '--s': b.s,
+      '--peak': b.peak,
+      opacity: 0,
+      willChange: 'transform, opacity',
+    }}
+  >
+    <svg viewBox="0 0 38 22" width="38" height="22" style={{display:'block', overflow:'visible'}}>
+      <defs>
+        <filter id={`mtGlow${b.id}`}>
+          <feGaussianBlur stdDeviation="0.6"/>
+        </filter>
+      </defs>
+      {/* bill outline */}
+      <rect x="1.5" y="2.5" width="35" height="17" rx="1.2"
+        fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="1.4"
+        strokeLinejoin="round"
+        style={{filter:'drop-shadow(0 0 4px rgba(255,255,255,0.45))'}}/>
+      {/* inner band */}
+      <rect x="4" y="5" width="30" height="12" rx="0.6"
+        fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="0.8"/>
+      {/* $ */}
+      <text x="19" y="15" textAnchor="middle"
+        fontFamily="Space Grotesk, sans-serif" fontWeight="700" fontSize="10"
+        fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth="0.9">$</text>
+    </svg>
+  </div>
+);
+
+const DustMote = ({ d }) => (
+  <div
+    aria-hidden
+    style={{
+      position:'absolute',
+      left:`${d.x}%`, bottom:`${d.y}%`,
+      width:3, height:3, borderRadius:'50%',
+      background:'rgba(200,210,255,0.85)',
+      boxShadow:'0 0 6px rgba(120,140,255,0.7)',
+      pointerEvents:'none',
+      animation:`mtDustRise ${d.dur}s linear ${d.delay}s infinite`,
+      '--dx':`${d.dx}px`, '--dy':`${d.dy}px`,
+      opacity:0,
+    }}
+  />
+);
+
+const MoneyTableScene = () => {
+  // Bills evaporating off the pile. x/y are % within the scene box.
+  // The pile occupies roughly x:25..75, y:30..72 of the box.
+  const bills = React.useMemo(() => ([
+    { id:0, x:38, y:54, delay:0.0,  dur:6.2, dx: 18, dy:-420, r0:-6,  r1: 18, s:1.0,  peak:.95 },
+    { id:1, x:52, y:60, delay:1.4,  dur:6.8, dx:-22, dy:-460, r0: 8,  r1:-22, s:0.85, peak:.85 },
+    { id:2, x:46, y:64, delay:2.6,  dur:5.8, dx: 34, dy:-380, r0:-10, r1: 12, s:0.7,  peak:.75 },
+    { id:3, x:58, y:50, delay:3.8,  dur:7.2, dx: -8, dy:-500, r0: 4,  r1:-18, s:0.9,  peak:.9  },
+    { id:4, x:42, y:58, delay:5.0,  dur:6.4, dx: 26, dy:-440, r0:-14, r1: 24, s:0.75, peak:.8  },
+    { id:5, x:62, y:56, delay:6.4,  dur:7.0, dx:-34, dy:-420, r0: 12, r1:-30, s:0.95, peak:.9  },
+    { id:6, x:36, y:62, delay:7.8,  dur:6.6, dx: 14, dy:-460, r0: -4, r1: 16, s:0.8,  peak:.85 },
+  ]), []);
+
+  const dust = React.useMemo(() => Array.from({length: 14}, (_, i) => ({
+    id:i,
+    x: 30 + Math.random()*42,
+    y: 40 + Math.random()*22,
+    delay: Math.random() * 6,
+    dur: 4.5 + Math.random() * 3.5,
+    dx: (Math.random()-0.5) * 60,
+    dy: -240 - Math.random() * 220,
+  })), []);
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, pointerEvents: 'none',
+      zIndex: 1, overflow: 'hidden',
+    }}>
+      {/* Scene anchored ~22% from the left */}
+      <div style={{
+        position: 'absolute',
+        left: '22%',
+        top: '50%',
+        width: 'min(40vw, 520px)',
+        aspectRatio: '1086 / 1448',
+        animation: 'mtSceneIntro 1.4s cubic-bezier(.22,.7,.2,1) 0.8s both',
+      }}>
+        {/* Warm spotlight halo — sits behind the pile, breathing pulse */}
+        <div style={{
+          position:'absolute',
+          inset:'-20% -28% -10% -28%',
+          background:'radial-gradient(ellipse at 50% 60%, rgba(120,110,255,0.32) 0%, rgba(91,93,225,0.18) 24%, rgba(84,31,164,0.10) 48%, transparent 72%)',
+          filter:'blur(6px)',
+          animation:'mtHaloPulse 7s ease-in-out infinite',
+          pointerEvents:'none',
+        }}/>
+
+        {/* Volumetric light cone from above — premium spotlight feel */}
+        <div style={{
+          position:'absolute',
+          left:'50%', top:'-30%',
+          transform:'translateX(-50%)',
+          width:'90%', height:'85%',
+          background:'linear-gradient(to bottom, rgba(180,170,255,0.18) 0%, rgba(120,110,220,0.10) 30%, rgba(91,93,225,0.04) 60%, transparent 100%)',
+          clipPath:'polygon(34% 0%, 66% 0%, 92% 100%, 8% 100%)',
+          filter:'blur(8px)',
+          mixBlendMode:'screen',
+          pointerEvents:'none',
+        }}/>
+
+        {/* The pile — single beautiful asset, breathing glow */}
+        <div style={{
+          position:'absolute', inset:0,
+          mixBlendMode:'screen',
+          animation:'mtPileBreathe 6s ease-in-out infinite',
+        }}>
+          <img
+            src="assets/table-4.png"
+            alt=""
+            draggable="false"
+            style={{
+              position:'absolute', inset:0,
+              width:'100%', height:'100%',
+              objectFit:'contain',
+              opacity: 0.92,
+              userSelect:'none',
+            }}/>
+        </div>
+
+        {/* Floor reflection — pile shadow on the ground beneath */}
+        <div style={{
+          position:'absolute',
+          left:'50%', bottom:'2%',
+          width:'78%', height:'18px',
+          transform:'translateX(-50%)',
+          background:'radial-gradient(ellipse at center, rgba(91,93,225,0.55) 0%, rgba(91,93,225,0.18) 40%, transparent 75%)',
+          filter:'blur(8px)',
+          animation:'mtFloorPulse 6s ease-in-out infinite',
+          pointerEvents:'none',
+        }}/>
+
+        {/* Rising bills — money evaporating off the pile */}
+        <div style={{ position:'absolute', inset:0, pointerEvents:'none' }}>
+          {bills.map(b => <RisingBill key={b.id} b={b}/>)}
+        </div>
+
+        {/* Dust motes drifting up alongside the bills */}
+        <div style={{ position:'absolute', inset:0, pointerEvents:'none', mixBlendMode:'screen' }}>
+          {dust.map(d => <DustMote key={d.id} d={d}/>)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── HERO CANVAS ───────────────────────────────────────────────
+const HeroCanvas = () => {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let raf, t = 0;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ── Brain-shaped polygon constellation nodes ──
+    // Nodes approximate the outline + interior of a brain silhouette
+    const LOGO_NODES_REL = [
+      // top crown
+      [0.38, 0.04],[0.52, 0.02],[0.65, 0.07],[0.75, 0.15],[0.80, 0.26],
+      // right lobe upper
+      [0.82, 0.38],[0.78, 0.50],[0.82, 0.60],[0.76, 0.70],
+      // right lobe lower
+      [0.65, 0.76],[0.54, 0.80],[0.50, 0.88],[0.44, 0.92],
+      // centre bottom (stem)
+      [0.38, 0.88],[0.32, 0.92],[0.26, 0.88],
+      // left lobe lower
+      [0.16, 0.78],[0.08, 0.68],[0.06, 0.56],
+      // left lobe upper
+      [0.10, 0.44],[0.06, 0.32],[0.12, 0.20],[0.22, 0.10],[0.30, 0.05],
+      // interior fill nodes
+      [0.38, 0.20],[0.52, 0.18],[0.64, 0.26],[0.70, 0.40],[0.66, 0.54],
+      [0.54, 0.60],[0.40, 0.62],[0.28, 0.58],[0.20, 0.44],[0.24, 0.30],
+      [0.36, 0.38],[0.50, 0.36],[0.58, 0.44],[0.44, 0.50],
+      // centre divider nodes (medial groove)
+      [0.38, 0.46],[0.38, 0.60],[0.38, 0.72],
+    ];
+
+    // ── wave particles ──
+    const PARTICLE_COUNT = 80;
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      x: Math.random(),
+      y: 0.55 + Math.random() * 0.45,
+      size: 0.6 + Math.random() * 1.6,
+      speed: 0.00012 + Math.random() * 0.00022,
+      phase: Math.random() * Math.PI * 2,
+      color: Math.random() > 0.5 ? 'blue' : 'purple',
+      opacity: 0.15 + Math.random() * 0.5,
+    }));
+
+    // ── scattered background star-dots ──
+    const STARS = Array.from({ length: 120 }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: 0.4 + Math.random() * 1.1,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.005 + Math.random() * 0.015,
+      color: Math.random() > 0.6 ? 'blue' : 'purple',
+    }));
+
+    const draw = () => {
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // ── deep dark background ──
+      const bg = ctx.createRadialGradient(W * 0.38, H * 0.45, 0, W * 0.38, H * 0.5, W * 0.72);
+      bg.addColorStop(0, '#0d0b2a');
+      bg.addColorStop(0.5, '#080620');
+      bg.addColorStop(1, '#040314');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // ── logo ring center: far left ──
+      const cx = W * 0.24, cy = H * 0.50;
+      const ringR = Math.min(W, H) * 0.26;
+
+      // ── pulsing outer glow behind ring ──
+      const glowPulse = 0.7 + 0.3 * Math.sin(t * 0.018);
+      const outerGlow = ctx.createRadialGradient(cx, cy, ringR * 0.3, cx, cy, ringR * 1.6);
+      outerGlow.addColorStop(0, `rgba(91,93,225,${0.18 * glowPulse})`);
+      outerGlow.addColorStop(0.5, `rgba(120,40,200,${0.10 * glowPulse})`);
+      outerGlow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = outerGlow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR * 1.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // ── neon ring (blue outer, purple inner) ──
+      const ringPulse = 0.85 + 0.15 * Math.sin(t * 0.022);
+
+      // Blue ring (outer)
+      ctx.save();
+      ctx.shadowBlur = 28 * ringPulse;
+      ctx.shadowColor = '#4af0ff';
+      ctx.strokeStyle = `rgba(74,200,255,${0.88 * ringPulse})`;
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Purple ring (inner, slightly smaller)
+      ctx.save();
+      ctx.shadowBlur = 22 * ringPulse;
+      ctx.shadowColor = '#b040ff';
+      ctx.strokeStyle = `rgba(168,60,255,${0.75 * ringPulse})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR * 0.93, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // ── clip polygon logo to circle interior ──
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR * 0.88, 0, Math.PI * 2);
+      ctx.clip();
+
+      // map brain-nodes into canvas space inside ring
+      const logoW = ringR * 1.45, logoH = ringR * 1.45;
+      const logoX = cx - logoW * 0.50, logoY = cy - logoH * 0.50;
+      const nodes = LOGO_NODES_REL.map(([rx, ry]) => ({
+        x: logoX + rx * logoW,
+        y: logoY + ry * logoH,
+      }));
+
+      // edges: connect nearby nodes (distance threshold)
+      const EDGE_THRESH = ringR * 0.58;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          const d = Math.hypot(dx, dy);
+          if (d < EDGE_THRESH) {
+            const alpha = (1 - d / EDGE_THRESH) * 0.55;
+            ctx.save();
+            ctx.strokeStyle = `rgba(100,200,255,${alpha})`;
+            ctx.lineWidth = 0.9;
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = 'rgba(80,180,255,0.4)';
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+
+      // node dots
+      nodes.forEach((n, idx) => {
+        const pulse = 0.7 + 0.3 * Math.sin(t * 0.025 + idx * 0.7);
+        const r = Math.max(0.1, 3.2 * pulse);
+        // glow halo
+        const haloR = Math.max(0.1, r * 4);
+        const ng = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, haloR);
+        ng.addColorStop(0, `rgba(120,220,255,${0.35 * pulse})`);
+        ng.addColorStop(1, 'rgba(120,220,255,0)');
+        ctx.fillStyle = ng;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, haloR, 0, Math.PI * 2);
+        ctx.fill();
+        // bright core dot
+        ctx.save();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#77DAFB';
+        ctx.fillStyle = `rgba(190,240,255,${0.9 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      ctx.restore(); // end clip
+
+      // ── energy waves (bottom-left flowing curves) ──
+      const waveColors = [
+        { r:91, g:93, b:225, alpha:0.18 },
+        { r:120, g:40, b:200, alpha:0.14 },
+        { r:74, g:180, b:255, alpha:0.10 },
+      ];
+      waveColors.forEach((wc, wi) => {
+        ctx.save();
+        ctx.strokeStyle = `rgba(${wc.r},${wc.g},${wc.b},${wc.alpha + 0.04 * Math.sin(t * 0.012 + wi)})`;
+        ctx.lineWidth = 1.5 + wi * 0.5;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `rgba(${wc.r},${wc.g},${wc.b},0.3)`;
+        ctx.beginPath();
+        const yBase = H * (0.72 + wi * 0.07);
+        const amp = H * (0.06 + wi * 0.02);
+        const freq = 0.006 + wi * 0.001;
+        const phaseOff = t * (0.008 + wi * 0.003) + wi * 1.2;
+        for (let px = 0; px <= W; px += 3) {
+          const py = yBase + amp * Math.sin(px * freq + phaseOff) + (amp * 0.4) * Math.sin(px * freq * 1.7 + phaseOff * 0.8);
+          if (px === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // ── scattered particles (wave region) ──
+      particles.forEach(p => {
+        p.x = (p.x + p.speed) % 1;
+        const px = p.x * W;
+        const pyBase = p.y * H;
+        const py = pyBase + 18 * Math.sin(px * 0.009 + t * 0.01 + p.phase);
+        const pulse = 0.6 + 0.4 * Math.sin(t * 0.02 + p.phase);
+        const [r, g, b] = p.color === 'blue' ? [74, 180, 255] : [168, 60, 255];
+        ctx.save();
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = `rgba(${r},${g},${b},0.6)`;
+        ctx.fillStyle = `rgba(${r},${g},${b},${p.opacity * Math.abs(pulse)})`;
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(0.1, p.size), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // ── background star field ──
+      STARS.forEach(s => {
+        const px = s.x * W, py = s.y * H;
+        const pulse = 0.4 + 0.6 * Math.abs(Math.sin(t * s.speed + s.phase));
+        const [r, g, b] = s.color === 'blue' ? [140, 210, 255] : [200, 140, 255];
+        ctx.fillStyle = `rgba(${r},${g},${b},${0.15 + 0.25 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(0.1, s.r * pulse), 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      t++;
+      raf = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return (
+    <canvas ref={ref} style={{
+      position: 'absolute', inset: 0,
+      width: '100%', height: '100%',
+      pointerEvents: 'none', zIndex: 0,
+    }}/>
+  );
+};
+
+// ── HOME PAGE ─────────────────────────────────────────────────
+const HomePage = ({ tweaks = TWEAK_DEFAULTS }) => {
+  const mc = MANUAL_PRESETS[tweaks.manualTone] || MANUAL_PRESETS.muted;
+  const ac = AUTO_PRESETS[tweaks.autoGlowLevel] || AUTO_PRESETS.high;
+  const [showPopup, setShowPopup] = React.useState(false);
+  return (
+  <div>
+    <SiteNav active="Home"/>
+
+    {/* ── HERO ────────────────────────────────────────────── */}
+    <section style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'flex-start', justifyContent:'center', overflow:'hidden', background:'#060518', paddingTop:96, paddingBottom:56 }}>
+      <NodeCanvas count={28}/>
+      {/* ambient glow */}
+      <div style={{ position:'absolute', top:'30%', left:'50%', transform:'translate(-50%,-50%)', width:700, height:500, background:'radial-gradient(ellipse, rgba(91,93,225,0.18) 0%, rgba(84,31,164,0.08) 50%, transparent 75%)', pointerEvents:'none' }}/>
+      <div style={{ position:'relative', zIndex:2, textAlign:'center', maxWidth:820, width:'100%', padding:'0 32px' }}>
+        <div>
+          <TypeBuilder text="AI Automation for Small Businesses" size={17}/>
+        </div>
+        <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+          <div style={{ marginBottom:24 }}>
+            <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(48px,6vw,80px)', fontWeight:800, lineHeight:1.1, letterSpacing:'-0.03em', color:'#fff', marginBottom:0, textWrap:'balance' }}>
+              Stop Leaving Money on the Table
+            </h1>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(48px,6vw,80px)', fontWeight:800, lineHeight:1.1, letterSpacing:'-0.03em', background:'linear-gradient(90deg, #5B5DE1, #9D5FE0)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', whiteSpace:'nowrap' }}>
+              with Manual Processes
+            </div>
+          </div>
+        </div>
+        <div style={{ animation:'fadeInUp 0.7s ease 0.4s both' }}>
+          <p style={{ fontSize:22, color:'rgba(255,255,255,0.58)', lineHeight:1.75, maxWidth:640, margin:'0 auto 36px', textWrap:'balance' }}>
+            Replace repetitive tasks, slow back-and-forths, and the daily admin pile-up with smart systems that save time, recover lost revenue, and let your business run smoother — without adding more to your plate.
+          </p>
+        </div>
+        <div style={{ animation:'fadeInUp 0.6s ease 0.55s both', display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap', alignItems:'center' }}>
+          <SBtn onClick={() => setShowPopup(true)} variant="primary" style={{ fontSize:19, padding:'15px 36px' }}>Book a Call</SBtn>
+          <SBtn href="pre-built.html" variant="ghost" style={{ fontSize:19 }}>See Solutions →</SBtn>
+        </div>
+        <div style={{ animation:'fadeInUp 0.6s ease 0.7s both', marginTop:20 }}>
+          <p style={{ fontSize:19, color:'rgba(255,255,255,0.45)', fontStyle:'italic' }}>Built for small businesses that need practical systems, not more software clutter.</p>
+        </div>
+        {/* trust strip */}
+        <div style={{ animation:'fadeInUp 0.6s ease 0.85s both', marginTop:56, paddingTop:32, borderTop:'1px solid rgba(255,255,255,0.07)' }}>
+          <p style={{ fontSize:14, letterSpacing:3, textTransform:'uppercase', color:'rgba(255,255,255,0.4)', marginBottom:20, fontWeight:600 }}>Trusted by businesses across</p>
+          <div style={{ display:'flex', justifyContent:'center', gap:12, flexWrap:'wrap' }}>
+            {['Retail','Professional Services','Trades','Healthcare','Hospitality'].map(l => (
+              <div key={l} style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:14, fontWeight:600, color:'rgba(255,255,255,0.65)', letterSpacing:0.5, padding:'7px 16px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:20 }}>{l}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    {/* ── COMPARISON ─────────────────────────────────────── */}
+    <section style={{ background:'#0d0c20', padding:'96px 32px' }}>
+      <div style={{ maxWidth:1000, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:56 }}>
+          <SLabel>The Real Cost</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:700, letterSpacing:'-0.02em', color:'#fff', textWrap:'balance' }}>Manual vs. Automated — Side by Side</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', gap:24, alignItems:'stretch' }}>
+          {/* Manual */}
+          <div className="hov-card" style={{ background: mc.bg, border:`1px solid ${mc.border}`, borderRadius:20, padding:32 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, fontFamily:'Space Grotesk,sans-serif', fontSize:19, fontWeight:700, letterSpacing:2, textTransform:'uppercase', color: mc.label, marginBottom:24 }}><span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:24, height:24, borderRadius:'50%', border:'1.5px solid currentColor', color:'currentColor' }}><LineIcon name="xmark" size={12} stroke={2}/></span>Manual Business</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              <KpiCard bad mc={mc} label="Daily Time Lost" value="4–6 hrs" sub="≈ R2,000–R3,000/day in owner time spent on tasks a system should handle"/>
+              <KpiCard bad mc={mc} label="Leads Falling Through" value="~23%" sub="of inbound enquiries never get followed up"/>
+              <KpiCard bad mc={mc} label="Revenue at Risk" value="R12k+" sub="per month from slow quotes and missed callbacks"/>
+              <KpiCard bad mc={mc} label="Owner Dependency" value="High" sub="business stops when the owner steps away"/>
+            </div>
+          </div>
+          {/* VS */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', padding:'0 12px' }}>
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
+              <div style={{ width:1, flex:1, minHeight:60, background:'linear-gradient(to bottom, transparent, rgba(91,93,225,0.4))' }}/>
+              <div style={{ width:52, height:52, borderRadius:'50%', background:'linear-gradient(135deg,#5B5DE1,#9D5FE0)', boxShadow:'0 0 28px rgba(91,93,225,0.7), 0 0 60px rgba(157,95,224,0.3)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:17, color:'#fff', letterSpacing:1, flexShrink:0 }}>VS</div>
+              <div style={{ width:1, flex:1, minHeight:60, background:'linear-gradient(to top, transparent, rgba(91,93,225,0.4))' }}/>
+            </div>
+          </div>
+          {/* Automated */}
+          <div className="hov-card" style={{ background: ac.bg, border:`1px solid ${ac.border}`, borderRadius:20, padding:32, boxShadow: ac.shadow }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, fontFamily:'Space Grotesk,sans-serif', fontSize:19, fontWeight:700, letterSpacing:2, textTransform:'uppercase', color:'#5B5DE1', marginBottom:24 }}><span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:24, height:24, borderRadius:'50%', border:'1.5px solid currentColor', color:'currentColor' }}><LineIcon name="check" size={12} stroke={2}/></span>Automated Business</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              <KpiCard label="Time Reclaimed" value="4–6 hrs" sub="back every day — enough to close 2–3 more deals or exit the daily admin loop"/>
+              <KpiCard label="Lead Follow-Up" value="100%" sub="every enquiry captured and actioned instantly"/>
+              <KpiCard label="Revenue Protected" value="R12k+" sub="per month from faster quotes and smart callbacks"/>
+              <KpiCard label="Owner Freed Up" value="Yes" sub="systems run whether you're in the office or not"/>
+            </div>
+          </div>
+        </div>
+        <p style={{ textAlign:'center', fontSize:22, color:'rgba(255,255,255,0.2)', marginTop:28, fontStyle:'italic' }}>Figures are illustrative directional estimates based on common client scenarios, not guaranteed outcomes.</p>
+      </div>
+    </section>
+
+    {/* ── WHAT WE OFFER ───────────────────────────────────── */}
+    <section style={{ background:'#0C0821', padding:'96px 32px' }}>
+      <div style={{ maxWidth:1000, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:56 }}>
+          <SLabel>How We Help</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:700, letterSpacing:'-0.02em', color:'#fff' }}>Two Ways to Remove the Drag</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:28 }}>
+          {/* Pre-Built */}
+          <div className="hov-card" style={{ borderRadius:20, border:'1px solid rgba(91,93,225,0.3)', background:'linear-gradient(135deg,rgba(91,93,225,0.12),rgba(84,31,164,0.06))', padding:'40px 36px', boxShadow:'0 0 40px rgba(91,93,225,0.1)' }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'transparent', border:'1px solid rgba(255,255,255,0.18)', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.55)', marginBottom:24 }}><LineIcon name="bolt" size={22}/></div>
+            <h3 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color:'#fff', marginBottom:14 }}>Pre-Built Solutions</h3>
+            <p style={{ fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:28 }}>Done-for-you automation packages for the most common business bottlenecks. Fixed price, fast to launch, and everything you need to get running is included.</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:32 }}>
+              {['Fixed price — no surprises','Ready in days, not months','Includes setup call and support','Sales, Marketing, Admin, Ops'].map(f => (
+                <div key={f} style={{ display:'flex', gap:10, alignItems:'center' }}>
+                  <span style={{ width:18, height:18, borderRadius:'50%', border:'1px solid rgba(255,255,255,0.35)', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.55)', flexShrink:0 }}><LineIcon name="check" size={10} stroke={2}/></span>
+                  <span style={{ fontSize:22, color:'rgba(255,255,255,0.6)' }}>{f}</span>
+                </div>
+              ))}
+            </div>
+            <SBtn href="pre-built.html" variant="primary">Browse Packages →</SBtn>
+          </div>
+          {/* Custom */}
+          <div className="hov-card" style={{ borderRadius:20, border:'1px solid rgba(255,255,255,0.09)', background:'rgba(255,255,255,0.03)', padding:'40px 36px' }}>
+            <div style={{ width:48, height:48, borderRadius:12, background:'transparent', border:'1px solid rgba(255,255,255,0.18)', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.55)', marginBottom:24 }}><LineIcon name="wrench" size={22}/></div>
+            <h3 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:24, fontWeight:700, color:'#fff', marginBottom:14 }}>Custom Solutions</h3>
+            <p style={{ fontSize:19, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:28 }}>When your problem doesn't fit a package, we map your workflow, build the right solution, and hand over something designed for the way your business actually works.</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:32 }}>
+              {['Built around your exact process','7-step structured build process','Train your team on handover','Ongoing support available'].map(f => (
+                <div key={f} style={{ display:'flex', gap:10, alignItems:'center' }}>
+                  <span style={{ width:18, height:18, borderRadius:'50%', border:'1px solid rgba(255,255,255,0.35)', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.55)', flexShrink:0 }}><LineIcon name="check" size={10} stroke={2}/></span>
+                  <span style={{ fontSize:22, color:'rgba(255,255,255,0.6)' }}>{f}</span>
+                </div>
+              ))}
+            </div>
+            <SBtn href="custom.html" variant="ghost">Solve My Bottleneck →</SBtn>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── STATS ───────────────────────────────────────────── */}
+    <section style={{ background:'linear-gradient(180deg,#0C0821 0%,#131458 50%,#0C0821 100%)', padding:'80px 32px', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 50%, rgba(91,93,225,0.12), transparent 70%)', pointerEvents:'none' }}/>
+      <div style={{ maxWidth:1000, margin:'0 auto', position:'relative' }}>
+        <div style={{ textAlign:'center', marginBottom:48 }}>
+          <SLabel color="rgba(168,216,244,0.6)">Market Evidence</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(24px,3vw,38px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>The Shift Is Already Happening</h2>
+        </div>
+        <div style={{ display:'flex', gap:0, flexWrap:'wrap', borderTop:'1px solid rgba(255,255,255,0.07)', borderBottom:'1px solid rgba(255,255,255,0.07)' }}>
+          <StatBlock target={78} label="of organisations report using AI in at least one business function" note="McKinsey, State of AI 2025"/>
+          <div style={{ width:1, background:'rgba(255,255,255,0.07)', alignSelf:'stretch' }}/>
+          <StatBlock target={66} label="of AI adopters reported increased productivity" note="PwC AI Agent Survey 2025"/>
+          <div style={{ width:1, background:'rgba(255,255,255,0.07)', alignSelf:'stretch' }}/>
+          <StatBlock target={57} label="of adopters reported measurable cost savings" note="PwC AI Agent Survey 2025"/>
+          <div style={{ width:1, background:'rgba(255,255,255,0.07)', alignSelf:'stretch' }}/>
+          <StatBlock prefix="+" target={25} label="revenue growth rate among top AI adopters" note="IBM AI in Action 2024"/>
+        </div>
+        <p style={{ textAlign:'center', fontSize:22, color:'rgba(255,255,255,0.2)', marginTop:20, fontStyle:'italic' }}>Directional market proof from published research — not guaranteed client results.</p>
+      </div>
+    </section>
+
+    {/* ── TESTIMONIALS ────────────────────────────────────── */}
+    <section style={{ background:'#0f0d22', padding:'96px 32px' }}>
+      <div style={{ maxWidth:1000, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:56 }}>
+          <SLabel>Client Results</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>What Businesses Are Saying</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:24 }}>
+          {[
+            { industry:'Real Estate', quote:'What you built for me saves me three hours a week — and it was so simple to get going. Honestly, thank you.' },
+            { industry:'Hospitality', quote:'This is so cool. I can\'t believe I waited this long to adopt technology like this.' },
+            { industry:'Professional Services', quote:'I can\'t wait to see what we implement next and what it will do for the business. The first one already paid for itself.' },
+          ].map((t, i) => (
+            <div key={i} className="hov-card" style={{ borderRadius:16, border:'1px solid rgba(255,255,255,0.08)', background:'rgba(255,255,255,0.03)', padding:'32px 28px', position:'relative' }}>
+              <div style={{ fontSize:28, color:'#5B5DE1', marginBottom:16, opacity:0.5 }}>"</div>
+              <p style={{ fontSize:19, color:'rgba(255,255,255,0.78)', lineHeight:1.75, marginBottom:24, fontStyle:'italic' }}>{t.quote}</p>
+              <div style={{ display:'flex', gap:12, alignItems:'center', paddingTop:18, borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ width:34, height:34, borderRadius:8, background:'linear-gradient(135deg,rgba(91,93,225,0.25),rgba(157,95,224,0.18))', border:'1px solid rgba(91,93,225,0.35)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <LineIcon name="building" size={16} color="#9DA8FF" stroke={1.6}/>
+                </div>
+                <div>
+                  <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:600, fontSize:16, color:'rgba(255,255,255,0.85)', letterSpacing:0.2 }}>{t.industry}</div>
+                  <div style={{ fontSize:13, color:'rgba(255,255,255,0.35)', letterSpacing:1.4, textTransform:'uppercase', marginTop:2, fontWeight:500 }}>Verified Client</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ── FAQ TEASER ──────────────────────────────────────── */}
+    <section style={{ background:'#0C0821', padding:'96px 32px' }}>
+      <div style={{ maxWidth:720, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:48 }}>
+          <SLabel>Good Questions</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(28px,3.5vw,40px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>Honest Answers.</h2>
+        </div>
+        {[
+          { q:'How long does setup take?', a:'Pre-built solutions typically take less than a week from purchase to launch. Custom solutions vary by complexity but follow a clear 7-step process — you\'ll know the timeline before we start.' },
+          { q:'Do I need to be technical to use this?', a:'Not at all. We handle the build, run a setup call with you, and train your team on how to use the system. You don\'t need to understand what\'s happening behind the scenes.' },
+          { q:'What if I need something more than a pre-built package?', a:'That\'s what our Custom Solutions are for. You can start with a discovery call and we\'ll map out the right build for your specific workflow.' },
+        ].map((item, i) => <FaqItem key={i} {...item}/>)}
+        <div style={{ textAlign:'center', marginTop:40 }}>
+          <SBtn href="contact.html" variant="ghost">See all FAQs on the Contact page →</SBtn>
+        </div>
+      </div>
+    </section>
+
+    {/* ── FINAL CTA ───────────────────────────────────────── */}
+    <section style={{ background:'linear-gradient(135deg,#0d0c20,#131458)', padding:'96px 32px', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%, rgba(91,93,225,0.25), transparent 65%)', pointerEvents:'none' }}/>
+      <div style={{ position:'absolute', bottom:-60, left:'50%', transform:'translateX(-50%)', width:600, height:200, background:'radial-gradient(ellipse, rgba(84,31,164,0.2), transparent 70%)', pointerEvents:'none' }}/>
+      <div style={{ maxWidth:680, margin:'0 auto', textAlign:'center', position:'relative' }}>
+        <SLabel color="#A8D8F4">Ready to Start</SLabel>
+        <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(32px,4vw,52px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>Stop Running the Business.<br/>Start Building It.</h2>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.5)', lineHeight:1.7, marginBottom:40 }}>Book a free call. We'll identify the biggest operational drag in your business and show you exactly what can be automated — and what it's worth.</p>
+        <SBtn onClick={() => setShowPopup(true)} variant="primary" style={{ fontSize:22, padding:'16px 42px' }}>Book a Call — It's Free</SBtn>
+        <p style={{ fontSize:19, color:'rgba(255,255,255,0.45)', marginTop:16 }}>No pressure. No jargon. Just a straight conversation about your business.</p>
+      </div>
+    </section>
+
+    <SiteFooter/>
+    {showPopup && <BookingPopup onClose={() => setShowPopup(false)}/>}
+  </div>
+  );
+};
+
+const App = () => {
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+  const [tweaksVisible, setTweaksVisible] = React.useState(false);
+  React.useEffect(() => {
+    const fn = e => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksVisible(false);
+    };
+    window.addEventListener('message', fn);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', fn);
+  }, []);
+  return (
+    <>
+      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksVisible}/>
+      <HomePage tweaks={tweaks}/>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

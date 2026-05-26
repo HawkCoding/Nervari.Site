@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframes — N[brand] Website</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@keyframes bgLetterPulse {
+  0%, 100% { opacity: 0.07; transform: scale(1) rotate(-4deg); }
+  50% { opacity: 0.13; transform: scale(1.04) rotate(-4deg); }
+}
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+// ─── PRIMITIVES ───────────────────────────────────────────────
+const BLUE = '#5B5DE1';
+const DARK = '#1a1a2e';
+const GRAY = '#888';
+const ff = { fontFamily: 'Caveat, cursive' };
+
+const Nav = () => (
+  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 24px', background:'#111', borderBottom:'2px solid #333' }}>
+    <div style={{ position:'relative', display:'inline-flex', alignItems:'center' }}>
+      <div style={{ position:'absolute', left:-8, top:'50%', transform:'translateY(-50%)', fontSize:72, fontWeight:900, color:'#fff', lineHeight:1, animation:'bgLetterPulse 2.8s ease-in-out infinite', pointerEvents:'none', userSelect:'none', fontFamily:'Caveat, cursive' }}>N</div>
+      <div style={{ ...ff, fontSize:20, fontWeight:700, color:'#fff', border:`2px dashed ${BLUE}`, padding:'3px 12px 3px 28px', borderRadius:4, position:'relative', zIndex:1 }}>N[brand]</div>
+    </div>
+    <div style={{ display:'flex', gap:20, ...ff, fontSize:16, color:'#ccc' }}>
+      {['Home','Pre-Built','Custom','Who We Are','Contact'].map(l => <span key={l}>{l}</span>)}
+    </div>
+    <Btn>Book a Call</Btn>
+  </div>
+);
+
+const Btn = ({ children, outline, small }) => (
+  <div style={{
+    display:'inline-block', padding: small ? '4px 14px' : '8px 22px',
+    background: outline ? 'transparent' : BLUE,
+    border:`2px solid ${BLUE}`, color: outline ? BLUE : '#fff',
+    ...ff, fontSize: small ? 14 : 17, borderRadius:6, cursor:'pointer', whiteSpace:'nowrap'
+  }}>{children}</div>
+);
+
+const Sec = ({ label, bg='#f7f7f7', children, dark, accent, pad=32 }) => (
+  <div style={{ background: dark ? DARK : bg, padding:`${pad}px 40px`, position:'relative', borderTop: accent ? `3px solid ${BLUE}` : 'none' }}>
+    <div style={{ position:'absolute', top:6, right:10, ...ff, fontSize:12, color: dark ? '#555' : '#bbb', textTransform:'uppercase', letterSpacing:1 }}>{label}</div>
+    {children}
+  </div>
+);
+
+const H1 = ({ text, sub, center=true, dark }) => (
+  <div style={{ textAlign: center ? 'center' : 'left', marginBottom:16 }}>
+    <div style={{ ...ff, fontSize:38, fontWeight:700, color: dark ? '#fff' : '#111', lineHeight:1.15 }}>{text}</div>
+    {sub && <div style={{ ...ff, fontSize:18, color: dark ? '#aaa' : '#666', marginTop:8, maxWidth:600, margin:'8px auto 0' }}>{sub}</div>}
+  </div>
+);
+
+const H2 = ({ text, dark, center }) => (
+  <div style={{ ...ff, fontSize:26, fontWeight:700, color: dark ? '#fff' : '#222', textAlign: center ? 'center' : 'left', marginBottom:12 }}>{text}</div>
+);
+
+const Box = ({ w='100%', h=80, label, dashed=true, accent, dark }) => (
+  <div style={{
+    width:w, height:h, border:`2px ${dashed?'dashed':'solid'} ${dark?'#444':'#ccc'}`,
+    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+    borderRadius:6, background: accent ? `${BLUE}22` : (dark ? '#222' : '#fff'),
+    ...ff, fontSize:14, color: dark ? '#666' : '#999'
+  }}>{label}</div>
+);
+
+const Lines = ({ n=3, dark }) => (
+  <div style={{ display:'flex', flexDirection:'column', gap:6, marginTop:8 }}>
+    {Array.from({length:n},(_,i)=>(
+      <div key={i} style={{ height:8, background: dark?'#333':'#ddd', borderRadius:4, width: i===n-1?'65%':'100%' }}/>
+    ))}
+  </div>
+);
+
+const Row = ({ children, gap=16, center, wrap, full }) => (
+  <div style={{ display:'flex', gap, justifyContent: center?'center':'flex-start', alignItems:'center', flexWrap: wrap?'wrap':'nowrap', width: full?'100%':undefined }}>{children}</div>
+);
+
+const Col = ({ children, gap=12, flex }) => (
+  <div style={{ display:'flex', flexDirection:'column', gap, flex }}>{children}</div>
+);
+
+const Card = ({ title, sub, h=160, accent, dark, w }) => (
+  <div style={{
+    flex:1, minWidth:w||140, minHeight:h, border:`2px solid ${dark?'#333':'#ddd'}`,
+    borderRadius:8, padding:14, background: dark?'#1a1a2e':'#fff',
+    borderTop: accent ? `3px solid ${BLUE}` : undefined
+  }}>
+    <Box h={40} dashed={false} label="[ img ]" dark={dark}/>
+    <div style={{ ...ff, fontSize:15, fontWeight:700, color: dark?'#fff':'#222', marginTop:8 }}>{title}</div>
+    {sub && <div style={{ ...ff, fontSize:13, color: dark?'#888':'#666', marginTop:4 }}>{sub}</div>}
+  </div>
+);
+
+const Stat = ({ v, label, dark }) => (
+  <div style={{ textAlign:'center', padding:'12px 20px', flex:1 }}>
+    <div style={{ ...ff, fontSize:40, fontWeight:700, color:BLUE }}>{v}</div>
+    <div style={{ ...ff, fontSize:14, color: dark?'#aaa':'#666' }}>{label}</div>
+  </div>
+);
+
+const Note = ({ text }) => (
+  <div style={{ ...ff, fontSize:13, color:BLUE, fontStyle:'italic', marginTop:4 }}>↳ {text}</div>
+);
+
+const Div = ({ label }) => (
+  <div style={{ display:'flex', alignItems:'center', gap:8, margin:'20px 0' }}>
+    <div style={{ flex:1, height:1, background:'#e0e0e0' }}/>
+    {label && <span style={{ ...ff, fontSize:13, color:'#bbb' }}>{label}</span>}
+    <div style={{ flex:1, height:1, background:'#e0e0e0' }}/>
+  </div>
+);
+
+const AccordionRow = ({ q, dark }) => (
+  <div style={{ padding:'12px 0', borderBottom:`1px solid ${dark?'#333':'#eee'}`, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+    <div style={{ ...ff, fontSize:16, color: dark?'#ddd':'#333' }}>{q}</div>
+    <div style={{ ...ff, fontSize:20, color:BLUE }}>+</div>
+  </div>
+);
+
+const FormField = ({ label, half }) => (
+  <div style={{ flex: half ? '0 0 calc(50% - 8px)' : '1 1 100%' }}>
+    <div style={{ ...ff, fontSize:13, color:'#666', marginBottom:4 }}>{label}</div>
+    <div style={{ height:36, border:'2px solid #ddd', borderRadius:6, background:'#fafafa' }}/>
+  </div>
+);
+
+const Footer = ({ dark }) => (
+  <div style={{ background: dark?'#0a0a1a':'#111', padding:'32px 40px', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:24, flexWrap:'wrap' }}>
+    <div style={{ ...ff, color:'#fff' }}>
+      <div style={{ fontSize:22, fontWeight:700, borderBottom:`2px dashed ${BLUE}`, paddingBottom:4 }}>N[brand]</div>
+      <div style={{ fontSize:13, color:'#666', marginTop:8 }}>AI-powered automations for small businesses</div>
+    </div>
+    {['Solutions','Company','Legal'].map(col => (
+      <div key={col} style={{ ...ff, color:'#888', fontSize:14 }}>
+        <div style={{ color:'#ddd', fontWeight:700, marginBottom:8 }}>{col}</div>
+        {['Link','Link','Link'].map((l,i) => <div key={i} style={{marginBottom:4}}>—</div>)}
+      </div>
+    ))}
+    <div style={{ ...ff, color:'#555', fontSize:13, width:'100%', borderTop:'1px solid #222', paddingTop:12 }}>© 2025 N[brand] · contact@placeholder.com · Terms · Privacy</div>
+  </div>
+);
+
+
+// ─── HOME A — "Full Sales Flow" ──────────────────────────────
+const HomeA = () => (
+  <Col gap={0}>
+    <Nav/>
+
+    {/* HERO */}
+    <Sec label="HERO" dark pad={56}>
+      <div style={{ textAlign:'center', maxWidth:700, margin:'0 auto' }}>
+        <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2, marginBottom:8 }}>AI AUTOMATION FOR SMALL BUSINESSES</div>
+        <H1 text="Stop Leaving Money on the Table with Manual Processes" dark
+            sub="Replace repetitive tasks, slow back-and-forths, and the daily admin pile-up with smart systems that save time, recover lost revenue, and let your business run smoother — without adding more to your plate."/>
+        <div style={{ height:16 }}/>
+        <Row center gap={12}>
+          <Btn>Book a Call</Btn>
+          <div style={{ ...ff, fontSize:14, color:'#666' }}>Built for businesses that need practical systems</div>
+        </Row>
+        <div style={{ height:24 }}/>
+        {/* trust strip */}
+        <div style={{ display:'flex', justifyContent:'center', gap:24, opacity:0.4 }}>
+          {['Co A','Co B','Co C','Co D','Co E'].map(l=>(
+            <Box key={l} w={80} h={28} label={l} dark dashed={false}/>
+          ))}
+        </div>
+        <Note text="trust strip — placeholder logos"/>
+      </div>
+    </Sec>
+
+    {/* COMPARISON */}
+    <Sec label="COMPARISON BLOCK" bg="#fff">
+      <H2 text="Manual vs. Automated — The Real Cost" center/>
+      <Row gap={24} center>
+        <div style={{ flex:1, border:'2px solid #eee', borderRadius:10, padding:20 }}>
+          <div style={{ ...ff, fontSize:18, fontWeight:700, color:'#c00', marginBottom:12 }}>❌ Manual Business</div>
+          <Col gap={8}>
+            {['KPI tile: leads lost','KPI tile: hours wasted','KPI tile: revenue gap'].map(l=><Box key={l} h={56} label={l}/>)}
+          </Col>
+        </div>
+        <div style={{ ...ff, fontSize:28, color:'#ddd' }}>→</div>
+        <div style={{ flex:1, border:`2px solid ${BLUE}`, borderRadius:10, padding:20 }}>
+          <div style={{ ...ff, fontSize:18, fontWeight:700, color:BLUE, marginBottom:12 }}>✓ Automated Business</div>
+          <Col gap={8}>
+            {['KPI tile: leads captured','KPI tile: hours reclaimed','KPI tile: revenue gained'].map(l=><Box key={l} h={56} label={l} accent/>)}
+          </Col>
+        </div>
+      </Row>
+      <Note text="use data-style KPI cards / mini-charts — not cartoons"/>
+    </Sec>
+
+    {/* OFFER */}
+    <Sec label="WHAT WE OFFER" bg="#f2f2f7">
+      <H2 text="Two Ways We Help" center/>
+      <Row gap={24} center>
+        <Card title="Pre-Built AI Automations" sub="Done-for-you packages for common bottlenecks. Fast to launch, fixed price." h={200} accent/>
+        <Card title="Custom Solutions" sub="Unique problems need unique builds. We map it, build it, hand it over." h={200}/>
+      </Row>
+    </Sec>
+
+    {/* STATS */}
+    <Sec label="PROOF STRIP" dark>
+      <Row gap={0} full>
+        <Stat v="78%" label="of orgs report AI use (McKinsey 2025)" dark/>
+        <Stat v="66%" label="of AI adopters saw productivity gains (PwC)" dark/>
+        <Stat v="25%+" label="revenue growth among AI leaders (IBM)" dark/>
+        <Stat v="57%" label="of adopters reported cost savings" dark/>
+      </Row>
+      <Note text="directional market proof — not guaranteed client results"/>
+    </Sec>
+
+    {/* TESTIMONIALS */}
+    <Sec label="TESTIMONIALS" bg="#fff">
+      <H2 text="What Clients Say" center/>
+      <Row gap={20} center wrap>
+        {[1,2,3].map(i => (
+          <div key={i} style={{ flex:1, minWidth:220, border:'2px solid #eee', borderRadius:10, padding:20 }}>
+            <Lines n={4}/>
+            <div style={{ ...ff, fontSize:14, color:'#999', marginTop:12 }}>— First Name, Role · [PLACEHOLDER]</div>
+          </div>
+        ))}
+      </Row>
+    </Sec>
+
+    {/* FAQ TEASER */}
+    <Sec label="FAQ TEASER" bg="#f7f7f7">
+      <H2 text="Common Questions" center/>
+      <div style={{ maxWidth:660, margin:'0 auto' }}>
+        {['How long does setup take?','Do I need to be technical?','What if I need something custom?'].map(q=>(
+          <AccordionRow key={q} q={q}/>
+        ))}
+      </div>
+    </Sec>
+
+    {/* FINAL CTA */}
+    <Sec label="FINAL CTA BAND" dark accent pad={48}>
+      <div style={{ textAlign:'center' }}>
+        <H2 text="Ready to Remove the Manual Drag?" dark center/>
+        <div style={{ height:16 }}/>
+        <Btn>Book a Call</Btn>
+      </div>
+    </Sec>
+
+    <Footer dark/>
+  </Col>
+);
+
+// ─── HOME B — "Split Hero + Alternating" ────────────────────
+const HomeB = () => (
+  <Col gap={0}>
+    <Nav/>
+
+    {/* SPLIT HERO */}
+    <Sec label="HERO — SPLIT" dark pad={56}>
+      <Row gap={40}>
+        <Col flex="1" gap={16}>
+          <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2 }}>AI AUTOMATION</div>
+          <div style={{ ...ff, fontSize:36, fontWeight:700, color:'#fff', lineHeight:1.2 }}>Your Competitors Are Moving Faster Because Their Systems Are.</div>
+          <div style={{ ...ff, fontSize:17, color:'#888' }}>AI-powered automations built to save time, recover revenue, and scale your business.</div>
+          <Row gap={12}><Btn>Book a Call</Btn><Btn outline>See Solutions</Btn></Row>
+        </Col>
+        <div style={{ flex:1 }}>
+          <Box h={280} label="[ animated workflow diagram / dashboard preview ]" dark dashed/>
+          <Note text="10% dramatic moment — hero animation: nodes connecting"/>
+        </div>
+      </Row>
+    </Sec>
+
+    {/* ALT SECTION 1 */}
+    <Sec label="PAIN BLOCK" bg="#fff">
+      <Row gap={40}>
+        <Box w={380} h={220} label="[ manual process visual / pain chart ]"/>
+        <Col flex="1" gap={10}>
+          <div style={{ ...ff, fontSize:13, color:'#c00', letterSpacing:1 }}>THE PROBLEM</div>
+          <H2 text="Manual Processes Are Quietly Draining Time and Revenue"/>
+          <Lines n={4}/>
+          <Note text="name the pain, quantify the upside"/>
+        </Col>
+      </Row>
+    </Sec>
+
+    {/* ALT SECTION 2 */}
+    <Sec label="UPSIDE BLOCK" bg="#f2f2f7">
+      <Row gap={40}>
+        <Col flex="1" gap={10}>
+          <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:1 }}>THE UPSIDE</div>
+          <H2 text="Automate the Repetitive. Focus on What Grows the Business."/>
+          <Lines n={4}/>
+        </Col>
+        <Box w={380} h={220} label="[ KPI dashboard / time saved chart ]" accent/>
+      </Row>
+    </Sec>
+
+    {/* OFFER CARDS */}
+    <Sec label="WHAT WE OFFER" bg="#fff">
+      <H2 text="How We Help" center/>
+      <Row gap={24} center>
+        <Card title="Pre-Built Solutions" sub="Fixed price. Fast launch. Proven packages." h={180} accent/>
+        <Card title="Custom Solutions" sub="Built around your unique bottleneck." h={180}/>
+      </Row>
+    </Sec>
+
+    {/* STATS */}
+    <Sec label="PROOF STRIP" dark>
+      <Row gap={0} full>
+        <Stat v="78%" label="orgs using AI (McKinsey)" dark/>
+        <Stat v="66%" label="saw productivity gains (PwC)" dark/>
+        <Stat v="3.4pp" label="potential productivity growth/yr" dark/>
+        <Stat v="57%" label="reported cost savings" dark/>
+      </Row>
+    </Sec>
+
+    {/* TESTIMONIALS */}
+    <Sec label="TESTIMONIALS" bg="#f7f7f7">
+      <H2 text="Results Clients Notice" center/>
+      <Row gap={20} center wrap>
+        {[1,2,3].map(i => (
+          <div key={i} style={{ flex:1, minWidth:200, border:'2px solid #eee', borderRadius:10, padding:20, background:'#fff' }}>
+            <Lines n={3}/>
+            <div style={{ ...ff, fontSize:13, color:'#aaa', marginTop:10 }}>— Name, Role [PLACEHOLDER]</div>
+          </div>
+        ))}
+      </Row>
+    </Sec>
+
+    {/* FAQ */}
+    <Sec label="FAQ TEASER" bg="#fff">
+      <Row gap={40}>
+        <Col flex="1">
+          <H2 text="Got Questions?"/>
+          <Lines n={3}/>
+          <div style={{marginTop:12}}><Btn outline small>See All FAQs</Btn></div>
+        </Col>
+        <Col flex="1" gap={0}>
+          {['How long does setup take?','Do I need to be technical?','Can you adapt a pre-built?'].map(q=>(
+            <AccordionRow key={q} q={q}/>
+          ))}
+        </Col>
+      </Row>
+    </Sec>
+
+    {/* CTA BAND */}
+    <Sec label="FINAL CTA BAND" dark accent pad={48}>
+      <div style={{ textAlign:'center' }}>
+        <H2 text="Book a Call. Remove the Drag." dark center/>
+        <div style={{height:16}}/>
+        <Btn>Book a Call</Btn>
+      </div>
+    </Sec>
+
+    <Footer dark/>
+  </Col>
+);
+
+// ─── PRE-BUILT A — "Jump Nav + Scroll Progress" ─────────────
+const PreBuiltA = ({ pbContentWidth = 900, pbCardCols = 4 }) => (
+  <Col gap={0}>
+    <Nav/>
+    <Sec label="PAGE HERO" dark pad={40}>
+      <div style={{ maxWidth: pbContentWidth, margin:'0 auto' }}>
+        <H1 text="Pre-Built AI Automations" dark sub="Done-for-you packages for common business bottlenecks. Faster to launch. Fixed price."/>
+      </div>
+
+    </Sec>
+
+    {/* JUMP NAV */}
+    <div style={{ position:'sticky', top:0, zIndex:10, background:'#fff', borderBottom:'2px solid #eee', padding:'10px 40px' }}>
+      <div style={{ maxWidth: pbContentWidth, margin:'0 auto' }}>
+        <Row gap={8} center>
+          {['Sales','Marketing','Admin','Operations','Outside the Box'].map(l=>(
+            <div key={l} style={{ ...ff, fontSize:15, padding:'4px 14px', border:`2px solid ${l==='Sales'?BLUE:'#ddd'}`, borderRadius:20, color:l==='Sales'?BLUE:'#666', cursor:'pointer' }}>{l}</div>
+          ))}
+          <div style={{ marginLeft:'auto', ...ff, fontSize:13, color:'#aaa' }}>scroll progress →</div>
+          <Note text="animated progress meter on right edge"/>
+        </Row>
+      </div>
+    </div>
+
+    {/* CATEGORY: SALES */}
+    <Sec label="CATEGORY SECTION — SALES" bg="#fff" accent pad={36}>
+      <div style={{ maxWidth: pbContentWidth, margin:'0 auto' }}>
+        <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2, marginBottom:4 }}>SALES</div>
+        <H2 text="Sales Automations"/>
+        <Lines n={2}/>
+        <div style={{height:20}}/>
+        <div style={{ display:'grid', gridTemplateColumns:`repeat(${pbCardCols}, 1fr)`, gap:16 }}>
+          {['Lead Capture to CRM','AI Lead Qualification','Missed Call Recovery','Quote Follow-Up Sequence','Sales Pipeline Alert','Lead Source Tracker'].map(t=>(
+            <div key={t} style={{ border:'2px solid #ddd', borderRadius:8, padding:14, background:'#fff', cursor:'pointer' }}>
+              <Box h={80} label="[ thumb ]" dashed={false}/>
+              <div style={{ ...ff, fontSize:14, fontWeight:700, color:'#222', marginTop:8 }}>{t}</div>
+              <div style={{ ...ff, fontSize:12, color:'#999', marginTop:4 }}>Short 1-2 line description here.</div>
+              <div style={{ ...ff, fontSize:13, color:BLUE, marginTop:8 }}>R4,890 →</div>
+            </div>
+          ))}
+        </div>
+        <Note text="hover state: card dims + gear icon appears. Click → modal"/>
+      </div>
+    </Sec>
+
+    {/* MODAL SKETCH */}
+    <div style={{ padding:'20px 40px', background:'#f0f0f7', borderLeft:`4px solid ${BLUE}` }}>
+      <div style={{ maxWidth: pbContentWidth, margin:'0 auto' }}>
+        <div style={{ ...ff, fontSize:14, color:BLUE, fontWeight:700, marginBottom:8 }}>MODAL PATTERN (on card click)</div>
+        <div style={{ display:'flex', gap:24, background:'#fff', border:'2px solid #ddd', borderRadius:12, padding:24, maxWidth:700 }}>
+          <Col flex="1" gap={10}>
+            <div style={{ ...ff, fontSize:18, fontWeight:700 }}>Lead Capture to CRM Sync</div>
+            <Lines n={4}/>
+            <div style={{ ...ff, fontSize:13, color:'#555' }}>✓ Workflow file &nbsp; ✓ Setup guide &nbsp; ✓ 2-hr setup call</div>
+            <div style={{ ...ff, fontSize:13, color:'#555' }}>⏱ 4–6 hrs saved/week &nbsp; 💰 R6k–R15k/month</div>
+            <div style={{ ...ff, fontSize:20, fontWeight:700, color:BLUE }}>R4,890</div>
+            <Btn small>Book a Call</Btn>
+            <Note text="auto-fills enquiry field with package name"/>
+          </Col>
+        </div>
+      </div>
+    </div>
+
+    {/* MORE CATEGORIES abbreviated */}
+    {['Marketing','Admin','Operations','Outside the Box'].map(cat => (
+      <Sec key={cat} label={`CATEGORY — ${cat.toUpperCase()}`} bg={cat==='Admin'?'#f7f7f7':'#fff'} pad={36}>
+        <div style={{ maxWidth: pbContentWidth, margin:'0 auto' }}>
+          <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2, marginBottom:4 }}>{cat.toUpperCase()}</div>
+          <H2 text={`${cat} Automations`}/>
+          <div style={{ display:'grid', gridTemplateColumns:`repeat(${pbCardCols}, 1fr)`, gap:16, marginTop:16 }}>
+            {[1,2,3,4].map(i=>(
+              <div key={i} style={{ border:'2px solid #ddd', borderRadius:8, padding:14 }}>
+                <Box h={60} label="[ thumb ]" dashed={false}/>
+                <div style={{ ...ff, fontSize:13, fontWeight:700, color:'#333', marginTop:8 }}>Solution title</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Sec>
+    ))}
+    <Footer dark/>
+  </Col>
+);
+
+// ─── PRE-BUILT B — "Sidebar + Full-Width Cards" ──────────────
+const PreBuiltB = () => (
+  <Col gap={0}>
+    <Nav/>
+    <Sec label="PAGE HERO" dark pad={40}>
+      <H1 text="Pre-Built AI Automations" dark sub="Proven packages. Fast to launch. Fixed price."/>
+    </Sec>
+    <div style={{ display:'flex', background:'#fff' }}>
+      {/* SIDEBAR */}
+      <div style={{ width:220, flexShrink:0, padding:'32px 24px', borderRight:'2px solid #eee', position:'sticky', top:0, alignSelf:'flex-start' }}>
+        <div style={{ ...ff, fontSize:13, color:'#aaa', letterSpacing:1, marginBottom:12 }}>JUMP TO</div>
+        {['Sales','Marketing','Admin','Operations','Outside the Box'].map((l,i)=>(
+          <div key={l} style={{ ...ff, fontSize:16, padding:'8px 12px', borderLeft:`3px solid ${i===0?BLUE:'#eee'}`, color:i===0?BLUE:'#666', marginBottom:4, cursor:'pointer' }}>{l}</div>
+        ))}
+        <div style={{ marginTop:24 }}>
+          <div style={{ ...ff, fontSize:13, color:'#aaa', marginBottom:8 }}>SCROLL DEPTH</div>
+          <div style={{ width:8, height:120, background:'#eee', borderRadius:4, position:'relative' }}>
+            <div style={{ width:8, height:40, background:BLUE, borderRadius:4 }}/>
+          </div>
+          <Note text="animated energy line"/>
+        </div>
+      </div>
+      {/* MAIN */}
+      <Col flex="1" gap={0}>
+        {['Sales','Marketing'].map((cat,ci) => (
+          <div key={cat} style={{ padding:'32px 40px', background:ci%2===0?'#fff':'#f7f7f7', borderBottom:'1px solid #eee' }}>
+            <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2 }}>{cat.toUpperCase()}</div>
+            <H2 text={`${cat} Automations`}/>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:16, marginTop:12 }}>
+              {[1,2,3].map(i=>(
+                <div key={i} style={{ border:'2px solid #ddd', borderRadius:8, padding:14, background:'#fff' }}>
+                  <Box h={70} label="[ thumb ]" dashed={false}/>
+                  <div style={{ ...ff, fontSize:14, fontWeight:700, color:'#222', marginTop:8 }}>Solution Title</div>
+                  <div style={{ ...ff, fontSize:12, color:'#999', marginTop:4 }}>1–2 line description</div>
+                  <div style={{ ...ff, fontSize:13, color:BLUE, marginTop:6 }}>R5,xxx →</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div style={{ padding:'24px 40px', ...ff, fontSize:15, color:'#aaa' }}>[ Admin / Operations / Outside the Box sections continue... ]</div>
+      </Col>
+    </div>
+    <Footer dark/>
+  </Col>
+);
+
+// ─── CUSTOM SOLUTIONS ────────────────────────────────────────
+const CustomPage = () => {
+  const steps = ['Book a Call','Define the Problem','Audit Workflow','Map Solution','Build & Preview','Launch & Train','Support & Improve'];
+  return (
+  <Col gap={0}>
+    <Nav/>
+    <Sec label="HERO" dark pad={56}>
+      <H1 text="Custom Solutions Built Around Your Business" dark
+          sub="Not every problem fits inside a pre-built package. We map the process, build the right solution, and hand it over."/>
+      <div style={{textAlign:'center', marginTop:16}}><Btn>Solve My Bottleneck</Btn></div>
+    </Sec>
+
+    {/* OBJECTION */}
+    <Sec label="OBJECTION HANDLING" bg="#f2f2f7">
+      <div style={{ maxWidth:700, margin:'0 auto', textAlign:'center' }}>
+        <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2 }}>COMMON CONCERN</div>
+        <H2 text="Custom Doesn't Mean Expensive or Complicated" center/>
+        <div style={{ ...ff, fontSize:16, color:'#555' }}>Custom automation is often less expensive than the ongoing cost of manual rework, missed follow-ups, and inconsistent handoffs.</div>
+      </div>
+    </Sec>
+
+    {/* PROCESS TIMELINE — HORIZONTAL */}
+    <Sec label="7-STEP PROCESS — HORIZONTAL (desktop)" bg="#fff">
+      <H2 text="How It Works" center/>
+      <div style={{ overflowX:'auto', marginTop:20 }}>
+        <div style={{ display:'flex', gap:0, minWidth:900 }}>
+          {steps.map((s,i)=>(
+            <div key={s} style={{ flex:1, textAlign:'center', position:'relative' }}>
+              <div style={{ width:48, height:48, borderRadius:'50%', border:`3px solid ${BLUE}`, background: i===0?BLUE:'#fff', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto', ...ff, fontSize:16, fontWeight:700, color:i===0?'#fff':BLUE }}>{i+1}</div>
+              {i<steps.length-1 && <div style={{ position:'absolute', top:24, left:'50%', width:'100%', height:3, background:'#ddd', zIndex:0 }}/>}
+              <div style={{ ...ff, fontSize:13, fontWeight:700, color:'#333', marginTop:8 }}>{s}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Note text="10% dramatic moment: connector lines animate in on scroll. Mobile collapses to vertical."/>
+    </Sec>
+
+    {/* PROCESS VERTICAL (mobile concept) */}
+    <Sec label="7-STEP PROCESS — VERTICAL (mobile collapse)" bg="#f7f7f7">
+      <Row gap={24}>
+        <Col flex="1" gap={0}>
+          {steps.map((s,i)=>(
+            <div key={s} style={{ display:'flex', gap:12, alignItems:'flex-start', marginBottom:16 }}>
+              <div style={{ width:32, height:32, borderRadius:'50%', border:`2px solid ${BLUE}`, background:i===0?BLUE:'#fff', display:'flex', alignItems:'center', justifyContent:'center', ...ff, fontSize:14, color:i===0?'#fff':BLUE, flexShrink:0 }}>{i+1}</div>
+              <div>
+                <div style={{ ...ff, fontSize:15, fontWeight:700 }}>{s}</div>
+                <div style={{ ...ff, fontSize:13, color:'#999' }}>Short step description.</div>
+              </div>
+            </div>
+          ))}
+        </Col>
+        <Box w={320} h={400} label="[ process diagram / solution concept ]" accent dashed/>
+      </Row>
+    </Sec>
+
+    {/* PROOF */}
+    <Sec label="PROOF / BENEFITS" dark>
+      <Row gap={0} full>
+        <Stat v="Tailored" label="to your exact workflow" dark/>
+        <Stat v="End-to-End" label="build, train, and hand over" dark/>
+        <Stat v="Ongoing" label="support after launch" dark/>
+      </Row>
+    </Sec>
+
+    {/* CTA */}
+    <Sec label="CTA BAND" dark accent pad={48}>
+      <div style={{textAlign:'center'}}>
+        <H2 text="Tell Us About Your Bottleneck." dark center/>
+        <div style={{height:16}}/>
+        <Row center gap={12}><Btn>Solve My Bottleneck</Btn><Btn outline>Build My Custom Solution</Btn></Row>
+      </div>
+    </Sec>
+    <Footer dark/>
+  </Col>
+  );
+};
+
+// ─── WHO WE ARE ──────────────────────────────────────────────
+const WhoPage = () => (
+  <Col gap={0}>
+    <Nav/>
+    <Sec label="INTRO BLOCK" dark pad={56}>
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <H1 text="We Built This Because We Saw the Problem Firsthand." dark
+            sub="Owners and managers carrying too much. Manual systems creating stress, delays, and lost revenue. We built practical solutions."/>
+      </div>
+    </Sec>
+
+    <Sec label="PROBLEM EMPATHY BLOCK" bg="#fff">
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <Row gap={40}>
+          <Col flex="1">
+            <div style={{ ...ff, fontSize:13, color:'#c00', letterSpacing:2 }}>THE REALITY</div>
+            <H2 text="Running a Business Shouldn't Mean Drowning in Admin"/>
+            <Lines n={5}/>
+          </Col>
+          <Box w={320} h={240} label="[ empathy visual / bottleneck diagram ]" dashed/>
+        </Row>
+      </div>
+    </Sec>
+
+    <Sec label="HOW WE WORK" bg="#f2f2f7">
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <H2 text="Practical. Not Overly Technical." center/>
+        <Row gap={20} center wrap>
+          {['We listen first','We map before we build','We train and hand over','We stay available'].map(s=>(
+            <Card key={s} title={s} sub="Short supporting sentence goes here." h={140}/>
+          ))}
+        </Row>
+      </div>
+    </Sec>
+
+    <Sec label="TECHNOLOGY WITHOUT OVERWHELM" dark>
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <Row gap={40}>
+          <Box w={300} h={200} label="[ friendly tech visual ]" dark dashed/>
+          <Col flex="1" gap={10}>
+            <div style={{ ...ff, fontSize:13, color:BLUE, letterSpacing:2 }}>OUR PROMISE</div>
+            <H2 text="Technology Shouldn't Feel Intimidating." dark/>
+            <div style={{ ...ff, fontSize:16, color:'#888' }}>We are the translator between modern systems and real business needs. You don't need to be technical.</div>
+          </Col>
+        </Row>
+      </div>
+    </Sec>
+
+    <Sec label="TRUST BLOCK" bg="#fff">
+      <div style={{ maxWidth:840, margin:'0 auto' }}>
+        <H2 text="What We Use and How We Work" center/>
+        <Row center gap={20} wrap>
+          {['n8n','AI Layer','WhatsApp','CRM Tools','Custom Build'].map(t=>(
+            <Box key={t} w={110} h={70} label={t} dashed={false}/>
+          ))}
+        </Row>
+        <Note text="tool logos — placeholder for layout only"/>
+      </div>
+    </Sec>
+
+    <Sec label="CTA BAND" dark accent pad={48}>
+      <div style={{ maxWidth:840, margin:'0 auto', textAlign:'center' }}>
+        <H2 text="Ready to Work With Us?" dark center/>
+        <div style={{height:16}}/>
+        <Btn>Book a Call</Btn>
+      </div>
+    </Sec>
+    <Footer dark/>
+  </Col>
+);
+
+// ─── CONTACT US ──────────────────────────────────────────────
+const ContactPage = () => {
+  const booked = 13; // late-month demo
+  return (
+  <Col gap={0}>
+    <Nav/>
+
+    {/* HERO + URGENCY */}
+    <Sec label="HERO + URGENCY MODULE" dark pad={56}>
+      <div style={{ textAlign:'center', maxWidth:640, margin:'0 auto' }}>
+        <H1 text="Save Your Spot" dark sub="We work with a limited number of businesses at a time so we can implement properly and provide real support."/>
+        <div style={{ marginTop:24, display:'inline-block', background:'#1a1a3e', border:`2px solid ${BLUE}`, borderRadius:12, padding:'20px 40px' }}>
+          <div style={{ ...ff, fontSize:14, color:'#aaa', letterSpacing:2 }}>SPOTS BOOKED THIS MONTH</div>
+          <div style={{ display:'flex', gap:8, marginTop:12, justifyContent:'center', flexWrap:'wrap' }}>
+            {Array.from({length:15},(_,i)=>(
+              <div key={i} style={{ width:24, height:24, borderRadius:4, background: i<booked ? BLUE : '#333', border:`2px solid ${i<booked?BLUE:'#444'}` }}/>
+            ))}
+          </div>
+          <div style={{ ...ff, fontSize:24, fontWeight:700, color:'#fff', marginTop:12 }}>{booked} / 15 booked</div>
+          <Note text="front-end deterministic logic by day-of-month"/>
+        </div>
+      </div>
+    </Sec>
+
+    {/* MID-PAGE CTA */}
+    <Sec label="MID-PAGE CTA" bg="#f2f2f7" pad={32}>
+      <div style={{ maxWidth:900, margin:'0 auto', textAlign:'center' }}>
+        <div style={{ ...ff, fontSize:20, fontWeight:700, color:'#222', marginBottom:12 }}>Ready to remove the manual drag from your business?</div>
+        <Btn>Book a Call Now</Btn>
+        <Note text="scrolls down to form — or opens booking link"/>
+      </div>
+    </Sec>
+
+    {/* FORM */}
+    <Sec label="CONTACT FORM" bg="#fff">
+      <div style={{ maxWidth:640, margin:'0 auto' }}>
+        <H2 text="Book a Call" center/>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:16, marginTop:20 }}>
+          <FormField label="Name *" half/>
+          <FormField label="Business Name *" half/>
+          <FormField label="Email *" half/>
+          <FormField label="Phone / WhatsApp *" half/>
+          <FormField label="Enquiring About (auto-fill from package)"/>
+          <div style={{ flex:'1 1 100%' }}>
+            <div style={{ ...ff, fontSize:13, color:'#666', marginBottom:4 }}>Notes (optional)</div>
+            <div style={{ height:80, border:'2px solid #ddd', borderRadius:6, background:'#fafafa' }}/>
+          </div>
+          <div style={{ flex:'1 1 100%' }}>
+            <Btn>Book My Spot</Btn>
+          </div>
+        </div>
+        <Note text="auto-fill from pre-built package card — field remains editable"/>
+      </div>
+    </Sec>
+
+    {/* FAQ */}
+    <Sec label="FAQ BLOCK" bg="#f7f7f7">
+      <H2 text="Questions Before You Book?" center/>
+      <div style={{ maxWidth:660, margin:'0 auto' }}>
+        {['How long does setup take?','Do I need to be technical?','Do you offer support after launch?','Can you adapt a pre-built solution?','What happens on the setup call?','What if I need something custom later?'].map(q=>(
+          <AccordionRow key={q} q={q}/>
+        ))}
+      </div>
+    </Sec>
+
+    <Footer dark/>
+  </Col>
+  );
+};
+
+
+// ─── TWEAKS ──────────────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "pbContentWidth": 900,
+  "pbCardCols": 3
+}/*EDITMODE-END*/;
+
+const TweaksPanel = ({ tweaks, setTweaks, visible }) => {
+  if (!visible) return null;
+  const update = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');
+  };
+  return (
+    <div style={{
+      position:'fixed', bottom:24, right:24, zIndex:9999,
+      background:'#fff', border:`2px solid ${BLUE}`, borderRadius:12,
+      padding:20, width:260, boxShadow:'0 8px 32px rgba(0,0,0,0.18)',
+      fontFamily:'Caveat, cursive'
+    }}>
+      <div style={{ fontSize:16, fontWeight:700, color:'#222', marginBottom:16 }}>Tweaks</div>
+
+      <div style={{ marginBottom:14 }}>
+        <div style={{ fontSize:14, color:'#555', marginBottom:6 }}>Pre-Built content width: <strong>{tweaks.pbContentWidth}px</strong></div>
+        <input type="range" min={600} max={1100} step={50} value={tweaks.pbContentWidth}
+          onChange={e => update('pbContentWidth', Number(e.target.value))}
+          style={{ width:'100%', accentColor: BLUE }}/>
+        <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, color:'#aaa' }}>
+          <span>600 (narrow)</span><span>1100 (wide)</span>
+        </div>
+      </div>
+
+      <div style={{ marginBottom:4 }}>
+        <div style={{ fontSize:14, color:'#555', marginBottom:6 }}>Card columns</div>
+        <div style={{ display:'flex', gap:8 }}>
+          {[2,3,4].map(n => (
+            <div key={n} onClick={() => update('pbCardCols', n)} style={{
+              flex:1, textAlign:'center', padding:'5px 0',
+              border:`2px solid ${tweaks.pbCardCols===n ? BLUE : '#ddd'}`,
+              borderRadius:6, fontSize:14, color: tweaks.pbCardCols===n ? BLUE : '#666',
+              cursor:'pointer', fontWeight: tweaks.pbCardCols===n ? 700 : 400
+            }}>{n} col</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── MAIN RENDER ─────────────────────────────────────────────
+const App = () => {
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+  const [tweaksVisible, setTweaksVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksVisible(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const { pbContentWidth, pbCardCols } = tweaks;
+
+  return (
+    <>
+      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksVisible}/>
+      <DesignCanvas>
+        <DCSection id="home" title="Home Page">
+          <DCArtboard id="home-a" label="Layout A — Full Sales Flow" width={1200}>
+            <HomeA/>
+          </DCArtboard>
+          <DCArtboard id="home-b" label="Layout B — Split Hero + Alternating" width={1200}>
+            <HomeB/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="prebuilt" title="Pre-Built Solutions Page">
+          <DCArtboard id="pb-a" label="Layout A — Jump Nav + Scroll Progress" width={1200}>
+            <PreBuiltA pbContentWidth={pbContentWidth} pbCardCols={pbCardCols}/>
+          </DCArtboard>
+          <DCArtboard id="pb-b" label="Layout B — Left Sidebar Nav" width={1200}>
+            <PreBuiltB/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="custom" title="Custom Solutions Page">
+          <DCArtboard id="cust" label="Custom Solutions — 7-Step Process" width={1200}>
+            <CustomPage/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="who" title="Who We Are Page">
+          <DCArtboard id="who" label="Who We Are" width={1200}>
+            <WhoPage/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="contact" title="Contact Us Page">
+          <DCArtboard id="contact" label="Contact Us — Save Your Spot" width={1200}>
+            <ContactPage/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

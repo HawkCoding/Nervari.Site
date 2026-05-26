@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(91,93,225,0.4)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes connectorGrow{from{width:0}to{width:100%}}
+.step-card{transition:transform 0.22s,box-shadow 0.22s,border-color 0.22s}
+.step-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(91,93,225,0.25)!important;border-color:rgba(91,93,225,0.5)!important}
+.step-card.active{border-color:rgba(91,93,225,0.5)!important;box-shadow:0 12px 40px rgba(91,93,225,0.2)!important}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+const STEPS = [
+  { n:1, icon:'phone', title:'Book a Call', desc:'A short discovery call to understand your business, friction points, and whether we\'re the right fit.' },
+  { n:2, icon:'target', title:'Define the Problem', desc:'We clearly name the bottleneck — what it\'s costing you and what the right outcome looks like.' },
+  { n:3, icon:'search', title:'Audit the Workflow', desc:'We map how work happens today — tools, handoffs, data sources, and where things break down.' },
+  { n:4, icon:'map', title:'Design the Solution', desc:'We design the best-fit automation and present it clearly before anything is built.' },
+  { n:5, icon:'gear', title:'Build and Preview', desc:'We build and walk you through it before go-live. You see it working before you sign off.' },
+  { n:6, icon:'rocket', title:'Launch and Train', desc:'We go live together. Your team gets trained so they know how to use it and get the most from it.' },
+  { n:7, icon:'shield', title:'Support and Improve', desc:'We stay available after launch. As your business changes, the system updates with it.' },
+];
+
+const StepCard = ({ step, active, onClick, isLast }) => (
+  <div style={{ display:'flex', alignItems:'flex-start', flex: isLast ? '0 0 auto' : 1, minWidth:0 }}>
+    <div className={`step-card${active ? ' active' : ''}`} onClick={onClick} style={{
+      flex:1, background: active ? 'rgba(91,93,225,0.1)' : 'rgba(255,255,255,0.03)',
+      border: `1px solid ${active ? 'rgba(91,93,225,0.45)' : 'rgba(255,255,255,0.08)'}`,
+      borderRadius:16, padding:'28px 22px', cursor:'pointer', position:'relative',
+      boxShadow: active ? '0 12px 40px rgba(91,93,225,0.2)' : 'none',
+    }}>
+      {/* step number badge */}
+      <div style={{
+        width:36, height:36, borderRadius:'50%',
+        background: active ? '#5B5DE1' : 'rgba(91,93,225,0.15)',
+        border:`2px solid ${active ? '#5B5DE1' : 'rgba(91,93,225,0.35)'}`,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:16,
+        color: active ? '#fff' : '#5B5DE1',
+        marginBottom:16, transition:'all 0.25s',
+        boxShadow: active ? '0 0 18px rgba(91,93,225,0.5)' : 'none',
+      }}>{step.n}</div>
+      <div style={{ width:44, height:44, borderRadius:10, border:'1px solid rgba(255,255,255,0.18)', display:'inline-flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.6)', marginBottom:12 }}><LineIcon name={step.icon} size={22}/></div>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:18, color:'#fff', marginBottom:active ? 10 : 0, lineHeight:1.3 }}>{step.title}</div>
+      {active && (
+        <div style={{ fontSize:15, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginTop:8, animation:'fadeIn 0.2s ease' }}>{step.desc}</div>
+      )}
+    </div>
+    {/* connector arrow */}
+    {!isLast && (
+      <div style={{ display:'flex', alignItems:'center', padding:'0 8px', flexShrink:0, marginTop:36, color:'rgba(91,93,225,0.5)', fontSize:22 }}>→</div>
+    )}
+  </div>
+);
+
+const HowItWorksPage = () => {
+  const [activeStep, setActiveStep] = React.useState(1);
+  const row1 = STEPS.slice(0, 4);
+  const row2 = STEPS.slice(4);
+
+  return (
+    <div>
+      <SiteNav/>
+
+      {/* HERO */}
+      <section style={{ background:'linear-gradient(180deg,#0C0821 0%,#0d0c20 100%)', padding:'140px 32px 80px', textAlign:'center' }}>
+        <div style={{ maxWidth:680, margin:'0 auto' }}>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.1s both' }}><SLabel>The Process</SLabel></div>
+          <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+            <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(40px,5vw,66px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>A Clear Process.<br/><span style={{ background:'linear-gradient(90deg,#5B5DE1,#9D5FE0)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>No Surprises.</span></h1>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.4s both' }}>
+            <p style={{ fontSize:20, color:'rgba(255,255,255,0.52)', lineHeight:1.75 }}>Seven structured steps from first call to live system. You know exactly where you are at every stage.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* STEPS — left to right */}
+      <section style={{ background:'#0C0821', padding:'64px 32px 96px' }}>
+        <div style={{ maxWidth:1200, margin:'0 auto' }}>
+
+          {/* Row 1: Steps 1–4 */}
+          <div style={{ display:'flex', alignItems:'flex-start', gap:0, marginBottom:32 }}>
+            {row1.map((step, i) => (
+              <StepCard key={step.n} step={step} active={activeStep===step.n} onClick={() => setActiveStep(step.n)} isLast={false}/>
+            ))}
+            {/* connector down to row 2 */}
+            <div style={{ width:0, alignSelf:'stretch' }}/>
+          </div>
+
+          {/* Row connector — down arrow */}
+          <div style={{ display:'flex', justifyContent:'flex-end', paddingRight:'calc(25% - 12px)', marginBottom:8 }}>
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:4, color:'rgba(91,93,225,0.5)' }}>
+              <div style={{ width:2, height:32, background:'linear-gradient(to bottom,rgba(91,93,225,0.4),rgba(91,93,225,0.1))' }}/>
+              <span style={{ fontSize:20 }}>↓</span>
+            </div>
+          </div>
+
+          {/* Row 2: Steps 5–7 (right to left visually continues the flow) */}
+          <div style={{ display:'flex', alignItems:'flex-start', gap:0, flexDirection:'row-reverse' }}>
+            {row2.map((step, i) => (
+              <StepCard key={step.n} step={step} active={activeStep===step.n} onClick={() => setActiveStep(step.n)} isLast={i === row2.length - 1}/>
+            ))}
+          </div>
+
+          {/* active step detail panel */}
+          <div style={{ marginTop:56, padding:'36px 40px', background:'rgba(91,93,225,0.07)', border:'1px solid rgba(91,93,225,0.2)', borderRadius:20, animation:'fadeInUp 0.3s ease' }}>
+            {(() => {
+              const s = STEPS.find(s => s.n === activeStep);
+              return (
+                <div style={{ display:'grid', gridTemplateColumns:'auto 1fr', gap:32, alignItems:'center' }}>
+                  <div style={{ width:72, height:72, borderRadius:'50%', background:'#5B5DE1', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:28, color:'#fff', boxShadow:'0 0 28px rgba(91,93,225,0.5)', flexShrink:0 }}>{s.n}</div>
+                  <div>
+                    <div style={{ display:'flex', gap:14, alignItems:'center', marginBottom:10 }}>
+                      <span style={{ display:'inline-flex', color:'rgba(255,255,255,0.7)' }}><LineIcon name={s.icon} size={26}/></span>
+                      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:24, color:'#fff' }}>{s.title}</div>
+                    </div>
+                    <div style={{ fontSize:18, color:'rgba(255,255,255,0.6)', lineHeight:1.75 }}>{s.desc}</div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ background:'linear-gradient(135deg,#0d0c20,#131458)', padding:'80px 32px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%,rgba(91,93,225,0.2),transparent 65%)', pointerEvents:'none' }}/>
+        <div style={{ maxWidth:560, margin:'0 auto', position:'relative' }}>
+          <SLabel>Ready to Start?</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(28px,3.5vw,44px)', fontWeight:800, color:'#fff', letterSpacing:'-0.02em', marginBottom:16 }}>Step 1 is just a conversation.</h2>
+          <p style={{ fontSize:18, color:'rgba(255,255,255,0.5)', marginBottom:32, lineHeight:1.7 }}>Book a free discovery call. No commitment, no jargon — just a clear look at what's slowing you down.</p>
+          <SBtn href="contact.html" variant="primary" style={{ fontSize:18, padding:'15px 40px' }}>Book a Call →</SBtn>
+        </div>
+      </section>
+
+      <SiteFooter/>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<HowItWorksPage/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

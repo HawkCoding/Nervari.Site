@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}::selection{background:rgba(91,93,225,0.4)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(91,93,225,0.65)!important;transform:translateY(-1px)}
+.faq-item:hover{border-color:rgba(91,93,225,0.25)!important}
+input,textarea,select{outline:none}
+input:focus,textarea:focus,select:focus{border-color:#5B5DE1!important;box-shadow:0 0 0 3px rgba(91,93,225,0.15)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.92)}}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+// ── TWEAKS ────────────────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "spotsTotal": 15,
+  "urgencyLevel": "medium",
+  "showWhatsApp": true,
+  "formCta": "Request a Call →"
+}/*EDITMODE-END*/;
+
+const ContactTweaksPanel = ({ tweaks, setTweaks, visible }) => {
+  if (!visible) return null;
+  const update = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');
+  };
+  const row = { marginBottom: 18 };
+  const label = { fontFamily:'Inter,sans-serif', fontSize:11, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.38)', marginBottom:8, display:'block' };
+  const segBtn = (val, cur, key) => ({
+    flex:1, padding:'7px 0', borderRadius:8, cursor:'pointer', fontFamily:'Inter,sans-serif', fontSize:13, fontWeight:600,
+    border: `1px solid ${cur===val ? '#5B5DE1' : 'rgba(255,255,255,0.1)'}`,
+    background: cur===val ? 'rgba(91,93,225,0.22)' : 'rgba(255,255,255,0.04)',
+    color: cur===val ? '#fff' : 'rgba(255,255,255,0.45)',
+  });
+
+  return (
+    <div style={{ position:'fixed', bottom:24, right:24, zIndex:9999, background:'#13102a', border:'1px solid rgba(91,93,225,0.35)', borderRadius:14, padding:'20px 22px', width:268, boxShadow:'0 12px 40px rgba(0,0,0,0.55)' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:18 }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:16, fontWeight:700, color:'#fff' }}>Tweaks</div>
+        <button onClick={() => { window.parent.postMessage({ type:'__edit_mode_dismissed' }, '*'); }} style={{ background:'rgba(255,255,255,0.07)', border:'none', color:'rgba(255,255,255,0.45)', cursor:'pointer', width:28, height:28, borderRadius:7, fontSize:18, display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+      </div>
+
+      <div style={row}>
+        <span style={label}>Spots capacity</span>
+        <div style={{ display:'flex', gap:8 }}>
+          {[10,15,20].map(n => (
+            <button key={n} onClick={() => update('spotsTotal', n)} style={segBtn(n, tweaks.spotsTotal, 'spotsTotal')}>{n}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={row}>
+        <span style={label}>Urgency level</span>
+        <div style={{ display:'flex', gap:8 }}>
+          {['low','medium','high'].map(u => (
+            <button key={u} onClick={() => update('urgencyLevel', u)} style={segBtn(u, tweaks.urgencyLevel, 'urgencyLevel')}>{u}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={row}>
+        <span style={label}>WhatsApp CTA</span>
+        <div style={{ display:'flex', gap:8 }}>
+          {[['Show', true],['Hide', false]].map(([lbl, val]) => (
+            <button key={lbl} onClick={() => update('showWhatsApp', val)} style={segBtn(val, tweaks.showWhatsApp, 'showWhatsApp')}>{lbl}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={row}>
+        <span style={label}>Form CTA copy</span>
+        <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+          {['Book My Spot →','Request a Call →','Get Started →'].map(opt => (
+            <button key={opt} onClick={() => update('formCta', opt)} style={{ ...segBtn(opt, tweaks.formCta), textAlign:'left', padding:'8px 12px', flex:'none' }}>{opt}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── SPOTS LOGIC (deterministic by day-of-month) ───────────────
+const getSpotsBooked = () => {
+  const now = new Date();
+  const day = now.getDate();
+  const bands = [[1,7,2,4],[8,14,5,8],[15,21,8,11],[22,27,11,13],[28,31,13,14]];
+  for (const [s,e,lo,hi] of bands) {
+    if (day >= s && day <= e) {
+      const t = (day - s) / Math.max(e - s, 1);
+      return Math.round(lo + t * (hi - lo));
+    }
+  }
+  return 3;
+};
+
+// ── SPOTS DISPLAY ─────────────────────────────────────────────
+const SpotsCounter = ({ booked, total = 15 }) => (
+  <div style={{ background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.25)', borderRadius:20, padding:'32px 40px', textAlign:'center', maxWidth:480, margin:'0 auto' }}>
+    <div style={{ fontSize:22, fontWeight:600, letterSpacing:2.5, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:20 }}>Spots Booked This Month</div>
+    <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap', marginBottom:20 }}>
+      {Array.from({ length: total }, (_, i) => (
+        <div key={i} style={{
+          width: 26, height: 26, borderRadius: 6,
+          background: i < booked ? '#5B5DE1' : 'rgba(255,255,255,0.06)',
+          border: `1px solid ${i < booked ? '#5B5DE1' : 'rgba(255,255,255,0.1)'}`,
+          boxShadow: i < booked ? '0 0 8px rgba(91,93,225,0.5)' : 'none',
+          transition: 'all 0.2s',
+          animation: i === booked - 1 ? 'dotPulse 2s ease infinite' : 'none',
+        }}/>
+      ))}
+    </div>
+    <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:28, color:'#fff' }}>
+      <span style={{ color:'#5B5DE1' }}>{booked}</span> / {total} booked
+    </div>
+    <div style={{ fontSize:22, color:'rgba(255,255,255,0.5)', marginTop:8 }}>
+      {total - booked} {total - booked === 1 ? 'spot' : 'spots'} remaining this month
+    </div>
+  </div>
+);
+
+// ── FORM FIELD ────────────────────────────────────────────────
+const Field = ({ label, required, half, type='text', value, onChange, placeholder }) => (
+  <div style={{ flex: half ? '0 0 calc(50% - 10px)' : '1 1 100%' }}>
+    <label style={{ display:'block', fontFamily:'Inter,sans-serif', fontSize:19, fontWeight:500, color:'rgba(255,255,255,0.5)', marginBottom:8 }}>
+      {label}{required && <span style={{ color:'#5B5DE1', marginLeft:3 }}>*</span>}
+    </label>
+    <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
+      style={{ width:'100%', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'13px 16px', fontFamily:'Inter,sans-serif', fontSize:19, color:'#fff', transition:'border-color 0.2s, box-shadow 0.2s' }}/>
+  </div>
+);
+
+// ── FAQ ───────────────────────────────────────────────────────
+const FaqItem = ({ q, a }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="faq-item" onClick={() => setOpen(o => !o)} style={{ borderBottom:'1px solid rgba(255,255,255,0.07)', padding:'20px 0', cursor:'pointer', transition:'border-color 0.2s' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:20 }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:22, fontWeight:600, color:'#fff' }}>{q}</div>
+        <div style={{ color:'#5B5DE1', fontSize:24, flexShrink:0, transition:'transform 0.2s', transform: open ? 'rotate(45deg)' : 'rotate(0)' }}>+</div>
+      </div>
+      {open && <div style={{ fontSize:19, color:'rgba(255,255,255,0.52)', lineHeight:1.75, marginTop:12, animation:'fadeIn 0.2s ease' }}>{a}</div>}
+    </div>
+  );
+};
+
+// ── URGENCY LABEL MAP ─────────────────────────────────────────
+const URGENCY_LABELS = {
+  low:    'Get in Touch',
+  medium: 'Limited Availability',
+  high:   'Filling Fast — Limited Spots',
+};
+
+// ── MAIN PAGE ─────────────────────────────────────────────────
+const ContactPage = ({ tweaks = TWEAK_DEFAULTS }) => {
+  const baseBooked = getSpotsBooked();
+  // Session-persistent +1: only counts once per browser session
+  const sessionKey = 'nervari_booked_' + new Date().toDateString();
+  const [sessionBooked] = React.useState(() => sessionStorage.getItem(sessionKey) === '1');
+  const [extraBooked, setExtraBooked] = React.useState(sessionBooked ? 1 : 0);
+  const booked = baseBooked + extraBooked;
+  const [submitted, setSubmitted] = React.useState(false);
+
+  // Pre-fill from URL param
+  const urlPkg = React.useMemo(() => {
+    try { return new URL(window.location.href).searchParams.get('pkg') || ''; } catch { return ''; }
+  }, []);
+
+  const [form, setForm] = React.useState({ name:'', email:'', phone:'', notes:'' });
+  const set = (k) => (v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Only count once per session
+    if (!sessionBooked) {
+      sessionStorage.setItem(sessionKey, '1');
+      setExtraBooked(1);
+    }
+    setSubmitted(true);
+  };
+
+  const FAQS = [
+    { q:'How long does setup take?', a:'Pre-built solutions are typically live within a week. Custom solutions depend on scope — we give you a clear timeline before we start, so there are no surprises.' },
+    { q:'Do I need to be technical?', a:'Not at all. We handle all the technical work. The setup call walks you through how everything works, and we train your team before handover.' },
+    { q:'Do you offer support after launch?', a:'Yes. We stay available after go-live. If something needs adjusting or you have questions, we\'re here — not gone after delivery.' },
+    { q:'Can you adapt a pre-built solution to my business?', a:'Yes. Pre-built packages include a setup call where we configure the workflow for your tools and processes. If it needs more significant changes, we\'ll be upfront about that.' },
+    { q:'What happens on the setup call?', a:'It\'s a working session — not a sales call. We configure the workflow, connect your tools, test everything, and make sure you and your team know how to use it.' },
+    { q:'What if I need something custom later?', a:'No problem. Many clients start with a pre-built solution and add custom work later as they scale. We can support that transition when you\'re ready.' },
+  ];
+
+  return (
+    <div>
+      <SiteNav active="Talk to Us"/>
+
+      {/* HERO + URGENCY */}
+      <section style={{ background:'#0C0821', padding:'140px 32px 80px', position:'relative', overflow:'hidden' }}>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 20%, rgba(91,93,225,0.16), transparent 60%)', pointerEvents:'none' }}/>
+        <div style={{ maxWidth:840, margin:'0 auto', position:'relative', textAlign:'center' }}>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.1s both' }}><SLabel>{URGENCY_LABELS[tweaks.urgencyLevel] || URGENCY_LABELS.medium}</SLabel></div>
+          <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+            <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(40px,5.5vw,68px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>Your Problem Deserves Our Full Attention.</h1>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.4s both', maxWidth:520, margin:'0 auto 40px' }}>
+            <p style={{ fontSize:22, color:'rgba(255,255,255,0.52)', lineHeight:1.75 }}>We limit how many businesses we take on each month — so every client gets our complete focus, not a rushed handoff. Book a spot before they're gone.</p>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.55s both' }}>
+            <SpotsCounter booked={booked} total={tweaks.spotsTotal}/>
+          </div>
+        </div>
+      </section>
+
+      {/* MID CTA */}
+      <section style={{ background:'#0d0c20', padding:'48px 32px', textAlign:'center', borderTop:'1px solid rgba(255,255,255,0.05)', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ maxWidth:840, margin:'0 auto', display:'flex', gap:24, alignItems:'center', justifyContent:'center', flexWrap:'wrap' }}>
+          <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:22, fontWeight:700, color:'#fff' }}>Ready to remove the manual drag from your business?</div>
+          <a href="#contact-form" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#5B5DE1', color:'#fff', padding:'13px 28px', borderRadius:10, fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:22, boxShadow:'0 0 28px rgba(91,93,225,0.4)', textDecoration:'none', transition:'all 0.2s' }}>Book a Call Now →</a>
+        </div>
+      </section>
+
+      {/* FORM */}
+      <section id="contact-form" style={{ background:'#0C0821', padding:'96px 32px' }}>
+        <div style={{ maxWidth:840, margin:'0 auto' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 480px', gap:64, alignItems:'start' }}>
+            {/* LEFT */}
+            <div>
+              <SLabel>Get in Touch</SLabel>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,3vw,38px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', marginBottom:16 }}>Book a Call</h2>
+              <p style={{ fontSize:19, color:'rgba(255,255,255,0.45)', lineHeight:1.75, marginBottom:32 }}>Fill in your details below and we'll be in touch to schedule a call. No pressure, no jargon — just a straight conversation about your business.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+                {[
+                  { icon:'phone', label:'Response time', value:'Live call within 2 minutes' },
+                  { icon:'target', label:'Call duration', value:'30–45 minutes' },
+                  { icon:'lock', label:'No obligation', value:'Completely free discovery call' },
+                ].map(item => (
+                  <div key={item.label} style={{ display:'flex', gap:14, alignItems:'center' }}>
+                    <div style={{ width:38, height:38, borderRadius:9, border:'1px solid rgba(255,255,255,0.18)', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.55)', flexShrink:0 }}><LineIcon name={item.icon} size={18}/></div>
+                    <div>
+                      <div style={{ fontSize:22, color:'rgba(255,255,255,0.5)', letterSpacing:1.5, textTransform:'uppercase', fontWeight:600 }}>{item.label}</div>
+                      <div style={{ fontSize:19, color:'rgba(255,255,255,0.7)', marginTop:2 }}>{item.value}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* ── WhatsApp CTA ── */}
+              {tweaks.showWhatsApp && <div style={{ marginTop:32, borderTop:'1px solid rgba(255,255,255,0.07)', paddingTop:28 }}>
+                <div style={{ fontSize:13, fontFamily:'Inter,sans-serif', fontWeight:600, letterSpacing:2.5, textTransform:'uppercase', color:'rgba(255,255,255,0.45)', marginBottom:14 }}>Or message us directly</div>
+                <a
+                  href="https://wa.me/27630977801?text=Hi%20Nervari%2C%20I%27d%20like%20to%20find%20out%20more%20about%20your%20automation%20solutions."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display:'flex', alignItems:'center', justifyContent:'center', gap:12,
+                    width:'100%',
+                    background:'#25D366',
+                    border:'1px solid #25D366',
+                    borderRadius:12, padding:'16px 20px',
+                    textDecoration:'none', color:'#fff',
+                    fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:18,
+                    transition:'all 0.22s',
+                    boxShadow:'0 8px 24px rgba(37,211,102,0.28)',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#1FBA57';
+                    e.currentTarget.style.boxShadow = '0 10px 32px rgba(37,211,102,0.45)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = '#25D366';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(37,211,102,0.28)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  {/* WhatsApp SVG icon */}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink:0 }}>
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.306A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.076-1.124l-.292-.174-3.035.796.812-2.965-.19-.304A7.946 7.946 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
+                  </svg>
+                  <span>Chat on WhatsApp</span>
+                </a>
+              </div>}
+            </div>
+            {/* FORM */}
+            <div>
+              {submitted ? (
+                <div style={{ textAlign:'center', padding:'48px 32px', background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.25)', borderRadius:20, animation:'fadeIn 0.3s ease' }}>
+                  <div style={{ width:64, height:64, borderRadius:'50%', border:'1.5px solid rgba(255,255,255,0.3)', display:'inline-flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', color:'rgba(255,255,255,0.85)' }}><LineIcon name="check" size={28} stroke={1.6}/></div>
+                  <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:24, color:'#fff', marginBottom:12 }}>You're in the queue</div>
+                  <div style={{ fontSize:19, color:'rgba(255,255,255,0.5)', lineHeight:1.7 }}>Keep your phone close — we'll be calling you within the next 2 minutes. Make sure your sound is on.</div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} style={{ background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.09)', borderRadius:20, padding:'36px 32px', display:'flex', flexWrap:'wrap', gap:18 }}>
+                  <Field label="Name" required value={form.name} onChange={set('name')} placeholder="Your name"/>
+                  <Field label="Email" required half type="email" value={form.email} onChange={set('email')} placeholder="your@email.com"/>
+                  <Field label="Phone / WhatsApp" required half value={form.phone} onChange={set('phone')} placeholder="+27 ..."/>
+                  <div style={{ flex:'1 1 100%' }}>
+                    <label style={{ display:'block', fontFamily:'Inter,sans-serif', fontSize:19, fontWeight:500, color:'rgba(255,255,255,0.5)', marginBottom:8 }}>What's your biggest bottleneck? <span style={{ opacity:0.5 }}>(optional)</span></label>
+                    <textarea value={form.notes} onChange={e => set('notes')(e.target.value)} rows={4} placeholder="Tell us a bit about your business and what's slowing you down..."
+                      style={{ width:'100%', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'13px 16px', fontFamily:'Inter,sans-serif', fontSize:19, color:'#fff', resize:'vertical', transition:'border-color 0.2s, box-shadow 0.2s' }}/>
+                  </div>
+                  <div style={{ flex:'1 1 100%' }}>
+                    <button type="submit" className="btn-primary" style={{ width:'100%', background:'#5B5DE1', color:'#fff', border:'none', borderRadius:10, padding:'15px', fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:19, cursor:'pointer', boxShadow:'0 0 28px rgba(91,93,225,0.4)', transition:'all 0.2s' }}>
+                      {tweaks.formCta}
+                    </button>
+                    <div style={{ textAlign:'center', marginTop:12, fontSize:16, color:'rgba(255,255,255,0.55)', lineHeight:1.5 }}>
+                      Keep your phone close — <span style={{ color:'#fff', fontWeight:600 }}>we'll call within 2 minutes.</span>
+                    </div>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ background:'#0d0c20', padding:'96px 32px' }}>
+        <div style={{ maxWidth:840, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:48 }}>
+            <SLabel>Good Questions</SLabel>
+            <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,3.5vw,38px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>Honest Answers.</h2>
+          </div>
+          <div style={{ maxWidth:680, margin:'0 auto' }}>
+            {FAQS.map((item, i) => <FaqItem key={i} {...item}/>)}
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter/>
+    </div>
+  );
+};
+
+const App = () => {
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+  const [panelVisible, setPanelVisible] = React.useState(false);
+  React.useEffect(() => {
+    const fn = e => {
+      if (e.data?.type === '__activate_edit_mode')   setPanelVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode') setPanelVisible(false);
+    };
+    window.addEventListener('message', fn);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', fn);
+  }, []);
+  return (
+    <>
+      <ContactTweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={panelVisible}/>
+      <ContactPage tweaks={tweaks}/>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>
