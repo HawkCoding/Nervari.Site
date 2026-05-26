@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Gift — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#0C0821;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(249,217,35,0.3)}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes floatA{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-18px) rotate(-3deg)}}
+@keyframes floatB{0%,100%{transform:translateY(0) rotate(8deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+@keyframes floatC{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-22px) rotate(4deg)}}
+@keyframes spinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(249,217,35,0.4)}50%{box-shadow:0 0 0 18px rgba(249,217,35,0)}}
+@keyframes ribbonSweep{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(340%) skewX(-15deg)}}
+@keyframes countUp{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.88) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+.gift-title{
+  background: linear-gradient(135deg, #f9d923 0%, #ffb347 40%, #fff 70%, #f9d923 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+.email-input{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:12px;
+  padding:16px 22px;
+  font-family:'Inter',sans-serif;
+  font-size:17px;
+  color:#fff;
+  outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  width:100%;
+}
+.email-input::placeholder{color:rgba(255,255,255,0.3)}
+.email-input:focus{border-color:rgba(249,217,35,0.5);box-shadow:0 0 0 4px rgba(249,217,35,0.08)}
+.submit-btn{
+  background:linear-gradient(90deg,#f9d923,#ffb347);
+  color:#0C0821;
+  border:none;
+  border-radius:12px;
+  padding:16px 36px;
+  font-family:'Inter',sans-serif;
+  font-weight:700;
+  font-size:17px;
+  cursor:pointer;
+  transition:transform 0.15s, box-shadow 0.2s;
+  white-space:nowrap;
+  animation:pulse 2.5s ease-in-out infinite;
+}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,217,35,0.45);animation:none}
+.submit-btn:active{transform:translateY(0)}
+
+.value-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:28px 24px;
+  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.value-card:hover{transform:translateY(-4px);border-color:rgba(249,217,35,0.25);box-shadow:0 12px 40px rgba(249,217,35,0.08)}
+
+.tag-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:rgba(249,217,35,0.1);
+  border:1px solid rgba(249,217,35,0.25);
+  border-radius:20px;
+  padding:6px 14px;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  color:#f9d923;
+  letter-spacing:0.5px;
+}
+.overlay{position:fixed;inset:0;background:rgba(8,4,24,0.88);z-index:400;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(12px);animation:fadeIn 0.2s ease}
+.modal{background:#13102a;border:1px solid rgba(249,217,35,0.25);border-radius:24px;max-width:480px;width:100%;padding:52px 44px;text-align:center;animation:popIn 0.25s ease;box-shadow:0 40px 100px rgba(0,0,0,0.6),0 0 80px rgba(249,217,35,0.08)}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+// ── Floating Orb ────────────────────────────────────────────
+const Orb = ({ size, top, left, color, delay, animName }) => (
+  <div style={{
+    position:'absolute', top, left,
+    width:size, height:size, borderRadius:'50%',
+    background:`radial-gradient(circle at 35% 35%, ${color}, transparent 70%)`,
+    opacity:0.18, filter:'blur(2px)',
+    animation:`${animName} ${3 + delay}s ease-in-out ${delay}s infinite`,
+    pointerEvents:'none',
+  }}/>
+);
+
+// ── Spinning ring ───────────────────────────────────────────
+const SpinRing = ({ size, top, left, color, dur }) => (
+  <div style={{
+    position:'absolute', top, left,
+    width:size, height:size, borderRadius:'50%',
+    border:`2px solid ${color}`,
+    opacity:0.13,
+    animation:`spinSlow ${dur}s linear infinite`,
+    pointerEvents:'none',
+  }}/>
+);
+
+// ── Particle dots ───────────────────────────────────────────
+const Particles = () => {
+  const pts = React.useMemo(() => Array.from({length:18},(_,i)=>({
+    x: Math.random()*100, y: Math.random()*100,
+    s: 2 + Math.random()*3,
+    d: Math.random()*3,
+    a: ['floatA','floatB','floatC'][i%3],
+  })),[]);
+  return (
+    <div style={{position:'absolute',inset:0,pointerEvents:'none',overflow:'hidden'}}>
+      {pts.map((p,i)=>(
+        <div key={i} style={{
+          position:'absolute',
+          left:`${p.x}%`, top:`${p.y}%`,
+          width:p.s, height:p.s, borderRadius:'50%',
+          background:'rgba(249,217,35,0.6)',
+          animation:`${p.a} ${3+p.d}s ease-in-out ${p.d}s infinite`,
+          filter:'blur(0.5px)',
+        }}/>
+      ))}
+    </div>
+  );
+};
+
+// ── Gift Box SVG ────────────────────────────────────────────
+const GiftBox = () => (
+  <div style={{position:'relative',display:'inline-flex',alignItems:'center',justifyContent:'center',marginBottom:8}}>
+    {/* glow ring */}
+    <div style={{
+      position:'absolute',
+      width:140,height:140,borderRadius:'50%',
+      background:'radial-gradient(circle,rgba(249,217,35,0.22) 0%,transparent 70%)',
+      animation:'floatC 4s ease-in-out infinite',
+    }}/>
+    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" style={{animation:'floatC 4s ease-in-out infinite',filter:'drop-shadow(0 8px 32px rgba(249,217,35,0.4))'}}>
+      {/* box body */}
+      <rect x="10" y="46" width="76" height="44" rx="6" fill="#f9d923" opacity="0.9"/>
+      {/* box lid */}
+      <rect x="6" y="34" width="84" height="16" rx="5" fill="#ffb347"/>
+      {/* ribbon vertical */}
+      <rect x="43" y="34" width="10" height="56" rx="3" fill="#e05a00" opacity="0.7"/>
+      {/* ribbon horizontal */}
+      <rect x="6" y="40" width="84" height="10" rx="3" fill="#e05a00" opacity="0.7"/>
+      {/* bow left loop */}
+      <ellipse cx="36" cy="28" rx="14" ry="9" fill="#ffb347" transform="rotate(-20 36 28)"/>
+      <ellipse cx="36" cy="28" rx="10" ry="6" fill="#f9d923" transform="rotate(-20 36 28)" opacity="0.5"/>
+      {/* bow right loop */}
+      <ellipse cx="60" cy="28" rx="14" ry="9" fill="#ffb347" transform="rotate(20 60 28)"/>
+      <ellipse cx="60" cy="28" rx="10" ry="6" fill="#f9d923" transform="rotate(20 60 28)" opacity="0.5"/>
+      {/* bow center */}
+      <circle cx="48" cy="32" r="7" fill="#e05a00"/>
+      <circle cx="48" cy="32" r="4" fill="#f9d923" opacity="0.8"/>
+      {/* sparkles */}
+      <circle cx="18" cy="20" r="2.5" fill="#f9d923" opacity="0.9"/>
+      <circle cx="78" cy="16" r="2" fill="#fff" opacity="0.7"/>
+      <circle cx="84" cy="60" r="1.5" fill="#f9d923" opacity="0.6"/>
+    </svg>
+  </div>
+);
+
+// ── This Month's Workflow Card ──────────────────────────────
+const WorkflowCard = () => (
+  <div style={{
+    background:'linear-gradient(135deg,rgba(249,217,35,0.06) 0%,rgba(91,93,225,0.08) 100%)',
+    border:'1px solid rgba(249,217,35,0.2)',
+    borderRadius:20,
+    padding:'32px 36px',
+    position:'relative',
+    overflow:'hidden',
+    maxWidth:600,
+    margin:'0 auto',
+  }}>
+    {/* sweep shine */}
+    <div style={{
+      position:'absolute',top:0,left:0,width:'60%',height:'100%',
+      background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)',
+      animation:'ribbonSweep 3.5s ease-in-out infinite',
+      pointerEvents:'none',
+    }}/>
+    <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:18}}>
+      <div style={{
+        width:44,height:44,borderRadius:12,
+        border:'1px solid rgba(255,255,255,0.2)',
+        display:'flex',alignItems:'center',justifyContent:'center',
+        flexShrink:0, color:'rgba(255,255,255,0.7)',
+      }}><LineIcon name="bolt" size={22}/></div>
+      <div>
+        <div style={{fontFamily:'Space Grotesk,sans-serif',fontWeight:800,fontSize:20,color:'#fff',lineHeight:1.2}}>May 2025 Workflow</div>
+        <div style={{fontSize:13,color:'rgba(255,255,255,0.4)',marginTop:2}}>Delivered free to your inbox</div>
+      </div>
+      <div style={{marginLeft:'auto'}} className="tag-badge">
+        <span style={{width:7,height:7,borderRadius:'50%',background:'#4ade80',display:'inline-block',boxShadow:'0 0 8px rgba(74,222,128,0.6)'}}></span>
+        Live Now
+      </div>
+    </div>
+    <div style={{fontFamily:'Space Grotesk,sans-serif',fontWeight:700,fontSize:22,color:'#fff',marginBottom:10}}>
+      Lead Capture → CRM → Follow-Up Automation
+    </div>
+    <div style={{fontSize:16,color:'rgba(255,255,255,0.55)',lineHeight:1.7,marginBottom:22}}>
+      A proven n8n workflow that captures leads from any form, auto-adds them to your CRM, and triggers a personalised follow-up sequence — without you lifting a finger. Used by real businesses to reclaim hours every week.
+    </div>
+    <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+      {['n8n','CRM Integration','Email Automation','Lead Nurturing'].map(t=>(
+        <span key={t} style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:20,padding:'5px 13px',fontSize:13,color:'rgba(255,255,255,0.5)',fontFamily:'Inter,sans-serif'}}>{t}</span>
+      ))}
+    </div>
+  </div>
+);
+
+// ── Thank You Modal ─────────────────────────────────────────
+const ThankYouModal = ({ onClose }) => {
+  React.useEffect(()=>{
+    document.body.style.overflow='hidden';
+    return ()=>{document.body.style.overflow=''};
+  },[]);
+  return (
+    <div className="overlay" onClick={onClose}>
+      <div className="modal" onClick={e=>e.stopPropagation()}>
+        <div style={{fontSize:64,marginBottom:20,animation:'floatC 3s ease-in-out infinite'}}>🎁</div>
+        <div style={{fontFamily:'Space Grotesk,sans-serif',fontWeight:800,fontSize:30,color:'#fff',marginBottom:10,lineHeight:1.2}}>
+          It's on its way!
+        </div>
+        <div style={{fontSize:16,color:'rgba(255,255,255,0.55)',lineHeight:1.75,marginBottom:10}}>
+          Thank you — check your inbox for this month's free workflow.
+        </div>
+        <div style={{
+          background:'rgba(249,217,35,0.07)',
+          border:'1px solid rgba(249,217,35,0.18)',
+          borderRadius:12,
+          padding:'14px 20px',
+          fontSize:15,
+          color:'rgba(255,255,255,0.6)',
+          lineHeight:1.7,
+          marginBottom:28,
+        }}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:10,color:'rgba(255,255,255,0.6)'}}><LineIcon name="calendar" size={18}/><span><strong style={{color:'rgba(255,255,255,0.85)'}}>Come back next month</strong> for a brand-new workflow — every one is hand-picked and proven to add real value.</span></div>
+        </div>
+        <button onClick={onClose} style={{
+          background:'linear-gradient(90deg,#f9d923,#ffb347)',
+          color:'#0C0821',border:'none',borderRadius:12,
+          padding:'14px 36px',fontFamily:'Inter,sans-serif',
+          fontWeight:700,fontSize:16,cursor:'pointer',
+          boxShadow:'0 8px 28px rgba(249,217,35,0.3)',
+        }}>Done →</button>
+      </div>
+    </div>
+  );
+};
+
+// ── Main Page ───────────────────────────────────────────────
+const FreeGiftPage = () => {
+  const [email, setEmail] = React.useState('');
+  const [submitted, setSubmitted] = React.useState(false);
+  const [shake, setShake] = React.useState(false);
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) { setShake(true); setTimeout(()=>setShake(false),600); return; }
+    setSubmitted(true);
+  };
+
+  return (
+    <div>
+      <SiteNav active="Free Gift"/>
+
+      {/* ── HERO ─────────────────────────────────────── */}
+      <section style={{
+        position:'relative', minHeight:'100vh',
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        padding:'120px 24px 80px', overflow:'hidden', textAlign:'center',
+      }}>
+        <NodeCanvas count={28} opacity={0.6}/>
+        <Particles/>
+        {/* background gradient blobs */}
+        <div style={{position:'absolute',top:'10%',left:'15%',width:500,height:500,borderRadius:'50%',background:'radial-gradient(circle,rgba(249,217,35,0.07) 0%,transparent 65%)',pointerEvents:'none'}}/>
+        <div style={{position:'absolute',bottom:'15%',right:'10%',width:400,height:400,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,93,225,0.12) 0%,transparent 65%)',pointerEvents:'none'}}/>
+
+        {/* Floating orbs */}
+        <Orb size={60} top="20%" left="8%" color="#f9d923" delay={0} animName="floatA"/>
+        <Orb size={40} top="30%" left="88%" color="#ffb347" delay={1} animName="floatB"/>
+        <Orb size={30} top="70%" left="5%" color="#5B5DE1" delay={0.5} animName="floatC"/>
+        <Orb size={50} top="75%" left="85%" color="#f9d923" delay={1.5} animName="floatA"/>
+        <SpinRing size={200} top="12%" left="72%" color="#f9d923" dur={18}/>
+        <SpinRing size={140} top="60%" left="4%" color="#5B5DE1" dur={14}/>
+
+        <div style={{position:'relative',zIndex:2,maxWidth:780,margin:'0 auto'}}>
+          {/* label */}
+          <div style={{animation:'fadeInUp 0.6s ease both',animationDelay:'0.05s'}}>
+            <div className="tag-badge" style={{margin:'0 auto 28px',fontSize:14,padding:'8px 18px',gap:8}}>
+              <span>🎁</span> Free Every Month — No Strings Attached
+            </div>
+          </div>
+
+          {/* gift box */}
+          <div style={{animation:'fadeInUp 0.6s ease both',animationDelay:'0.1s',marginBottom:24}}>
+            <GiftBox/>
+          </div>
+
+          {/* headline */}
+          <div style={{animation:'fadeInUp 0.65s ease both',animationDelay:'0.15s'}}>
+            <h1 className="gift-title" style={{
+              fontFamily:'Space Grotesk,sans-serif',
+              fontWeight:800,
+              fontSize:'clamp(42px,6vw,74px)',
+              lineHeight:1.08,
+              marginBottom:20,
+              letterSpacing:-1.5,
+            }}>
+              Start Getting Results.<br/>Before You Spend a Penny.
+            </h1>
+          </div>
+
+          {/* subline */}
+          <div style={{animation:'fadeInUp 0.65s ease both',animationDelay:'0.22s'}}>
+            <p style={{
+              fontFamily:'Inter,sans-serif',fontSize:'clamp(17px,2vw,21px)',
+              color:'rgba(255,255,255,0.55)',lineHeight:1.75,maxWidth:580,margin:'0 auto 36px',
+            }}>
+              Each month we hand you a <strong style={{color:'rgba(255,255,255,0.85)'}}>ready-to-run automation workflow</strong> — proven to add real value to businesses — completely free. No catch. Just results.
+            </p>
+          </div>
+
+          {/* ── Email form ── */}
+          <div style={{animation:'fadeInUp 0.65s ease both',animationDelay:'0.3s'}}>
+            <form onSubmit={handleSubmit} style={{
+              display:'flex',gap:12,maxWidth:520,margin:'0 auto 16px',
+              flexWrap:'wrap',justifyContent:'center',
+            }}>
+              <input
+                className="email-input"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={e=>setEmail(e.target.value)}
+                style={{
+                  flex:'1 1 260px',
+                  outline:'none',
+                  animation: shake ? 'none' : undefined,
+                  transform: shake ? 'translateX(0)' : undefined,
+                  boxShadow: shake ? '0 0 0 3px rgba(239,68,68,0.4)' : undefined,
+                }}
+              />
+              <button type="submit" className="submit-btn">
+                Send It to Me →
+              </button>
+            </form>
+            <div style={{fontSize:13,color:'rgba(255,255,255,0.2)',fontFamily:'Inter,sans-serif'}}>
+              No spam. Unsubscribe anytime. Ever.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── VALUE STRIP ─────────────────────────────── */}
+      <section style={{padding:'0 24px 100px'}}>
+        <div style={{maxWidth:1060,margin:'0 auto'}}>
+          <div style={{textAlign:'center',marginBottom:48}}>
+            <SLabel color="#f9d923">The Promise</SLabel>
+            <div style={{fontFamily:'Space Grotesk,sans-serif',fontWeight:800,fontSize:'clamp(26px,3.5vw,38px)',color:'#fff',letterSpacing:-0.5,maxWidth:560,margin:'0 auto'}}>
+              Every month. Guaranteed value.<br/>No fluff.
+            </div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:20}}>
+            {[
+              { icon:'refresh', title:'Refreshes Monthly', body:'Every month a brand-new workflow drops. Each one is hand-selected for real-world impact.' },
+              { icon:'check', title:'Proven in the Wild', body:'These aren\'t demos. They\'re workflows that have already added measurable value to real businesses.' },
+              { icon:'bolt', title:'Ready to Run', body:'Drop it into n8n, configure in minutes, and watch it work — no technical expertise required.' },
+              { icon:'target', title:'Built for Business', body:'Each workflow targets a common business bottleneck. Time saved. Revenue protected. Stress reduced.' },
+            ].map(c=>(
+              <div key={c.title} className="value-card">
+                <div style={{width:50,height:50,borderRadius:12,border:'1px solid rgba(255,255,255,0.18)',display:'inline-flex',alignItems:'center',justifyContent:'center',color:'rgba(255,255,255,0.6)',marginBottom:14}}><LineIcon name={c.icon} size={24}/></div>
+                <div style={{fontFamily:'Space Grotesk,sans-serif',fontWeight:700,fontSize:19,color:'#fff',marginBottom:10}}>{c.title}</div>
+                <div style={{fontSize:15,color:'rgba(255,255,255,0.48)',lineHeight:1.7}}>{c.body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── MONTHLY GUARANTEE BANNER ─────────────────── */}
+      <section style={{padding:'0 24px 100px'}}>
+        <div style={{
+          maxWidth:900,margin:'0 auto',
+          background:'linear-gradient(135deg,rgba(249,217,35,0.08) 0%,rgba(255,179,71,0.06) 50%,rgba(91,93,225,0.08) 100%)',
+          border:'1px solid rgba(249,217,35,0.18)',
+          borderRadius:24,padding:'52px 48px',
+          textAlign:'center',position:'relative',overflow:'hidden',
+        }}>
+          {/* sweep */}
+          <div style={{position:'absolute',top:0,left:0,width:'50%',height:'100%',background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.03),transparent)',animation:'ribbonSweep 4s ease-in-out infinite',pointerEvents:'none'}}/>
+          <div style={{width:64,height:64,borderRadius:14,border:'1px solid rgba(255,255,255,0.2)',display:'inline-flex',alignItems:'center',justifyContent:'center',color:'rgba(255,255,255,0.7)',marginBottom:20}}><LineIcon name="package" size={32}/></div>
+          <div style={{fontFamily:'Space Grotesk,sans-serif',fontWeight:800,fontSize:'clamp(22px,3vw,34px)',color:'#fff',marginBottom:16,letterSpacing:-0.5}}>
+            A new workflow lands every month —<br/>and it's guaranteed to add value.
+          </div>
+          <div style={{fontSize:17,color:'rgba(255,255,255,0.5)',lineHeight:1.75,maxWidth:560,margin:'0 auto 28px'}}>
+            We don't send filler. Every workflow we release is a proven system that businesses have used to save time, cut costs, or grow faster. If it hasn't done that, it doesn't ship.
+          </div>
+          <div className="tag-badge" style={{margin:'0 auto',fontSize:14,padding:'10px 20px'}}>
+            <span style={{display:'inline-flex',color:'rgba(255,255,255,0.6)'}}><LineIcon name="lock" size={14}/></span> No cost. No commitment. Just value delivered.
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter/>
+
+      {submitted && <ThankYouModal onClose={()=>setSubmitted(false)}/>}
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<FreeGiftPage/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

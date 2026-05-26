@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Built Solutions — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:#060725;color:#F7EFFD;font-family:'Inter',sans-serif;font-size:17px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}::selection{background:rgba(119,218,251,0.3)}
+.pkg-card{transition:transform 0.22s,box-shadow 0.22s,border-color 0.22s;cursor:pointer}
+.pkg-card:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(24,89,209,0.28)!important;border-color:rgba(119,218,251,0.35)!important}
+.jump-pill{transition:all 0.2s;cursor:pointer}
+.jump-pill:hover{background:rgba(24,89,209,0.15)!important;color:#F7EFFD!important}
+.btn-primary:hover{box-shadow:0 0 40px rgba(119,218,251,0.5)!important;transform:translateY(-1px)}
+.btn-ghost:hover{background:rgba(255,255,255,0.08)!important}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes logoLetterPulse{0%,100%{opacity:.13;transform:translateY(-52%) scale(1)}50%{opacity:.22;transform:translateY(-52%) scale(1.07)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ringPulse{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.7}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+@keyframes ringPulse2{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.5}100%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}
+@keyframes breathGlow{0%,100%{box-shadow:0 0 30px rgba(24,89,209,0.35),inset 0 0 30px rgba(24,89,209,0.06)}50%{box-shadow:0 0 80px rgba(24,89,209,0.7),0 0 140px rgba(70,13,151,0.4),inset 0 0 60px rgba(24,89,209,0.14)}}
+@keyframes orbitDot{0%{transform:rotate(0deg) translateX(180px) rotate(0deg)}100%{transform:rotate(360deg) translateX(180px) rotate(-360deg)}}
+@keyframes orbitDot2{0%{transform:rotate(120deg) translateX(200px) rotate(-120deg)}100%{transform:rotate(480deg) translateX(200px) rotate(-480deg)}}
+@keyframes orbitDot3{0%{transform:rotate(240deg) translateX(160px) rotate(-240deg)}100%{transform:rotate(600deg) translateX(160px) rotate(-600deg)}}
+@keyframes shimmerBtn{0%,100%{background-position:200% center}50%{background-position:-200% center}}
+</style>
+</head>
+<body>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel">
+
+const CATS = ['Sales','Marketing','Admin','Operations','Outside the Box'];
+
+const PACKAGES = {
+  Sales: [
+    { title:'Lead Capture to CRM Sync', desc:'Captures leads from any form or channel and pushes them straight into your CRM — automatically.', longDesc:'Every lead that hits your website, Facebook ad, or landing page is instantly captured, enriched with additional data, and pushed into your CRM with a follow-up task assigned to the right person. No copy-pasting. No dropped leads. No manual data entry. The workflow also deduplicates records so your CRM stays clean, and fires an internal Slack or email alert so your team can act within minutes — not hours. Businesses using this workflow have reported recovering 20–30% of leads that previously fell through the cracks.', time:'4–6 hrs/week', value:'R6k–R15k/month', price:'R4,890' },
+    { title:'AI Lead Qualification', desc:'Scores every inbound lead automatically and routes the hot ones to your team before they go cold.', longDesc:'Not all leads are equal — and this workflow knows the difference. Using AI, it scores each inbound lead based on your criteria (budget signals, industry, message urgency, source quality), tags them in your CRM, and routes high-priority leads to your sales team instantly via WhatsApp, Slack, or email. Low-scoring leads are queued for nurture. The result: your team focuses on the right people at the right time, while no lead is ever ignored. Setup takes one session and it learns as you go.', time:'5–8 hrs/week', value:'R8k–R20k/month', price:'R6,240' },
+    { title:'Missed Call Recovery', desc:'Every missed call triggers an automatic follow-up so leads never go cold while you\'re busy.', longDesc:'A missed call is a missed opportunity — unless this workflow is running. The moment a call goes unanswered, an automated WhatsApp or SMS is sent to the caller acknowledging the miss and inviting them to book a callback or leave a message. Simultaneously, your team gets an internal alert. High-value callers (identified by previous CRM interactions) get a prioritised response. Used by service businesses, clinics, and property agents who can\'t afford to lose inbound interest to a ringing phone.', time:'3–5 hrs/week', value:'R5k–R12k/month', price:'R5,310' },
+    { title:'Quote Follow-Up Sequence', desc:'Sends timed reminders after a quote is issued so you never lose a deal to silence.', longDesc:'Most deals die not because the client said no — but because no one followed up. This workflow sends a structured sequence of follow-up messages after every quote is issued: a warm check-in at 48 hours, a value reminder at day 5, and an urgency nudge at day 10. If there\'s no response after a set threshold, the owner gets an alert for a personal touch. High-value quotes trigger a separate, more frequent sequence. It runs silently in the background and has measurably increased close rates for every business that\'s deployed it.', time:'4–7 hrs/week', value:'R7k–R18k/month', price:'R6,980' },
+    { title:'Sales Pipeline Alert System', desc:'Flags stalled deals automatically so nothing gets stuck without someone knowing about it.', longDesc:'Deals stall for many reasons — but the damage happens when no one notices for weeks. This workflow monitors your CRM pipeline and flags any deal that hasn\'t moved in a configurable period (e.g. 3, 5, or 7 days). It sends role-based reminders to the responsible rep, and escalates to management if the deal stays stuck. You can configure different thresholds per deal size or pipeline stage. The result is a pipeline that moves — not one that silently rots while your team chases other things.', time:'3–6 hrs/week', value:'R6k–R14k/month', price:'R5,760' },
+    { title:'Lead Source Performance Tracker', desc:'Automatically tracks which channels bring the best leads and delivers the data to you daily.', longDesc:'Stop guessing which marketing channel is actually working. This workflow captures the source of every inbound lead, cross-references it against your CRM outcomes, and builds a live performance snapshot. Every morning (or weekly, your choice), it pushes a structured summary to you or your team: leads by source, conversion rates, and cost-per-lead if integrated with ad spend. It runs across Facebook, Google, WhatsApp, referral, and organic — all in one view. Finally, data-driven decisions without a data analyst.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R6,430' },
+  ],
+  Marketing: [
+    { title:'Review Request Engine', desc:'Sends review requests automatically after every completed job and routes the best ones first.', longDesc:'Reviews are revenue — but asking for them manually is awkward, inconsistent, and easy to forget. This workflow triggers a personalised review request via WhatsApp or email after each job is marked complete, waits for a response window, and routes positive sentiment toward your Google or Trustpilot profile. Neutral or negative responses trigger an internal alert so you can manage the relationship before it becomes a public complaint. Businesses using this system have doubled their monthly review count within 90 days.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R4,560' },
+    { title:'Content Repurposing Workflow', desc:'Takes one piece of content and turns it into multiple post-ready formats automatically.', longDesc:'Your ideas shouldn\'t die after one LinkedIn post. This workflow takes a single input — a voice note, a draft blog, a meeting transcript — and uses AI to produce multiple output formats: a social caption, a short-form video script, a newsletter intro, and a thread outline. Each is structured for a specific platform and dropped into a draft folder or Notion for your review. It doesn\'t replace your voice — it amplifies it. One hour of thinking becomes a week of content.', time:'5–8 hrs/week', value:'R7k–R18k/month', price:'R7,130' },
+    { title:'Campaign Lead Nurture Flow', desc:'Moves new leads into a structured nurture journey automatically — no manual intervention needed.', longDesc:'The moment a lead enters your world — via a form, a lead magnet, or a paid ad — this workflow places them into a timed nurture sequence tailored to their entry point. Over days or weeks, they receive value-first messages that build trust, answer common objections, and guide them toward a booking or purchase. The sequence adapts based on engagement: if they click a link, they move to a hotter track. If they go quiet, a re-engagement message fires. It\'s a full sales assistant working quietly in the background, 24 hours a day.', time:'4–7 hrs/week', value:'R6k–R16k/month', price:'R6,740' },
+    { title:'Ad Lead Response Router', desc:'Routes paid-ad leads to the right person or CRM stage the moment they come in.', longDesc:'Speed-to-lead is everything in paid advertising. This workflow catches every lead the moment it\'s submitted from Facebook, Google, or TikTok, enriches it with source and campaign data, and routes it instantly to the correct CRM stage, team member, and follow-up channel. High-intent leads trigger a WhatsApp message within 60 seconds. The campaign and ad set that generated the lead are logged automatically for attribution. No more leads rotting in a spreadsheet while someone checks their email.', time:'3–5 hrs/week', value:'R5k–R13k/month', price:'R5,980' },
+    { title:'Referral Tracking Workflow', desc:'Tracks every referral automatically and sends thank-you follow-ups without you lifting a finger.', longDesc:'Referrals are your best leads — but most businesses have no system to track them, reward them, or encourage more of them. This workflow captures referral sources at the point of entry, logs them against outcomes in your CRM, and triggers an automatic thank-you message to the referrer when a deal closes. It also generates a monthly referral summary so you know exactly who\'s sending you business and how much that\'s worth. A simple, powerful way to make your best clients feel seen.', time:'2–4 hrs/week', value:'R4k–R11k/month', price:'R5,420' },
+    { title:'Marketing KPI Digest', desc:'Builds and delivers a clear marketing summary to you on a schedule — no dashboard-digging required.', longDesc:'Most business owners don\'t have time to log into three platforms and stitch together their own marketing picture. This workflow pulls key data from your connected tools — website traffic, lead volume, email open rates, ad spend, and social reach — and compiles it into a clean, readable digest delivered to your inbox or WhatsApp every Monday morning. No fluff. Just the numbers that matter. You stay informed without spending an hour every week hunting through dashboards.', time:'3–5 hrs/week', value:'R5k–R12k/month', price:'R6,210' },
+  ],
+  Admin: [
+    { title:'Invoice Reminder Automation', desc:'Sends payment reminders and flags overdue invoices automatically — no manual chasing required.', longDesc:'Late payments hurt cash flow — but manually chasing clients is uncomfortable and time-consuming. This workflow monitors your invoicing system and triggers a polite, professional reminder sequence for every overdue invoice: a friendly nudge at 3 days, a firmer reminder at 7, and an escalation alert to the owner at 14. Clients who pay are automatically removed from the sequence. The internal dashboard gives you a live view of outstanding amounts at any time. Businesses using this system have reduced average payment time by over 40%.', time:'3–6 hrs/week', value:'R5k–R14k/month', price:'R4,980' },
+    { title:'New Client Onboarding Pack', desc:'Sends every new client exactly what they need to get started — automatically, the moment they sign.', longDesc:'First impressions are made or broken in the first 48 hours. This workflow fires the moment a new client is confirmed — sending a personalised welcome email, a link to complete their onboarding form, their signed agreement, and a calendar invite for the kickoff call. Internally, it creates the client file, assigns tasks to your team, and sets reminders for key milestones. Nothing falls through. Everything is consistent. And your client feels like they\'ve just signed with a world-class operation — because they have.', time:'4–7 hrs/week', value:'R6k–R16k/month', price:'R6,590' },
+    { title:'Document Request Tracker', desc:'Chases missing documents automatically so your team doesn\'t have to send awkward follow-up emails.', longDesc:'Waiting for documents is a silent productivity killer. This workflow sends a structured request for any outstanding document (ID copies, contracts, financial statements, sign-offs), tracks responses, and sends escalating follow-ups until the item is received. Once uploaded, it\'s automatically filed and the relevant team member is notified. The outstanding list is visible in a shared dashboard in real time. No more "did you get my email?" back-and-forth — just a clean, professional system that gets things done.', time:'3–5 hrs/week', value:'R4k–R11k/month', price:'R5,740' },
+    { title:'Internal Approval Flow', desc:'Routes requests through the right approval steps automatically — with status updates along the way.', longDesc:'Approvals that depend on email chains get lost. This workflow replaces those chains with a structured routing system: a request is submitted, sent to the first approver, and — once approved — passed automatically to the next stage. Rejections trigger a notification with a reason. Delays beyond a set window trigger an escalation. Every approval is logged with a timestamp and an outcome. Whether it\'s leave requests, purchase orders, or client sign-offs, this workflow makes the process fast, transparent, and trackable.', time:'4–6 hrs/week', value:'R6k–R15k/month', price:'R6,860' },
+    { title:'Meeting Summary Dispatcher', desc:'Sends AI-generated meeting summaries and action items to all attendees automatically after every call.', longDesc:'Meetings are only valuable if people act on what was discussed. This workflow connects to your calendar and — after each meeting — uses AI to produce a clean summary of key points, decisions made, and action items with owners and due dates. It sends this to every attendee within 15 minutes of the meeting ending. For recurring team meetings, it also tracks which action items from last week were completed and which are still outstanding. No more "what did we agree on?" moments.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R5,630' },
+    { title:'Staff Task Reminder System', desc:'Keeps recurring admin tasks on track by sending team members timely, automatic reminders.', longDesc:'Recurring tasks — monthly reports, weekly check-ins, compliance submissions, safety checks — are easy to forget when everyone is busy. This workflow builds a structured reminder calendar and sends the right prompt to the right person at the right time, based on your schedule and role assignments. It also tracks whether the task was acknowledged or marked complete, and escalates to management if it\'s missed. Simple, reliable, and far more effective than hoping people remember.', time:'2–3 hrs/week', value:'R3k–R8k/month', price:'R4,790' },
+  ],
+  Operations: [
+    { title:'Job Status Update Workflow', desc:'Keeps clients and internal teams updated automatically as each job moves through its stages.', longDesc:'Clients who don\'t know what\'s happening with their job call to find out — and that call takes time you don\'t have. This workflow monitors your job management system and fires a status update to the client at every key milestone: job received, work in progress, quality check, ready for delivery, complete. Internally, it updates the ops board and notifies the next person in the chain. No one is left wondering. Your team stops fielding "where is my job?" calls, and your clients feel genuinely looked after.', time:'4–7 hrs/week', value:'R7k–R18k/month', price:'R6,920' },
+    { title:'Order Handoff Automation', desc:'Moves order data from sales to operations automatically — no re-entry, no errors, no delays.', longDesc:'The handoff between sales and operations is where things break. Details get re-entered incorrectly. Emails get missed. Jobs start late. This workflow captures every confirmed order and pushes the complete, formatted job brief directly into your ops system — whether that\'s a spreadsheet, a project management tool, or a production system — along with all client details, specifications, and timelines. The ops team is notified immediately and a kickoff checklist is created automatically. Fewer errors. Faster starts. Happier clients.', time:'5–8 hrs/week', value:'R8k–R20k/month', price:'R7,480' },
+    { title:'Stock Alert and Reorder Notice', desc:'Monitors stock levels and fires alerts automatically when anything falls below your set threshold.', longDesc:'Running out of stock mid-job is one of the most avoidable operational failures — and this workflow prevents it. It connects to your inventory system, monitors levels against configurable thresholds, and sends an alert the moment anything drops too low. For critical items, it can also draft a reorder message to your supplier. A weekly stock health summary is also delivered automatically so you can spot trends before they become problems. Set it once, and you\'ll never be caught short again.', time:'3–5 hrs/week', value:'R5k–R12k/month', price:'R5,890' },
+    { title:'Daily Ops Summary Dashboard Push', desc:'Compiles your key operational numbers and delivers them to you on a schedule — automatically.', longDesc:'Running a business without a daily ops view is like driving blind. This workflow collects your key metrics — jobs in progress, jobs completed, outstanding orders, team utilisation, flagged issues — and compiles them into a clean, readable summary delivered to your phone or inbox every morning before you start your day. It\'s not a fancy dashboard you have to log into — it\'s a briefing that comes to you. Owners who use this report faster decision-making and fewer operational surprises.', time:'3–5 hrs/week', value:'R5k–R13k/month', price:'R6,350' },
+    { title:'Service Ticket Routing', desc:'Routes every service request to the right team automatically — with priority tagging on submission.', longDesc:'Service requests that land in a shared inbox get ignored, duplicated, and delayed. This workflow captures every inbound service ticket — from email, a web form, or WhatsApp — classifies it by type and urgency using AI, and routes it to the right team or individual with a priority tag. An acknowledgement is sent to the client automatically. High-priority tickets trigger an immediate alert. The team gets a clean queue. The client gets a professional response. And nothing falls through.', time:'4–6 hrs/week', value:'R6k–R15k/month', price:'R6,770' },
+    { title:'Workflow Escalation Engine', desc:'Automatically escalates delayed tasks, blocked jobs, and missed SLAs before they become real problems.', longDesc:'Most operational failures don\'t happen suddenly — they\'re preceded by a series of delays that no one escalated. This workflow monitors your active jobs, tasks, and SLA commitments, and the moment something is running late, it fires a structured escalation: a reminder to the responsible person, followed by a management alert if the window passes. The escalation trail is logged automatically so you have a clear record of what happened and when. It\'s the operational safety net that prevents small delays from becoming expensive failures.', time:'4–7 hrs/week', value:'R6k–R17k/month', price:'R7,040' },
+  ],
+  'Outside the Box': [
+    { title:'WhatsApp Concierge Assistant', desc:'Handles inbound WhatsApp questions intelligently and escalates real opportunities to your team.', longDesc:'Your WhatsApp inbox is a sales channel — but manually answering every message is exhausting. This workflow deploys an AI concierge that handles common inbound questions (pricing, availability, process, FAQs) instantly, 24/7. When a message signals genuine buying intent or requires a human, it escalates to your team with a full conversation summary and a suggested next step. Your team spends time on the right conversations. Your clients get an immediate, professional response at any hour. And you never miss a lead hiding in your inbox.', time:'5–8 hrs/week', value:'R7k–R18k/month', price:'R7,260' },
+    { title:'Voice Note to Task Workflow', desc:'Turns your voice notes into structured tasks, summaries, and reminders automatically.', longDesc:'Owners think faster than they type. This workflow lets you send a voice note to a dedicated WhatsApp number or inbox, and within minutes it\'s transcribed, summarised by AI, and turned into a set of structured tasks with owners, deadlines, and priorities — pushed directly into your project management tool. No more ideas lost in voice note archives. No more manual transcription. Just think out loud, and let the system handle the rest. Built for founders who move fast and think on their feet.', time:'2–4 hrs/week', value:'R4k–R10k/month', price:'R5,540' },
+    { title:'AI Proposal Builder', desc:'Builds a complete first-draft proposal from intake answers in minutes — not hours.', longDesc:'Writing proposals is one of the highest-value, most time-consuming tasks in any service business. This workflow shortens it dramatically. When a new enquiry comes in, it sends a structured intake form. The moment the form is completed, AI uses the answers — combined with your internal templates and pricing logic — to produce a tailored first-draft proposal. It\'s sent to you for review and light editing, then dispatched to the client. What used to take 3 hours now takes 20 minutes. And the quality is consistently high.', time:'4–7 hrs/week', value:'R7k–R18k/month', price:'R7,390' },
+    { title:'Webform to Instant Estimate', desc:'Generates an instant estimate or next step recommendation the moment a website form is submitted.', longDesc:'Visitors who fill in your contact form are already interested — and they expect a fast response. This workflow captures the submission, uses the information provided to generate a rough estimate or a set of tailored next-step recommendations using AI and your pricing logic, and delivers it back to the enquirer within minutes. It also alerts your team with a qualified brief. The effect: your business feels faster and more professional than competitors who take 24 hours to reply with a generic response.', time:'3–6 hrs/week', value:'R5k–R14k/month', price:'R6,680' },
+    { title:'Knowledge Base Answer Assistant', desc:'Pulls answers from your internal docs and prepares draft replies for your team — instantly.', longDesc:'Every business has information locked in documents, past emails, and team knowledge that never gets used efficiently. This workflow connects to your internal knowledge base — Google Drive, Notion, a SharePoint folder — and when a client question comes in, it searches for the most relevant answer, drafts a professional reply, and sends it to your team for one-click approval and dispatch. Response times drop. Consistency improves. And your team stops spending 20 minutes writing answers they\'ve written a hundred times before.', time:'4–6 hrs/week', value:'R6k–R16k/month', price:'R7,110' },
+    { title:'Executive Daily Brief', desc:'Delivers a personalised daily briefing to the owner — leads, jobs, cash signals, and open issues.', longDesc:'Running a business means being pulled in every direction before 9am. This workflow gives you back your mornings. Every day, before you start, it compiles a structured briefing: new leads received, jobs in progress, overdue invoices, flagged team issues, and any items that require your attention. It\'s sent directly to your phone — no logins, no dashboards, no digging. Owners who use this report feeling more in control, catching problems earlier, and spending less time in reactive mode and more time on growth.', time:'3–5 hrs/week', value:'R5k–R13k/month', price:'R6,460' },
+  ],
+};
+
+// ── INCLUDED ITEMS with individual values ────────────────────
+const INCLUDED = [
+  { label:'Workflow file',        value:'R1,200' },
+  { label:'Installation guide',   value:'R800'   },
+  { label:'Setup documents',      value:'R600'   },
+  { label:'2-hour setup call',    value:'R3,000' },
+  { label:'Launch support',       value:'R1,500' },
+  { label:'Handover notes',       value:'R500'   },
+];
+
+// helper — strip 'R' and commas, parse to int
+const parseRand = s => parseInt(s.replace(/[R,]/g,''), 10) || 0;
+
+// ── PACKAGE CARD ─────────────────────────────────────────────
+const PkgCard = ({ pkg, onOpen }) => {
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpand = (e) => {
+    e.stopPropagation();
+    setExpanded(v => !v);
+  };
+
+  return (
+    <div className="pkg-card" onClick={() => onOpen(pkg)} style={{
+      borderRadius:14, border:'1px solid rgba(255,255,255,0.09)',
+      background:'rgba(15,13,61,0.55)', padding:'24px 22px',
+      display:'flex', flexDirection:'column', gap:14,
+      boxShadow:'0 4px 20px rgba(0,0,0,0.3)',
+    }}>
+      <div style={{ width:40, height:40, borderRadius:10, background:'transparent', border:'1px solid rgba(255,255,255,0.18)', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)' }}><LineIcon name="bolt" size={18}/></div>
+      <div>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:18, color:'#fff', marginBottom:8, lineHeight:1.3 }}>{pkg.title}</div>
+        {/* short description always visible */}
+        <div style={{ fontSize:13.5, color:'rgba(255,255,255,0.5)', lineHeight:1.65 }}>{pkg.desc}</div>
+        {/* expanded long description */}
+        {expanded && (
+          <div style={{ fontSize:13, color:'rgba(255,255,255,0.38)', lineHeight:1.75, marginTop:10, paddingTop:10, borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+            {pkg.longDesc}
+          </div>
+        )}
+        {/* more / less toggle */}
+        <button onClick={handleExpand} style={{
+          marginTop:8, background:'none', border:'none', cursor:'pointer',
+          display:'inline-flex', alignItems:'center', gap:4,
+          fontSize:12, color:'rgba(119,218,251,0.9)', fontFamily:'Inter,sans-serif', fontWeight:600,
+          padding:0, letterSpacing:0.3,
+        }}>
+          {expanded ? 'Less ↑' : 'More ↓'}
+        </button>
+      </div>
+      <div style={{ marginTop:'auto', display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:14, borderTop:'1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:20, color:'#77DAFB' }}>{pkg.price}</div>
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:3 }}>
+          <div style={{ fontSize:12, color:'rgba(255,255,255,0.55)', fontWeight:600 }}>{pkg.value}/mo</div>
+          <div style={{ fontSize:11, color:'rgba(255,255,255,0.35)' }}>saves {pkg.time}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── MODAL ────────────────────────────────────────────────────
+const Modal = ({ pkg, onClose, onBook }) => {
+  const [descExpanded, setDescExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  if (!pkg) return null;
+
+  // compute total value: included items + bonus gift
+  const includedTotal = INCLUDED.reduce((sum, item) => sum + parseRand(item.value), 0);
+  const bonusValue = 3000;
+  const grandTotal = includedTotal + bonusValue;
+  const fmtRand = n => 'R' + n.toLocaleString('en-ZA');
+
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(6,7,37,0.92)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:24, backdropFilter:'blur(10px)', animation:'fadeIn 0.18s ease' }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        background:'#0F0D3D', border:'1px solid rgba(24,89,209,0.38)', borderRadius:20,
+        maxWidth:640, width:'100%', padding:'40px',
+        boxShadow:'0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(70,13,151,0.28)',
+        animation:'slideUp 0.22s ease', maxHeight:'92vh', overflowY:'auto',
+      }}>
+
+        {/* ── header ── */}
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:20 }}>
+          <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:22, fontWeight:700, color:'#fff', lineHeight:1.2, flex:1, paddingRight:16 }}>{pkg.title}</div>
+          <button onClick={onClose} style={{ background:'rgba(255,255,255,0.08)', border:'none', color:'rgba(255,255,255,0.5)', cursor:'pointer', width:32, height:32, borderRadius:8, fontSize:20, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>×</button>
+        </div>
+
+        {/* ── description (short + expandable) ── */}
+        <div style={{ marginBottom:24, background:'rgba(255,255,255,0.03)', borderRadius:12, padding:'18px 20px', border:'1px solid rgba(255,255,255,0.07)' }}>
+          <p style={{ fontSize:16, color:'rgba(255,255,255,0.62)', lineHeight:1.75, margin:0 }}>{pkg.desc}</p>
+          {descExpanded && (
+            <p style={{ fontSize:14.5, color:'rgba(255,255,255,0.42)', lineHeight:1.8, marginTop:14, paddingTop:14, borderTop:'1px solid rgba(255,255,255,0.07)', marginBottom:0 }}>
+              {pkg.longDesc}
+            </p>
+          )}
+          <button onClick={() => setDescExpanded(v => !v)} style={{
+            marginTop:10, background:'none', border:'none', cursor:'pointer',
+            display:'inline-flex', alignItems:'center', gap:5,
+            fontSize:13, color:'#77DAFB', fontFamily:'Inter,sans-serif', fontWeight:600, padding:0,
+          }}>
+            {descExpanded ? 'Show less ↑' : 'Read more ↓'}
+          </button>
+        </div>
+
+        {/* ── stats ── */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:28 }}>
+          <div style={{ background:'rgba(24,89,209,0.1)', border:'1px solid rgba(24,89,209,0.25)', borderRadius:10, padding:'14px 16px' }}>
+            <div style={{ fontSize:10, letterSpacing:2, color:'#77DAFB', textTransform:'uppercase', marginBottom:6, fontWeight:700 }}>Time Saved</div>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:20, color:'#77DAFB' }}>{pkg.time}</div>
+          </div>
+          <div style={{ background:'rgba(24,89,209,0.1)', border:'1px solid rgba(24,89,209,0.25)', borderRadius:10, padding:'14px 16px' }}>
+            <div style={{ fontSize:10, letterSpacing:2, color:'#77DAFB', textTransform:'uppercase', marginBottom:6, fontWeight:700 }}>Est. Monthly Value</div>
+            <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:20, color:'#77DAFB' }}>{pkg.value}</div>
+          </div>
+        </div>
+
+        {/* ── what's included ── */}
+        <div style={{ marginBottom:16 }}>
+          <div style={{ fontSize:11, letterSpacing:2.5, color:'rgba(247,239,253,0.4)', textTransform:'uppercase', marginBottom:14, fontWeight:700, fontFamily:'Space Grotesk,sans-serif' }}>What's Included</div>
+          <div style={{ display:'flex', flexDirection:'column', gap:0, borderRadius:12, overflow:'hidden', border:'1px solid rgba(255,255,255,0.08)' }}>
+            {INCLUDED.map((item, i) => (
+              <div key={item.label} style={{
+                display:'flex', alignItems:'center', justifyContent:'space-between',
+                padding:'11px 16px',
+                background: i % 2 === 0 ? 'rgba(255,255,255,0.025)' : 'rgba(255,255,255,0.015)',
+                borderBottom: i < INCLUDED.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+              }}>
+                <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                  <LineIcon name="check" size={14} color="rgba(255,255,255,0.55)" stroke={2}/>
+                  <span style={{ fontSize:14, color:'rgba(255,255,255,0.65)' }}>{item.label}</span>
+                </div>
+                <span style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:14, color:'rgba(255,255,255,0.45)' }}>{item.value}</span>
+              </div>
+            ))}
+
+            {/* ── secret bonus row ── */}
+            <div style={{
+              display:'flex', alignItems:'center', justifyContent:'space-between',
+              padding:'13px 16px',
+              background:'linear-gradient(90deg,rgba(249,217,35,0.06),rgba(255,179,71,0.04))',
+              borderTop:'1px solid rgba(249,217,35,0.15)',
+            }}>
+              <div style={{ display:'flex', alignItems:'center', gap:9 }}>
+                <span style={{ fontSize:15, flexShrink:0 }}>🎁</span>
+                <div>
+                  <div style={{ fontSize:14, color:'#f9d923', fontWeight:600, lineHeight:1.3 }}>Secret Bonus Gift</div>
+                  <div style={{ fontSize:11.5, color:'rgba(255,255,255,0.35)', marginTop:2 }}>Revealed after purchase — up to R3,000 value</div>
+                </div>
+              </div>
+              <div style={{ textAlign:'right', flexShrink:0, marginLeft:12 }}>
+                <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:14, color:'rgba(249,217,35,0.7)' }}>up to {fmtRand(bonusValue)}</div>
+                <div style={{ fontSize:10, color:'rgba(255,255,255,0.25)', marginTop:1 }}>FREE</div>
+              </div>
+            </div>
+
+            {/* ── total value row ── */}
+            <div style={{
+              display:'flex', alignItems:'center', justifyContent:'space-between',
+              padding:'14px 16px',
+              background:'rgba(24,89,209,0.12)',
+              borderTop:'1px solid rgba(24,89,209,0.3)',
+            }}>
+              <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:15, color:'#fff' }}>Total Package Value</div>
+              <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:20, color:'#77DAFB' }}>{fmtRand(grandTotal)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── price + CTA ── */}
+        <div style={{ borderTop:'1px solid rgba(255,255,255,0.08)', paddingTop:22, display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, flexWrap:'wrap' }}>
+          <div>
+            <div style={{ fontSize:11, letterSpacing:2, color:'rgba(247,239,253,0.38)', textTransform:'uppercase', marginBottom:4, fontWeight:700 }}>Your Price</div>
+            <div style={{ display:'flex', alignItems:'baseline', gap:12 }}>
+              <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:32, color:'#77DAFB' }}>{pkg.price}</div>
+              <div style={{ fontSize:13, color:'rgba(255,255,255,0.3)', textDecoration:'line-through' }}>{fmtRand(grandTotal)}</div>
+            </div>
+          </div>
+          <button onClick={onBook} style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#1859D1', color:'#F7EFFD', padding:'14px 30px', borderRadius:10, fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:16, boxShadow:'0 0 28px rgba(24,89,209,0.5)', border:'none', cursor:'pointer' }}>Book a Call →</button>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+// ── SECTION DIVIDER ──────────────────────────────────────────
+const SectionDivider = ({ cat }) => (
+  <div style={{ position:'relative', height:48, display:'flex', alignItems:'center', justifyContent:'center', overflow:'visible' }}>
+    <div style={{ position:'absolute', left:0, right:0, height:1, background:'linear-gradient(90deg, transparent 0%, rgba(24,89,209,0.45) 30%, rgba(70,13,151,0.45) 70%, transparent 100%)' }}/>
+    <div style={{ position:'relative', background:'#060725', padding:'0 20px', display:'flex', alignItems:'center', gap:10 }}>
+      <div style={{ width:6, height:6, borderRadius:'50%', background:'#77DAFB', boxShadow:'0 0 10px 3px rgba(119,218,251,0.7)' }}/>
+      <span style={{ fontSize:10, letterSpacing:3, textTransform:'uppercase', color:'rgba(119,218,251,0.65)', fontFamily:'Space Grotesk,sans-serif', fontWeight:600 }}>{cat}</span>
+      <div style={{ width:6, height:6, borderRadius:'50%', background:'#BA50EB', boxShadow:'0 0 10px 3px rgba(186,80,235,0.7)' }}/>
+    </div>
+  </div>
+);
+
+// ── SCROLL PROGRESS ──────────────────────────────────────────
+const ScrollProgress = () => {
+  const [pct, setPct] = React.useState(0);
+  React.useEffect(() => {
+    const fn = () => { const el = document.documentElement; setPct(el.scrollTop / (el.scrollHeight - el.clientHeight) * 100); };
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+
+  const size = 72;
+  const stroke = 5;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const dash = circ * pct / 100;
+  const gap  = circ - dash;
+
+  return (
+    <div style={{ position:'fixed', right:20, top:'50%', transform:'translateY(-50%)', zIndex:50, display:'flex', flexDirection:'column', alignItems:'center', gap:0 }}>
+      <svg width={size} height={size} style={{ transform:'rotate(-90deg)', filter:`drop-shadow(0 0 ${6 + pct * 0.12}px rgba(119,218,251,${0.4 + pct * 0.005}))`, transition:'filter 0.3s' }}>
+        {/* track */}
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={stroke}/>
+        {/* fill */}
+        <circle cx={size/2} cy={size/2} r={r} fill="none"
+          stroke="url(#pg)" strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${gap}`}
+          style={{ transition:'stroke-dasharray 0.15s linear' }}/>
+        <defs>
+          <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#1859D1"/>
+            <stop offset="100%" stopColor="#BA50EB"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      {/* number overlaid on the ring */}
+      <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', textAlign:'center', pointerEvents:'none' }}>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:22, color:'#fff', lineHeight:1 }}>{Math.round(pct)}</div>
+        <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:9, color:'rgba(255,255,255,0.4)', letterSpacing:1 }}>%</div>
+      </div>
+    </div>
+  );
+};
+
+// ── MAIN PAGE ────────────────────────────────────────────────
+const PreBuiltPage = () => {
+  const [activeModal, setActiveModal] = React.useState(null);
+  const [activeCat, setActiveCat] = React.useState('Sales');
+  const [showPopup, setShowPopup] = React.useState(false);
+
+  const scrollTo = (cat) => {
+    setActiveCat(cat);
+    const el = document.getElementById(`cat-${cat.replace(/\s+/g,'-')}`);
+    if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+  };
+
+  React.useEffect(() => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) setActiveCat(e.target.dataset.cat); });
+    }, { threshold: 0.3 });
+    CATS.forEach(cat => { const el = document.getElementById(`cat-${cat.replace(/\s+/g,'-')}`); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div>
+      <SiteNav active="Pre-Built Solutions"/>
+      <ScrollProgress/>
+
+      {/* HERO */}
+      <section style={{ background:'linear-gradient(180deg,#060725 0%,#0F0D3D 100%)', padding:'140px 32px 80px', textAlign:'center' }}>
+        <div style={{ maxWidth:680, margin:'0 auto' }}>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.1s both' }}><SLabel>Done-For-You Automation</SLabel></div>
+          <div style={{ animation:'fadeInUp 0.7s ease 0.25s both' }}>
+            <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(42px,5vw,68px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>Pre-Built AI Automations</h1>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.4s both' }}>
+            <p style={{ fontSize:22, color:'rgba(247,239,253,0.55)', lineHeight:1.75, marginBottom:36 }}>Proven packages designed for common business bottlenecks. Faster to launch than fully custom work. Everything included to get you running.</p>
+          </div>
+          <div style={{ animation:'fadeInUp 0.6s ease 0.55s both', display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
+            {CATS.map(c => (
+              <button key={c} onClick={() => scrollTo(c)} style={{ fontFamily:'Inter,sans-serif', fontWeight:500, fontSize:22, padding:'8px 18px', borderRadius:20, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.6)', cursor:'pointer', transition:'all 0.2s' }}>{c}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STICKY JUMP NAV */}
+      <div style={{ position:'sticky', top:70, zIndex:40, background:'rgba(6,7,37,0.96)', backdropFilter:'blur(12px)', borderBottom:'1px solid rgba(24,89,209,0.2)', padding:'12px 32px' }}>
+        <div style={{ maxWidth:900, margin:'0 auto', display:'flex', gap:8, flexWrap:'wrap' }}>
+          {CATS.map(c => (
+            <button key={c} onClick={() => scrollTo(c)} className="jump-pill" style={{
+              fontFamily:'Inter,sans-serif', fontWeight:500, fontSize:22,
+              padding:'7px 18px', borderRadius:20, border:'none', cursor:'pointer',
+              background: activeCat === c ? 'rgba(24,89,209,0.18)' : 'transparent',
+              color: activeCat === c ? '#F7EFFD' : 'rgba(247,239,253,0.45)',
+              borderBottom: activeCat === c ? '2px solid #77DAFB' : '2px solid transparent',
+              transition:'all 0.2s',
+            }}>{c}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* CATEGORIES */}
+      {CATS.map((cat, ci) => (
+        <React.Fragment key={cat}>
+        <section id={`cat-${cat.replace(/\s+/g,'-')}`} data-cat={cat}
+          style={{ background: ci % 2 === 0 ? '#060725' : '#0F0D3D', padding:'80px 32px' }}>
+          <div style={{ maxWidth:900, margin:'0 auto' }}>
+            <div style={{ marginBottom:40 }}>
+              <SLabel>{cat.toUpperCase()}</SLabel>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(30px,3.5vw,42px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', marginBottom:10 }}>{cat} Automations</h2>
+              <p style={{ fontSize:19, color:'rgba(247,239,253,0.45)', maxWidth:520 }}>
+                {cat==='Sales' && 'Capture more leads, follow up faster, and keep your pipeline moving without the manual work.'}
+                {cat==='Marketing' && 'Run smarter campaigns, request reviews, and track performance without the daily admin.'}
+                {cat==='Admin' && 'Automate the paperwork, approvals, and reminders that quietly eat your day.'}
+                {cat==='Operations' && 'Keep jobs moving, teams informed, and operations running without the owner in the middle.'}
+                {cat==='Outside the Box' && 'Creative AI-powered automations that go beyond the standard categories.'}
+              </p>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
+              {PACKAGES[cat].map((pkg, i) => <PkgCard key={i} pkg={pkg} onOpen={setActiveModal}/>)}
+            </div>
+          </div>
+        </section>
+        {ci < CATS.length - 1 && (
+          <div style={{ background: ci % 2 === 0 ? '#0F0D3D' : '#060725', paddingBottom:0 }}>
+            <SectionDivider cat={CATS[ci + 1]}/>
+          </div>
+        )}
+        </React.Fragment>
+      ))}
+
+      {/* HOW IT WORKS LINK */}
+      <section style={{ background:'#060725', padding:'40px 32px', borderTop:'1px solid rgba(24,89,209,0.18)', textAlign:'center' }}>
+        <div style={{ maxWidth:600, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'center', gap:20, flexWrap:'wrap' }}>
+          <span style={{ fontSize:17, color:'rgba(255,255,255,0.4)' }}>Want to understand our delivery process?</span>
+          <SBtn href="how-it-works.html" variant="ghost" style={{ fontSize:16, padding:'10px 24px' }}>See How It Works →</SBtn>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section style={{ background:'linear-gradient(135deg,#060725,#0F0D3D)', padding:'100px 32px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+        {/* background radial */}
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 50%, rgba(70,13,151,0.3), transparent 65%)', pointerEvents:'none' }}/>
+        {/* orbiting dots */}
+        <div style={{ position:'absolute', left:'50%', top:'50%', width:0, height:0, pointerEvents:'none' }}>
+          <div style={{ position:'absolute', width:8, height:8, borderRadius:'50%', background:'#77DAFB', boxShadow:'0 0 12px 4px rgba(119,218,251,0.9)', animation:'orbitDot 6s linear infinite' }}/>
+          <div style={{ position:'absolute', width:6, height:6, borderRadius:'50%', background:'#BA50EB', boxShadow:'0 0 10px 3px rgba(186,80,235,0.8)', animation:'orbitDot2 9s linear infinite' }}/>
+          <div style={{ position:'absolute', width:5, height:5, borderRadius:'50%', background:'#77DAFB', boxShadow:'0 0 8px 3px rgba(119,218,251,0.7)', animation:'orbitDot3 7s linear infinite' }}/>
+        </div>
+        {/* expanding rings */}
+        <div style={{ position:'absolute', left:'50%', top:'50%', width:300, height:300, borderRadius:'50%', border:'1px solid rgba(24,89,209,0.5)', animation:'ringPulse 3.5s ease-out infinite', pointerEvents:'none' }}/>
+        <div style={{ position:'absolute', left:'50%', top:'50%', width:300, height:300, borderRadius:'50%', border:'1px solid rgba(70,13,151,0.45)', animation:'ringPulse2 3.5s ease-out 1.75s infinite', pointerEvents:'none' }}/>
+        {/* card */}
+        <div style={{ maxWidth:600, margin:'0 auto', position:'relative', background:'rgba(6,7,37,0.92)', border:'1px solid rgba(24,89,209,0.42)', borderRadius:24, padding:'56px 48px', backdropFilter:'blur(12px)', animation:'breathGlow 4s ease-in-out infinite' }}>
+          <SLabel color="#77DAFB">Not Sure Which Package?</SLabel>
+          <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(30px,3.5vw,46px)', fontWeight:700, color:'#fff', letterSpacing:'-0.02em', marginBottom:16 }}>Book a Call and We'll Point You in the Right Direction</h2>
+          <p style={{ fontSize:22, color:'rgba(255,255,255,0.52)', marginBottom:36, lineHeight:1.75 }}>Tell us where your biggest bottleneck is. We'll match you to the right package — or tell you if a custom solution makes more sense.</p>
+          <a onClick={e => { e.preventDefault(); setShowPopup(true); }} href="#" style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'16px 42px', borderRadius:12, fontSize:19, fontWeight:700, fontFamily:'Space Grotesk,sans-serif', color:'#fff', textDecoration:'none', background:'linear-gradient(90deg,#1859D1,#460D97,#1859D1)', backgroundSize:'300% auto', animation:'shimmerBtn 3s linear infinite', boxShadow:'0 0 40px rgba(24,89,209,0.6)', border:'none', cursor:'pointer' }}>Book a Call →</a>
+        </div>
+      </section>
+
+      <SiteFooter/>
+      {activeModal && <Modal pkg={activeModal} onClose={() => setActiveModal(null)} onBook={() => { setActiveModal(null); setShowPopup(true); }}/>}
+      {showPopup && <BookingPopup onClose={() => setShowPopup(false)}/>}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<PreBuiltPage/>);
+</script>
+<div id="root"></div>
+</body>
+</html>
