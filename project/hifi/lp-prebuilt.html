@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Built Solutions — Nervari</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0C0821;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+::selection{background:rgba(91,93,225,0.4)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.opt-btn{transition:all 0.18s;cursor:pointer;text-align:left}
+.opt-btn:hover{border-color:rgba(91,93,225,0.6)!important;background:rgba(91,93,225,0.1)!important}
+.opt-btn.selected{border-color:#5B5DE1!important;background:rgba(91,93,225,0.15)!important}
+.pkg-card{transition:all 0.2s;cursor:pointer}
+.pkg-card:hover{border-color:rgba(91,93,225,0.5)!important;transform:translateY(-2px);box-shadow:0 12px 32px rgba(91,93,225,0.18)}
+.pkg-card.picked{border-color:#5B5DE1!important;background:rgba(91,93,225,0.12)!important}
+input,textarea{outline:none;transition:border-color 0.2s}
+input:focus,textarea:focus{border-color:rgba(91,93,225,0.6)!important}
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+const TOTAL_STEPS = 4;
+
+// Package data mapped by category + problem
+const PACKAGES_MAP = {
+  sales: {
+    leads:    [{ title:'Lead Capture to CRM Sync', desc:'Captures every lead, enriches records, and pushes them into your CRM with a task created automatically.', time:'4–6 hrs/wk', price:'R4,890' }, { title:'Missed Call Recovery', desc:'Messages missed callers instantly and books follow-up actions so no lead ever goes cold.', time:'3–5 hrs/wk', price:'R5,310' }, { title:'AI Lead Qualification', desc:'Scores inbound leads, tags urgency, and routes hot leads to your sales team in real time.', time:'5–8 hrs/wk', price:'R6,240' }],
+    followup: [{ title:'Quote Follow-Up Sequence', desc:'Sends timed reminders after a quote is issued and alerts you on high-value inactivity.', time:'4–7 hrs/wk', price:'R6,980' }, { title:'Sales Pipeline Alert System', desc:'Flags stalled deals and sends reminders to keep every deal moving.', time:'3–6 hrs/wk', price:'R5,760' }, { title:'Lead Source Performance Tracker', desc:'Tracks which channels bring the best leads and pushes daily summary reports.', time:'2–4 hrs/wk', price:'R6,430' }],
+  },
+  marketing: {
+    reviews:  [{ title:'Review Request Engine', desc:'Triggers review requests after service completion and routes positive responses first.', time:'2–4 hrs/wk', price:'R4,560' }, { title:'Referral Tracking Workflow', desc:'Tracks referrals, source performance, and sends thank-you follow-ups automatically.', time:'2–4 hrs/wk', price:'R5,420' }, { title:'Marketing KPI Digest', desc:'Builds a recurring summary of traffic, leads, and campaign performance for your team.', time:'3–5 hrs/wk', price:'R6,210' }],
+    content:  [{ title:'Content Repurposing Workflow', desc:'Turns one content input into multiple post drafts, captions, and publishing tasks.', time:'5–8 hrs/wk', price:'R7,130' }, { title:'Campaign Lead Nurture Flow', desc:'Moves new leads into timed email or WhatsApp nurture journeys without manual work.', time:'4–7 hrs/wk', price:'R6,740' }, { title:'Ad Lead Response Router', desc:'Pushes paid-ad leads to the right channel, CRM stage, or owner instantly.', time:'3–5 hrs/wk', price:'R5,980' }],
+  },
+  admin: {
+    invoices: [{ title:'Invoice Reminder Automation', desc:'Sends payment reminders and internal alerts on overdue invoices without manual tracking.', time:'3–6 hrs/wk', price:'R4,980' }, { title:'Internal Approval Flow', desc:'Moves requests through approval steps with status updates and escalation notices.', time:'4–6 hrs/wk', price:'R6,860' }, { title:'Document Request Tracker', desc:'Automates chasing missing documents and logs outstanding items so nothing falls through.', time:'3–5 hrs/wk', price:'R5,740' }],
+    onboarding:[{ title:'New Client Onboarding Pack', desc:'Sends forms, welcome docs, internal tasks, and kickoff reminders automatically on signup.', time:'4–7 hrs/wk', price:'R6,590' }, { title:'Meeting Summary Dispatcher', desc:'Sends structured AI-generated summaries and action items to all attendees after every meeting.', time:'2–4 hrs/wk', price:'R5,630' }, { title:'Staff Task Reminder System', desc:'Sends recurring reminders for deadline-driven admin work to keep the team on track.', time:'2–3 hrs/wk', price:'R4,790' }],
+  },
+  operations: {
+    jobs:     [{ title:'Job Status Update Workflow', desc:'Updates internal teams and clients automatically as jobs move through each stage.', time:'4–7 hrs/wk', price:'R6,920' }, { title:'Order Handoff Automation', desc:'Moves order information from sales to ops without manual re-entry or errors.', time:'5–8 hrs/wk', price:'R7,480' }, { title:'Service Ticket Routing', desc:'Routes service issues to the right team and logs priority automatically on submission.', time:'4–6 hrs/wk', price:'R6,770' }],
+    reporting:[{ title:'Daily Ops Summary Dashboard Push', desc:'Compiles operational KPIs and delivers them on a schedule to your team or inbox.', time:'3–5 hrs/wk', price:'R6,350' }, { title:'Stock Alert and Reorder Notice', desc:'Triggers alerts when stock or consumables fall below thresholds so you never run short.', time:'3–5 hrs/wk', price:'R5,890' }, { title:'Workflow Escalation Engine', desc:'Escalates delayed tasks, blocked jobs, or missed SLAs with automatic notifications.', time:'4–7 hrs/wk', price:'R7,040' }],
+  },
+  other: {
+    ai:       [{ title:'WhatsApp Concierge Assistant', desc:'Handles simple inbound questions and escalates real sales or support needs to your team.', time:'5–8 hrs/wk', price:'R7,260' }, { title:'AI Proposal Builder', desc:'Builds first-draft proposals from intake answers and internal templates in minutes.', time:'4–7 hrs/wk', price:'R7,390' }, { title:'Executive Daily Brief', desc:'Builds a daily digest of leads, jobs, cash flow prompts, and issues for the owner.', time:'3–5 hrs/wk', price:'R6,460' }],
+  },
+};
+
+const PROBLEM_OPTIONS = {
+  sales:      [{ v:'leads', label:'I\'m losing leads', sub:'Slow follow-up, missed enquiries, things falling through the cracks' }, { v:'followup', label:'Deals aren\'t closing fast enough', sub:'Quotes sit unanswered, pipeline stalls, deals go cold' }],
+  marketing:  [{ v:'reviews', label:'I\'m not getting reviews or referrals', sub:'Happy clients aren\'t leaving feedback or sending others' }, { v:'content', label:'My marketing isn\'t converting', sub:'Leads come in but don\'t get nurtured properly' }],
+  admin:      [{ v:'invoices', label:'Chasing payments and approvals', sub:'Overdue invoices, slow sign-offs, missing documents' }, { v:'onboarding', label:'Onboarding and reminders are manual', sub:'New clients, staff reminders, meeting follow-ups' }],
+  operations: [{ v:'jobs', label:'Jobs and orders are chaotic', sub:'Handoffs break, updates get missed, clients chase us' }, { v:'reporting', label:'I have no visibility into what\'s happening', sub:'No dashboards, no alerts, running blind' }],
+  other:      [{ v:'ai', label:'I want something smarter', sub:'AI assistants, voice-to-task, proposal builders' }],
+};
+
+// ── Components ─────────────────────────────────────────────
+
+const OptBtn = ({ label, sub, selected, onClick, icon }) => (
+  <button className={`opt-btn${selected ? ' selected' : ''}`} onClick={onClick} style={{
+    width:'100%', background: selected ? 'rgba(91,93,225,0.15)' : 'rgba(255,255,255,0.03)',
+    border: `1.5px solid ${selected ? '#5B5DE1' : 'rgba(255,255,255,0.1)'}`,
+    borderRadius:12, padding:'16px 20px', display:'flex', alignItems:'center', gap:14,
+  }}>
+    {icon && <span style={{ width:32, height:32, borderRadius:8, border:'1px solid rgba(255,255,255,0.18)', display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'rgba(255,255,255,0.6)' }}><LineIcon name={icon} size={16}/></span>}
+    <div style={{ flex:1 }}>
+      <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:600, fontSize:16, color:'#fff', marginBottom: sub ? 3 : 0 }}>{label}</div>
+      {sub && <div style={{ fontSize:13, color:'rgba(255,255,255,0.42)', lineHeight:1.4 }}>{sub}</div>}
+    </div>
+    <div style={{ width:20, height:20, borderRadius:'50%', border:`2px solid ${selected ? '#5B5DE1' : 'rgba(255,255,255,0.2)'}`, background: selected ? '#5B5DE1' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+      {selected && <div style={{ width:8, height:8, borderRadius:'50%', background:'#fff' }}/>}
+    </div>
+  </button>
+);
+
+const PkgCard = ({ pkg, picked, onClick }) => (
+  <div className={`pkg-card${picked ? ' picked' : ''}`} onClick={onClick} style={{
+    borderRadius:14, border:`1.5px solid ${picked ? '#5B5DE1' : 'rgba(255,255,255,0.09)'}`,
+    background: picked ? 'rgba(91,93,225,0.12)' : 'rgba(255,255,255,0.03)',
+    padding:'22px 20px', position:'relative',
+  }}>
+    {picked && <div style={{ position:'absolute', top:12, right:14, width:22, height:22, borderRadius:'50%', background:'#5B5DE1', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff' }}><LineIcon name="check" size={12} stroke={2.2}/></div>}
+    <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:16, color:'#fff', marginBottom:8, lineHeight:1.3, paddingRight:28 }}>{pkg.title}</div>
+    <div style={{ fontSize:13, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:14 }}>{pkg.desc}</div>
+    <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
+      <div style={{ fontSize:13, color:'#5B5DE1', fontWeight:600 }}>{pkg.price}</div>
+      <div style={{ fontSize:13, color:'rgba(255,255,255,0.35)' }}>· saves {pkg.time}</div>
+    </div>
+  </div>
+);
+
+const ProgressBar = ({ step }) => (
+  <div style={{ width:'100%', height:3, background:'rgba(255,255,255,0.07)', borderRadius:99, overflow:'hidden' }}>
+    <div style={{ height:'100%', width:`${(step / TOTAL_STEPS) * 100}%`, background:'linear-gradient(90deg,#5B5DE1,#9D5FE0)', borderRadius:99, transition:'width 0.45s cubic-bezier(0.4,0,0.2,1)' }}/>
+  </div>
+);
+
+const StepWrap = ({ children }) => (
+  <div style={{ animation:'scaleIn 0.28s ease both' }}>{children}</div>
+);
+
+// ── Main ───────────────────────────────────────────────────
+const App = () => {
+  const [step, setStep] = React.useState(0);
+  const [cat, setCat] = React.useState(null);
+  const [problem, setProblem] = React.useState(null);
+  const [picked, setPicked] = React.useState(null);
+  const [form, setForm] = React.useState({ name:'', email:'', phone:'' });
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const next = () => setStep(s => s + 1);
+  const back = () => setStep(s => s - 1);
+  const setF = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const packages = cat && problem && PACKAGES_MAP[cat] && PACKAGES_MAP[cat][problem]
+    ? PACKAGES_MAP[cat][problem]
+    : (cat && PACKAGES_MAP[cat] ? Object.values(PACKAGES_MAP[cat])[0] : []);
+
+  const canContinue = () => {
+    if (step === 1) return !!cat;
+    if (step === 2) return !!problem;
+    if (step === 3) return !!picked;
+    if (step === 4) return form.name && form.email && form.phone;
+    return true;
+  };
+
+  const submit = e => { e.preventDefault(); if (canContinue()) setSubmitted(true); };
+
+  const inputStyle = {
+    width:'100%', background:'rgba(255,255,255,0.05)',
+    border:'1.5px solid rgba(255,255,255,0.12)', borderRadius:10,
+    padding:'14px 16px', fontFamily:'Inter,sans-serif', fontSize:16, color:'#fff',
+  };
+
+  const CAT_OPTIONS = [
+    { v:'sales', label:'Sales', sub:'Lead capture, follow-up, pipeline', icon:'trendUp' },
+    { v:'marketing', label:'Marketing', sub:'Reviews, nurture, ad leads', icon:'megaphone' },
+    { v:'admin', label:'Admin', sub:'Invoices, onboarding, approvals', icon:'clipboard' },
+    { v:'operations', label:'Operations', sub:'Job tracking, reporting, handoffs', icon:'gear' },
+    { v:'other', label:'Something else', sub:'AI tools, voice workflows, custom ideas', icon:'asterisk' },
+  ];
+
+  return (
+    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column' }}>
+
+      {/* Top Bar */}
+      <div style={{ padding:'20px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom: step > 0 ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent' }}>
+        <a href="index.html" style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:800, fontSize:22, color:'#fff', textDecoration:'none', letterSpacing:-0.5 }}>Nervari</a>
+        {step > 0 && step <= TOTAL_STEPS && !submitted && (
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <div style={{ fontSize:13, color:'rgba(255,255,255,0.35)', fontWeight:500 }}>Step {step} of {TOTAL_STEPS}</div>
+            <div style={{ width:120 }}><ProgressBar step={step}/></div>
+          </div>
+        )}
+        <a href="pre-built.html" style={{ fontSize:14, color:'rgba(255,255,255,0.35)', textDecoration:'none' }}>Browse all →</a>
+      </div>
+
+      {/* Content */}
+      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px' }}>
+        <div style={{ width:'100%', maxWidth:600 }}>
+
+          {/* HERO */}
+          {step === 0 && (
+            <div style={{ animation:'fadeUp 0.5s ease both', textAlign:'center' }}>
+              <div style={{ display:'inline-block', fontFamily:'Inter,sans-serif', fontSize:12, fontWeight:600, letterSpacing:3, textTransform:'uppercase', color:'#5B5DE1', marginBottom:20, padding:'6px 14px', border:'1px solid rgba(91,93,225,0.3)', borderRadius:20 }}>Pre-Built Solutions</div>
+              <h1 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(36px,5vw,56px)', fontWeight:800, color:'#fff', letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20, textWrap:'balance' }}>
+                Find your automation<br/>
+                <span style={{ background:'linear-gradient(90deg,#5B5DE1,#9D5FE0)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>in 60 seconds.</span>
+              </h1>
+              <p style={{ fontSize:18, color:'rgba(255,255,255,0.5)', lineHeight:1.75, marginBottom:40, maxWidth:400, margin:'0 auto 40px', textWrap:'balance' }}>Answer 3 quick questions and we'll match you to the right pre-built package — fixed price, fast to launch.</p>
+              <button onClick={next} style={{ background:'#5B5DE1', color:'#fff', border:'none', borderRadius:12, padding:'16px 40px', fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:18, cursor:'pointer', boxShadow:'0 0 40px rgba(91,93,225,0.5)', transition:'all 0.2s' }}>Find My Package →</button>
+              <div style={{ marginTop:16, fontSize:13, color:'rgba(255,255,255,0.25)' }}>30 packages across 5 categories. Fixed pricing. No surprises.</div>
+            </div>
+          )}
+
+          {/* STEP 1 — Category */}
+          {step === 1 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Question 1</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>Which area of your business needs help?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>We have packages across all of these.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {CAT_OPTIONS.map(o => (
+                  <OptBtn key={o.v} label={o.label} sub={o.sub} icon={o.icon} selected={cat === o.v}
+                    onClick={() => { setCat(o.v); setProblem(null); setPicked(null); setTimeout(next, 200); }}/>
+                ))}
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 2 — Problem */}
+          {step === 2 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Question 2</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>What's the core problem?</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:28 }}>Pick the one that costs you the most.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {(PROBLEM_OPTIONS[cat] || []).map(o => (
+                  <OptBtn key={o.v} label={o.label} sub={o.sub} selected={problem === o.v}
+                    onClick={() => { setProblem(o.v); setPicked(null); setTimeout(next, 200); }}/>
+                ))}
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 3 — Package picker */}
+          {step === 3 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Your Matches</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(24px,4vw,34px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>Here are your best options.</h2>
+              <p style={{ fontSize:15, color:'rgba(255,255,255,0.38)', marginBottom:24 }}>Pick the one you'd like to start with.</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:12, marginBottom:8 }}>
+                {packages.map((pkg, i) => (
+                  <PkgCard key={i} pkg={pkg} picked={picked === pkg.title} onClick={() => setPicked(pkg.title)}/>
+                ))}
+              </div>
+              <div style={{ padding:'14px 18px', background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:10, fontSize:13, color:'rgba(255,255,255,0.35)', display:'flex', gap:10, alignItems:'center', marginTop:4 }}>
+                <span style={{display:'inline-flex',color:'rgba(255,255,255,0.45)'}}><LineIcon name="asterisk" size={14}/></span>
+                <span>Not sure? Book a call and we'll recommend the right fit based on your business.</span>
+              </div>
+            </StepWrap>
+          )}
+
+          {/* STEP 4 — Contact */}
+          {step === 4 && !submitted && (
+            <StepWrap>
+              <div style={{ marginBottom:8, fontSize:12, letterSpacing:3, textTransform:'uppercase', color:'rgba(91,93,225,0.7)', fontWeight:600 }}>Last Step</div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'clamp(26px,4vw,36px)', fontWeight:800, color:'#fff', marginBottom:8, letterSpacing:'-0.02em', lineHeight:1.2 }}>Where should we reach you?</h2>
+
+              {/* Selected package reminder */}
+              {picked && (
+                <div style={{ padding:'12px 16px', background:'rgba(91,93,225,0.1)', border:'1px solid rgba(91,93,225,0.25)', borderRadius:10, marginBottom:24, display:'flex', alignItems:'center', gap:10 }}>
+                  <span style={{ color:'#5B5DE1', display:'inline-flex' }}><LineIcon name="bolt" size={14}/></span>
+                  <div style={{ fontSize:14, color:'rgba(255,255,255,0.7)', flex:1 }}><strong style={{ color:'#fff' }}>{picked}</strong></div>
+                  <button onClick={() => back()} style={{ fontSize:12, color:'rgba(91,93,225,0.7)', background:'none', border:'none', cursor:'pointer' }}>Change</button>
+                </div>
+              )}
+
+              <form onSubmit={submit} style={{ display:'flex', flexDirection:'column', gap:14 }}>
+                <div>
+                  <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Your Name *</label>
+                  <input required value={form.name} onChange={setF('name')} placeholder="Full name" style={inputStyle}/>
+                </div>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+                  <div>
+                    <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Email *</label>
+                    <input required type="email" value={form.email} onChange={setF('email')} placeholder="you@business.com" style={inputStyle}/>
+                  </div>
+                  <div>
+                    <label style={{ display:'block', fontSize:12, fontWeight:600, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.35)', marginBottom:7 }}>Phone *</label>
+                    <input required value={form.phone} onChange={setF('phone')} placeholder="+27 ..." style={inputStyle}/>
+                  </div>
+                </div>
+                <button type="submit" style={{ background:'#5B5DE1', color:'#fff', border:'none', borderRadius:12, padding:'16px', fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:18, cursor:'pointer', boxShadow:'0 0 36px rgba(91,93,225,0.45)', marginTop:4, transition:'all 0.2s' }}>Book My Setup Call →</button>
+                <div style={{ textAlign:'center', fontSize:13, color:'rgba(255,255,255,0.2)' }}>Fixed price. No commitment until you're happy. Confirmed within 1 business day.</div>
+              </form>
+            </StepWrap>
+          )}
+
+          {/* SUBMITTED */}
+          {submitted && (
+            <div style={{ textAlign:'center', animation:'fadeUp 0.5s ease both', padding:'40px 0' }}>
+              <div style={{ width:72, height:72, borderRadius:'50%', background:'rgba(91,93,225,0.15)', border:'2px solid #5B5DE1', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', margin:'0 auto 28px', boxShadow:'0 0 40px rgba(91,93,225,0.3)' }}><LineIcon name="check" size={32} stroke={2}/></div>
+              <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:32, fontWeight:800, color:'#fff', marginBottom:12 }}>You're booked in.</h2>
+              <p style={{ fontSize:17, color:'rgba(255,255,255,0.5)', lineHeight:1.75, maxWidth:360, margin:'0 auto 32px' }}>We'll confirm your setup call within one business day. Check your email — and get ready to launch.</p>
+
+              {picked && (
+                <div style={{ maxWidth:400, margin:'0 auto 28px', padding:'20px 22px', background:'rgba(91,93,225,0.08)', border:'1px solid rgba(91,93,225,0.22)', borderRadius:14, textAlign:'left' }}>
+                  <div style={{ fontSize:12, letterSpacing:2.5, textTransform:'uppercase', color:'rgba(255,255,255,0.3)', marginBottom:12, fontWeight:600 }}>Package Selected</div>
+                  <div style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:700, fontSize:17, color:'#fff', marginBottom:8 }}>{picked}</div>
+                  <div style={{ fontSize:13, color:'rgba(255,255,255,0.4)' }}>Next: 2-hour setup call → launch within the week.</div>
+                </div>
+              )}
+
+              <div style={{ display:'flex', gap:14, justifyContent:'center', flexWrap:'wrap' }}>
+                <a href="pre-built.html" style={{ fontSize:14, color:'rgba(255,255,255,0.35)', textDecoration:'none', padding:'10px 18px', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8 }}>Browse all packages</a>
+                <a href="index.html" style={{ fontSize:14, color:'rgba(255,255,255,0.35)', textDecoration:'none', padding:'10px 18px', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8 }}>← Home</a>
+              </div>
+            </div>
+          )}
+
+          {/* Nav buttons */}
+          {step >= 2 && step <= TOTAL_STEPS && !submitted && (
+            <div style={{ marginTop:28, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <button onClick={back} style={{ background:'none', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.45)', borderRadius:8, padding:'10px 20px', fontFamily:'Inter,sans-serif', fontSize:14, cursor:'pointer', transition:'all 0.2s' }}>← Back</button>
+              {step < TOTAL_STEPS && (
+                <button onClick={next} disabled={!canContinue()} style={{ background: canContinue() ? '#5B5DE1' : 'rgba(255,255,255,0.07)', color: canContinue() ? '#fff' : 'rgba(255,255,255,0.2)', border:'none', borderRadius:8, padding:'10px 24px', fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:14, cursor: canContinue() ? 'pointer' : 'not-allowed', transition:'all 0.2s' }}>Continue →</button>
+              )}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* Footer strip */}
+      {!submitted && (
+        <div style={{ padding:'16px 32px', borderTop:'1px solid rgba(255,255,255,0.05)', display:'flex', justifyContent:'center', gap:32, flexWrap:'wrap' }}>
+          {['Fixed pricing — no surprises', 'Live in under a week', '2-hour setup call included'].map(t => (
+            <div key={t} style={{ fontSize:12, color:'rgba(255,255,255,0.22)', display:'flex', alignItems:'center', gap:6 }}>
+              <span style={{ color:'rgba(91,93,225,0.7)', display:'inline-flex' }}><LineIcon name="check" size={12} stroke={1.8}/></span>{t}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>
