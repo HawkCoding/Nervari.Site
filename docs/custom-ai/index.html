@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<title>A custom AI system built around your biggest bottleneck | Nervari</title>
+<meta name="description" content="Nervari designs and builds a custom AI system around the one bottleneck that slows your business down, and trains your team to use it.">
+<meta name="theme-color" content="#0C0821">
+<link rel="icon" href="/custom-ai/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/custom-ai/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/custom-ai/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Space Grotesk";src:url("/custom-ai/fonts/space-grotesk.woff2") format("woff2");font-weight:500 700;font-style:normal;font-display:swap}
+@font-face{font-family:"Inter";src:url("/custom-ai/fonts/inter.woff2") format("woff2");font-weight:400 600;font-style:normal;font-display:swap}
+/* Fallbacks sized to match, so the swap does not move the layout */
+@font-face{font-family:"SG Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:108.6%;ascent-override:90.6%;descent-override:26.9%;line-gap-override:0%}
+@font-face{font-family:"Inter Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:107.3%;ascent-override:90.3%;descent-override:22.5%;line-gap-override:0%}
+
+:root{
+  --bg:#0C0821;
+  --panel:#120D2C;
+  --ink:#F4F2FB;
+  --muted:#A9A4C4;
+  --accent:#5B5DE1;
+  --accent-hover:#6E70EC;
+  --accent-line:#8587F0;
+  --hair:rgba(244,242,251,.10);
+  --hair-2:rgba(244,242,251,.20);
+  --display:"Space Grotesk","SG Fallback",system-ui,sans-serif;
+  --text:"Inter","Inter Fallback",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --gutter:24px;
+}
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{background:var(--bg);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-wrap:break-word}
+svg{display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.nw{white-space:nowrap}
+[hidden]{display:none!important}
+
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+.section{padding:clamp(88px,12vh,136px) 0}
+.h2{font-family:var(--display);font-weight:500;font-size:clamp(38px,5vw,68px);line-height:1;letter-spacing:-.035em;text-wrap:balance}
+
+/* Reveal: only when the script runs and motion is allowed */
+.can-reveal .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.can-reveal .reveal.is-in{opacity:1;transform:none}
+.can-reveal .reveal.d1{transition-delay:.08s}
+
+/* ---------- Hero ---------- */
+.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:72px var(--gutter) 88px}
+.hero__inner{width:100%;max-width:1320px;display:flex;flex-direction:column;align-items:center}
+.hero h1{font-family:var(--display);font-weight:500;font-size:clamp(50px,8.6vw,128px);line-height:.95;letter-spacing:-.045em;max-width:10.4em;text-wrap:balance}
+
+/* The dimension mark: two extension lines, a dimension line and a 45 degree
+   tick at each end, at the exact width of the word it sits under. */
+.measure{position:relative;display:inline-block;white-space:nowrap;--t:max(2px,.024em);--sq:.17em}
+.measure::before,.measure::after{content:"";position:absolute;pointer-events:none}
+.measure::before{left:0;right:0;top:calc(100% - .07em);height:.29em;border-left:max(1.5px,.012em) solid rgba(91,93,225,.7);border-right:max(1.5px,.012em) solid rgba(91,93,225,.7)}
+.measure::after{left:calc(var(--sq) / -2);right:calc(var(--sq) / -2);bottom:calc(-.12em - var(--sq) / 2);height:var(--sq);
+  background:
+    linear-gradient(to bottom right,transparent calc(50% - var(--t)/1.4),var(--accent) calc(50% - var(--t)/1.4),var(--accent) calc(50% + var(--t)/1.4),transparent calc(50% + var(--t)/1.4)) left center/var(--sq) var(--sq) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - var(--t)/1.4),var(--accent) calc(50% - var(--t)/1.4),var(--accent) calc(50% + var(--t)/1.4),transparent calc(50% + var(--t)/1.4)) right center/var(--sq) var(--sq) no-repeat,
+    linear-gradient(var(--accent),var(--accent)) center/calc(100% - var(--sq)) var(--t) no-repeat}
+@media (prefers-reduced-motion:no-preference){
+  .measure::before{animation:fade .5s ease-out .2s both}
+  .measure::after{animation:draw .9s cubic-bezier(.2,.7,.2,1) .45s both}
+}
+@keyframes draw{from{clip-path:inset(0 50% 0 50%)}to{clip-path:inset(0 0 0 0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.hero .sub{margin-top:clamp(52px,6.6vh,64px);font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#C9C5DE;max-width:34em;text-wrap:balance}
+.hero .sub>span{display:block}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:68px;padding:0 40px;background:var(--accent);color:#fff;font:600 19px/1 var(--text);letter-spacing:-.005em;text-decoration:none;border:0;border-radius:4px;cursor:pointer;transition:background-color .15s ease}
+.btn:hover{background:var(--accent-hover)}
+.btn svg{width:16px;height:16px;flex:none}
+.hero .btn{margin-top:clamp(32px,4.4vh,44px)}
+.reassure{margin-top:18px;font-size:15px;line-height:1.5;color:var(--muted)}
+
+/* ---------- What you get ---------- */
+.get .h2{margin-bottom:clamp(36px,5vh,56px)}
+.rows{list-style:none;border-top:1px solid var(--hair)}
+.rows li{display:grid;grid-template-columns:72px 1fr;gap:40px;align-items:center;padding:26px 0;border-bottom:1px solid var(--hair)}
+.rows svg{width:72px;height:72px}
+.rows p{font-family:var(--display);font-weight:500;font-size:clamp(21px,2.3vw,32px);line-height:1.2;letter-spacing:-.02em;text-wrap:pretty}
+.ink{stroke:rgba(244,242,251,.72)}
+.acc{stroke:var(--accent-line)}
+
+/* ---------- How it works ---------- */
+.how__grid{display:grid;grid-template-columns:5fr 7fr;grid-template-areas:"head steps" "scen steps";grid-template-rows:auto 1fr;column-gap:clamp(40px,6vw,96px);row-gap:40px;align-items:start}
+.how__head{grid-area:head}.how__scen{grid-area:scen}.how__steps{grid-area:steps}
+.how .h2{font-size:clamp(34px,4.2vw,56px);line-height:1.04}
+.scenario{padding:26px 28px;border:1px solid var(--hair-2);border-radius:4px;color:var(--muted);font-size:16px}
+.scenario b{color:var(--ink);font-weight:600}
+.scenario small{display:block;margin-top:10px;font-size:14px}
+.steps{list-style:none;position:relative;padding-left:44px}
+.steps::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;width:2px;background:rgba(244,242,251,.22)}
+.steps li{position:relative;padding:0 0 26px}
+.steps li:last-child{padding-bottom:0}
+.steps li::before{content:"";position:absolute;left:-36px;top:13px;width:14px;height:2px;background:rgba(244,242,251,.4)}
+.steps .check::before{left:-39px;top:6px;width:20px;height:16px;background:linear-gradient(to top right,transparent calc(50% - 1.5px),var(--accent-line) calc(50% - 1.5px),var(--accent-line) calc(50% + 1.5px),transparent calc(50% + 1.5px))}
+.steps h3{font-family:var(--display);font-weight:500;font-size:clamp(20px,1.8vw,24px);line-height:1.2;letter-spacing:-.015em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.steps .n{font-size:14px;font-weight:500;color:var(--muted);letter-spacing:0;min-width:1.6em}
+.steps .tag{font-family:var(--text);font-size:13px;font-weight:600;letter-spacing:.01em;color:var(--accent-line);border:1px solid rgba(133,135,240,.5);border-radius:3px;padding:2px 7px;line-height:1.3}
+.steps p{margin-top:4px;color:var(--muted);font-size:16px}
+.steps .check p{color:var(--ink)}
+
+/* ---------- Questions ---------- */
+.faq .h2{margin-bottom:clamp(36px,5vh,56px)}
+.qa{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(32px,5vw,72px)}
+.qa div{padding:24px 0 28px;border-top:1px solid var(--hair)}
+.qa h3{font-family:var(--display);font-weight:500;font-size:clamp(19px,1.7vw,22px);line-height:1.25;letter-spacing:-.01em;margin-bottom:8px}
+.qa p{color:var(--muted);font-size:16px}
+
+/* ---------- Form ---------- */
+.book{scroll-margin-top:0}
+.book__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,96px);align-items:start}
+.book .h2{font-size:clamp(38px,5vw,68px)}
+.promise{margin-top:24px;font-size:clamp(17px,1.4vw,19px);color:var(--muted);max-width:26em}
+.promise strong{color:var(--ink);font-weight:500}
+.form{display:grid;gap:20px}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:8px}
+.field label span{color:var(--muted);font-weight:400}
+.field input,.field textarea{display:block;width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--panel);border:1px solid var(--hair-2);border-radius:4px;padding:15px 16px;transition:border-color .15s ease,box-shadow .15s ease}
+.field input{height:56px}
+.field textarea{min-height:96px;resize:vertical;line-height:1.45}
+.field input::placeholder,.field textarea::placeholder{color:rgba(169,164,196,.7)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent-line);box-shadow:0 0 0 3px rgba(91,93,225,.35)}
+.field [aria-invalid="true"]{border-color:#F29B9B}
+.err{display:block;min-height:0;margin-top:6px;font-size:14px;color:#F6B4B4}
+.err:empty{display:none}
+.measured{position:relative}
+.measured::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:8px;opacity:0;transition:opacity .2s ease;
+  background:linear-gradient(var(--accent-line),var(--accent-line)) left top/1.5px 8px no-repeat,linear-gradient(var(--accent-line),var(--accent-line)) right top/1.5px 8px no-repeat,linear-gradient(var(--accent-line),var(--accent-line)) center 3px/100% 2px no-repeat}
+.measured:focus-within::after{opacity:1}
+.form .btn{width:100%;margin-top:8px}
+.next{font-size:15px;color:var(--muted);text-align:center}
+.done{padding:32px 28px;border:1px solid var(--accent-line);border-radius:4px;background:var(--panel);font-family:var(--display);font-size:clamp(20px,2vw,24px);line-height:1.3;letter-spacing:-.01em}
+.done:focus{outline:none}
+
+.foot{padding:40px 0 48px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid var(--hair)}
+
+/* ---------- Phone sticky bar ---------- */
+.sticky{display:none}
+
+/* ---------- Tablet and phone ---------- */
+@media (max-width:860px){
+  .how__grid,.book__grid,.qa{grid-template-columns:1fr}
+  .how__grid{grid-template-areas:"head" "steps" "scen";grid-template-rows:auto;row-gap:36px}
+  .book__grid{gap:32px}
+}
+@media (max-width:767px){
+  .sticky{display:block;position:fixed;left:0;right:0;bottom:0;z-index:10;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(12,8,33,.94);border-top:1px solid var(--hair);transform:translateY(110%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s}
+  .sticky.is-shown{transform:none;visibility:visible;transition:transform .25s ease,visibility 0s}
+  .sticky .btn{width:100%;height:54px;font-size:18px}
+}
+@media (max-width:600px){
+  :root{--gutter:16px}
+  .section{padding:56px 0}
+  .hero{padding:40px var(--gutter) 88px}
+  .hero h1{font-size:clamp(44px,13.4vw,56px);line-height:.98;letter-spacing:-.04em}
+  .hero .sub{margin-top:44px;font-size:17px;max-width:21em}
+  .measure{--sq:.22em;--t:2px}
+  .measure::before{border-left-width:1.5px;border-right-width:1.5px}
+  .btn{height:58px;font-size:18px}
+  .hero .btn{width:100%;max-width:358px;margin-top:32px}
+  .reassure{font-size:14px;max-width:20em}
+  .rows li{grid-template-columns:48px 1fr;gap:18px;padding:16px 0}
+  .rows svg{width:48px;height:48px}
+  .scenario{padding:20px}
+  .steps{padding-left:36px}
+  .steps::before{left:6px}
+  .steps li{padding-bottom:16px}
+  .steps li::before{left:-30px}
+  .steps .check::before{left:-33px}
+  .qa div{padding:16px 0 18px}
+  .foot{padding:28px 0 32px}
+}
+@media (prefers-reduced-motion:reduce){
+  .btn,.field input,.field textarea,.measured::after{transition:none}
+  .sticky,.sticky.is-shown{transition:none}
+}
+</style>
+</head>
+<body>
+
+<main>
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="hero__inner">
+      <h1 id="hero-title">A custom AI system built around your biggest <span class="measure">bottleneck</span>.</h1>
+      <p class="sub"><span>For owners of small and <span class="nw">mid-sized</span> businesses in South Africa.</span> <span>We design it, build it and train your team to use it.</span></p>
+      <a class="btn" href="#book" data-cta>Book my free call
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5v10.5M3.5 8.5 8 13l4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
+      </a>
+      <p class="reassure">No commitment. You see the design before anything is built.</p>
+    </div>
+  </section>
+
+  <section class="section get" aria-labelledby="get-title">
+    <div class="wrap">
+      <h2 class="h2 reveal" id="get-title">What you get</h2>
+      <ul class="rows reveal d1">
+        <li>
+          <svg viewBox="0 0 72 72" fill="none" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+            <path class="ink" d="M6 28h20M6 36h20M6 44h20M50 36h16"/>
+            <rect class="ink" x="26" y="22" width="24" height="28"/>
+            <circle cx="38" cy="36" r="3.2" fill="#8587F0" stroke="none"/>
+          </svg>
+          <p>A working AI system, built around how you work.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 72 72" fill="none" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+            <path class="ink" d="M14 20h44v44H14z"/>
+            <path class="ink" d="M22 34h28M22 42h28M22 50h18"/>
+            <path class="acc" d="M14 7v8M58 7v8M14 11h44M11.5 13.5l5-5M55.5 13.5l5-5"/>
+          </svg>
+          <p>A clear design you check before we build.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 72 72" fill="none" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+            <path class="ink" d="M18 8h40v26H18zM38 34v6"/>
+            <path class="acc" d="M26 21h24"/>
+            <circle class="ink" cx="24" cy="50" r="5"/>
+            <circle class="ink" cx="48" cy="50" r="5"/>
+            <path class="ink" d="M14 66c0-6 4.5-9 10-9s10 3 10 9M38 66c0-6 4.5-9 10-9s10 3 10 9"/>
+          </svg>
+          <p>Training, so your team can use it and check it.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 72 72" fill="none" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+            <rect class="ink" x="28" y="28" width="16" height="16"/>
+            <path class="ink" d="M57 30A22 22 0 1 0 54 50"/>
+            <path class="acc" d="M50 22l7.5 8.5L64 21"/>
+          </svg>
+          <p>Support after launch, and updates as needs change.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section how" aria-labelledby="how-title">
+    <div class="wrap how__grid">
+      <h2 class="h2 how__head reveal" id="how-title">You check the work twice before launch.</h2>
+      <p class="scenario how__scen reveal"><b>Example:</b> a business sends quotes days late because each one is typed by hand. We would map how quotes are made today, then build a system that drafts each quote from the enquiry for a person to check.<small>An illustration, not a client result.</small></p>
+      <ol class="steps how__steps reveal d1">
+        <li><h3><span class="n">01</span>Book a call</h3><p>A short, free call about your business.</p></li>
+        <li><h3><span class="n">02</span>Define the problem</h3><p>We agree the bottleneck and the goal.</p></li>
+        <li><h3><span class="n">03</span>Audit the workflow</h3><p>We map how the work is done today.</p></li>
+        <li class="check"><h3><span class="n">04</span>Design the solution <span class="tag">Check 1</span></h3><p>You check the design before we build.</p></li>
+        <li class="check"><h3><span class="n">05</span>Build and preview <span class="tag">Check 2</span></h3><p>You see it working before you sign off.</p></li>
+        <li><h3><span class="n">06</span>Launch and train</h3><p>We go live and train your team.</p></li>
+        <li><h3><span class="n">07</span>Support and improve</h3><p>We stay available after launch.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 class="h2 reveal" id="faq-title">Before you book</h2>
+      <div class="qa reveal d1">
+        <div><h3>Who is it for?</h3><p>Owners and managers of small and <span class="nw">mid-sized</span> businesses with one bottleneck that slows everything down.</p></div>
+        <div><h3>Who is it not for?</h3><p>Anyone who wants AI but has no clear bottleneck. We start with the bottleneck, then choose the tools.</p></div>
+        <div><h3>What do I need to do?</h3><p>Explain the bottleneck, show us how the work is done, and check the design and the build. We do the technical work.</p></div>
+        <div><h3>How is the cost worked out?</h3><p>It depends on how much there is to build. You get the price and the timeline before we start.</p></div>
+        <div><h3>What if custom work is not a fit?</h3><p>We tell you honestly on the call. If one of our pre-built packages suits you better, we say so.</p></div>
+        <div><h3>Which tools do you build with?</h3><p>We choose after we understand the bottleneck. Tools we use include ChatGPT, Gemini, WhatsApp and Microsoft 365.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section book" id="book" aria-labelledby="book-title">
+    <div class="wrap book__grid">
+      <div class="reveal">
+        <h2 class="h2" id="book-title">Book your free call.</h2>
+        <p class="promise">Tell us about your biggest bottleneck. We listen and tell you honestly if custom work is the right fit. <strong>No&nbsp;commitment.</strong></p>
+      </div>
+      <div class="reveal d1">
+        <form class="form" id="lead-form" method="dialog" novalidate aria-labelledby="book-title">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+            <span class="err" id="f-name-err" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="f-email-err">
+            <span class="err" id="f-email-err" aria-live="polite"></span>
+          </div>
+          <div class="field measured">
+            <label for="f-job">Your biggest bottleneck <span>(optional)</span></label>
+            <textarea id="f-job" name="bottleneck" rows="3" placeholder="e.g. quotes take days to go out"></textarea>
+          </div>
+          <button class="btn" type="submit">Book my free call</button>
+          <p class="next">Next, Nervari emails you to set up the call.</p>
+        </form>
+        <div class="done" id="form-done" tabindex="-1" role="status" hidden><p>This is an example page. Your details were not sent or saved.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap">&copy; 2026 Nervari</div></footer>
+
+<div class="sticky" id="sticky" aria-hidden="true">
+  <a class="btn" href="#book" data-cta>Book my free call</a>
+</div>
+
+<script src="/custom-ai/main.js" defer></script>
+</body>
+</html>
