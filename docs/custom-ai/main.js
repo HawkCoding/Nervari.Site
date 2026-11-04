@@ -62,21 +62,40 @@
   /* Form: check the fields, then show the notice. Nothing is sent or stored. */
   if (!form) return;
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  function phoneOk(v) {
+    var digits = v.replace(/\D/g, '').length;
+    return /^[+\d\s().-]+$/.test(v) && digits >= 9 && digits <= 15;
+  }
+  function picked(name) { return form.querySelector('input[name="' + name + '"]:checked'); }
+
   var rules = [
     { id: 'f-name', test: function (v) { return v.length >= 2; }, msg: 'Please enter your name.' },
-    { id: 'f-email', test: function (v) { return EMAIL.test(v); }, msg: 'Please enter a valid email address.' }
+    { id: 'f-phone', test: phoneOk, msg: 'Please enter a phone number with at least 9 digits.' },
+    { id: 'f-email', test: function (v) { return EMAIL.test(v); }, msg: 'Please enter a valid email address.' },
+    { id: 'g-job', group: 'job', msg: 'Please choose the job that slows you down.' },
+    { id: 'g-size', group: 'size', msg: 'Please choose how many people work in your business.' }
   ];
 
-  function setError(field, msg) {
-    var err = document.getElementById(field.id + '-err');
-    field.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  function check(r) {
+    var el = document.getElementById(r.id);
+    return r.group ? !!picked(r.group) : r.test(el.value.trim());
+  }
+  function setError(el, msg) {
+    var err = document.getElementById(el.id + '-err');
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
     if (err) err.textContent = msg || '';
+  }
+  /* The place to put the cursor when a rule fails: the field, or the
+     first choice in a group. */
+  function focusTarget(r) {
+    var el = document.getElementById(r.id);
+    return r.group ? form.querySelector('input[name="' + r.group + '"]') : el;
   }
 
   rules.forEach(function (r) {
-    var field = document.getElementById(r.id);
-    field.addEventListener('input', function () {
-      if (field.getAttribute('aria-invalid') === 'true' && r.test(field.value.trim())) setError(field, '');
+    var el = document.getElementById(r.id);
+    el.addEventListener(r.group ? 'change' : 'input', function () {
+      if (el.getAttribute('aria-invalid') === 'true' && check(r)) setError(el, '');
     });
   });
 
@@ -84,10 +103,9 @@
     e.preventDefault();
     var firstBad = null;
     rules.forEach(function (r) {
-      var field = document.getElementById(r.id);
-      var ok = r.test(field.value.trim());
-      setError(field, ok ? '' : r.msg);
-      if (!ok && !firstBad) firstBad = field;
+      var ok = check(r);
+      setError(document.getElementById(r.id), ok ? '' : r.msg);
+      if (!ok && !firstBad) firstBad = focusTarget(r);
     });
     if (firstBad) { firstBad.focus(); return; }
 
