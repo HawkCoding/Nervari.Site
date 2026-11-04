@@ -64,8 +64,7 @@
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   var rules = [
     { id: 'f-name', test: function (v) { return v.length >= 2; }, msg: 'Please enter your name.' },
-    { id: 'f-email', test: function (v) { return EMAIL.test(v); }, msg: 'Please enter a valid email address.' },
-    { id: 'f-job', test: function (v) { return v.length >= 10; }, msg: 'Please describe the job in a few words.' }
+    { id: 'f-email', test: function (v) { return EMAIL.test(v); }, msg: 'Please enter a valid email address.' }
   ];
 
   function setError(field, msg) {
