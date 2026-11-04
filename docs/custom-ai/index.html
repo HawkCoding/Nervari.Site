@@ -41,6 +41,7 @@ svg{display:block}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 .nw{white-space:nowrap}
+[hidden]{display:none!important}
 
 .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
 .section{padding:clamp(88px,12vh,136px) 0}
@@ -73,9 +74,8 @@ a{color:inherit}
 @keyframes draw{from{clip-path:inset(0 50% 0 50%)}to{clip-path:inset(0 0 0 0)}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
-.hero .sub{margin-top:clamp(52px,6.6vh,64px);font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:var(--muted);max-width:34em;text-wrap:balance}
+.hero .sub{margin-top:clamp(52px,6.6vh,64px);font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#C9C5DE;max-width:34em;text-wrap:balance}
 .hero .sub>span{display:block}
-.hero .sub>span+span{color:var(--ink)}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:68px;padding:0 40px;background:var(--accent);color:#fff;font:600 19px/1 var(--text);letter-spacing:-.005em;text-decoration:none;border:0;border-radius:4px;cursor:pointer;transition:background-color .15s ease}
 .btn:hover{background:var(--accent-hover)}
@@ -166,7 +166,6 @@ a{color:inherit}
   .hero{padding:40px var(--gutter) 88px}
   .hero h1{font-size:clamp(44px,13.4vw,56px);line-height:.98;letter-spacing:-.04em}
   .hero .sub{margin-top:44px;font-size:17px;max-width:21em}
-  .hero .sub>span+span{margin-top:6px}
   .measure{--sq:.22em;--t:2px}
   .measure::before{border-left-width:1.5px;border-right-width:1.5px}
   .btn{height:58px;font-size:18px}

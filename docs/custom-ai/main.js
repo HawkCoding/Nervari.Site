@@ -95,6 +95,7 @@
     form.hidden = true;
     var done = document.getElementById('form-done');
     done.hidden = false;
-    done.focus();
+    done.focus({ preventScroll: true });
+    done.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'center' });
   });
 })();
